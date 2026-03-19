@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kill -9 717 6673)",
+      "WebFetch(domain:himanshu.page)",
+      "Bash(git -C /Users/jitendersharma/Documents/Portfolio/portfolio rev-parse --git-dir)"
+    ]
+  }
+}
