@@ -7,15 +7,13 @@ interface WorkProps {
   onOpenCS: (id: string) => void;
 }
 
-const HOOK_TEXT =
-  "17,000 support tickets a year because merchants couldn't tell if a payment failure was their code, the bank, or Razorpay. I redesigned the dashboard so they never had to guess again.";
-
 function CaseCard({
   num,
   tags,
   title,
   year,
   delay,
+  hookText,
   onClick,
 }: {
   num: string;
@@ -23,6 +21,7 @@ function CaseCard({
   title: string;
   year: string;
   delay: number;
+  hookText: string;
   onClick: () => void;
 }) {
   const hookRef = useRef<HTMLDivElement>(null);
@@ -30,10 +29,10 @@ function CaseCard({
   useEffect(() => {
     const el = hookRef.current;
     if (!el) return;
-    el.innerHTML = HOOK_TEXT.split(" ")
+    el.innerHTML = hookText.split(" ")
       .map((w) => `<span class="tok">${w}</span>`)
       .join(" ");
-  }, []);
+  }, [hookText]);
 
   const handleMouseEnter = () => {
     const toks = hookRef.current?.querySelectorAll<HTMLSpanElement>(".tok");
@@ -117,19 +116,21 @@ export default function Work({ onOpenCS }: WorkProps) {
           title="Downtime Dashboard 2.0"
           year="2025"
           delay={0.1}
+          hookText="17,000 support tickets a year because merchants couldn't tell if a payment failure was their code, the bank, or Razorpay. I redesigned the dashboard so they never had to guess again."
           onClick={() => onOpenCS("cs1")}
         />
         <CaseCard
           num="02"
           tags={[
-            { label: "Redesign", hi: true },
-            { label: "Iteration" },
-            { label: "Data-driven" },
+            { label: "0→1 Build", hi: true },
+            { label: "Field Research" },
+            { label: "Android App" },
             { label: "Razorpay" },
           ]}
-          title="Case Study Title Two"
-          year="2023"
+          title="Task Force App"
+          year="2025"
           delay={0.22}
+          hookText="276 field agents were planning their days off WhatsApp messages and paper notes, using a bot that worked half the time. I rebuilt the entire field operations experience from scratch — 40% adopted it in a single day."
           onClick={() => onOpenCS("cs2")}
         />
       </div>
