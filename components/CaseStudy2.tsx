@@ -29,7 +29,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
           exit={{ y: "100%" }}
-          transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] as [number,number,number,number] }}
         >
           <div className="ol-header">
             <button className="ol-back" onClick={onClose}>
