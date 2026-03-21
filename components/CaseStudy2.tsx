@@ -16,6 +16,7 @@ const NAV_LABELS = ["Brief", "Research", "Problem", "Ideation", "Solution", "Out
 /* ── Slide data ── */
 
 const getStartedSlides = [
+  { src: "/cs2/get-started/splash.gif", annotation: "Splash screen — the first thing a field agent sees when they open the Task Force App" },
   { src: "/cs2/get-started/1.png", annotation: "OTP login — secure agent authentication via registered mobile number" },
   { src: "/cs2/get-started/2.png", annotation: "Day overview — personalised greeting, 20 open tickets, swipe to start working" },
   { src: "/cs2/get-started/3.png", annotation: "Homepage — tickets sorted by priority with TAT and distance indicators" },
