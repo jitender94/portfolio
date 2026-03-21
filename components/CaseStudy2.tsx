@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SurfaceSlideshow from "./SurfaceSlideshow";
+import PhoneSlideshow from "./PhoneSlideshow";
+import FlowDiagram from "./FlowDiagram";
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,73 @@ interface Props {
 
 const SEC_IDS = ["tf-s01", "tf-s02", "tf-s03", "tf-s04", "tf-s05", "tf-s06"];
 const NAV_LABELS = ["Brief", "Research", "Problem", "Ideation", "Solution", "Outcome"];
+
+/* ── Slide data ── */
+
+const getStartedSlides = [
+  { src: "/cs2/get-started/1.png", annotation: "OTP login — secure agent authentication via registered mobile number" },
+  { src: "/cs2/get-started/2.png", annotation: "Day overview — personalised greeting, 20 open tickets, swipe to start working" },
+  { src: "/cs2/get-started/3.png", annotation: "Homepage — tickets sorted by priority with TAT and distance indicators" },
+  { src: "/cs2/get-started/4.png", annotation: "Inventory widget — devices (25) and SIMs (25) available at a glance" },
+  { src: "/cs2/get-started/5.png", annotation: "Sort options — filter tickets by Priority, TAT, or Distance" },
+  { src: "/cs2/get-started/7.png", annotation: "Inventory detail — all assigned A910 devices with serial numbers" },
+  { src: "/cs2/get-started/8.png", annotation: "SIM inventory — carrier-wise SIMs ready to assign to devices" },
+];
+
+const installationSlides = [
+  { src: "/cs2/installation/Installation1.png", annotation: "Ticket card — merchant details, 2 TIDs, overdue status, directions & call shortcuts" },
+  { src: "/cs2/installation/Installation2.png", annotation: "Installation start — Total TIDs: 02, Mapped: 00 · all ticket details pre-populated" },
+  { src: "/cs2/installation/Mapping3.png", annotation: "Device scan — barcode scanner reads serial number (primary input path)" },
+  { src: "/cs2/installation/Mapping4.png", annotation: "Serial confirmed ✓ — SIM number entry with live inventory suggestions below" },
+  { src: "/cs2/installation/Mapping6.png", annotation: "SIM selected from inventory — matched and confirmed, proceed to next step" },
+  { src: "/cs2/installation/Mapping12.png", annotation: "SIM barcode scanner — secondary path; used when SIM barcode is readable" },
+  { src: "/cs2/installation/Mapping13.png", annotation: "All TIDs mapped successfully 🎉 — do test transactions, then upload photos" },
+  { src: "/cs2/installation/Checklist1.png", annotation: "Feature & device checklist — training items verified, device accessories confirmed" },
+  { src: "/cs2/installation/Upload1.png", annotation: "Photo upload — shop board, inside view, devices photo (all required for compliance)" },
+  { src: "/cs2/installation/Upload8.png", annotation: "All photos uploaded ✓ — proceed to merchant OTP" },
+  { src: "/cs2/installation/Validation1.png", annotation: "Merchant OTP — enter representative name and mobile number for verification" },
+  { src: "/cs2/installation/Validation3.png", annotation: "OTP sent to merchant — awaiting 6-digit confirmation" },
+  { src: "/cs2/installation/Confirmation1.png", annotation: "Installation complete ✓ — confirmation sent to merchant, save installation copy" },
+];
+
+const deactivationSlides = [
+  { src: "/cs2/deactivation/Deactivation1.png", annotation: "Deactivation ticket — merchant info, 2 TIDs, 2 days left, device & SIM inventory confirmed" },
+  { src: "/cs2/deactivation/Unmapping1.png", annotation: "Deactivation start — Total TIDs: 02, Unmapped: 00 · begin device unmapping" },
+  { src: "/cs2/deactivation/Unmapping5.png", annotation: "Unmap TID — device serial + SIM confirmed, device status marked: Not working" },
+  { src: "/cs2/deactivation/Unmapping10.png", annotation: "All TIDs unmapped successfully 🎉 — upload photos to proceed" },
+  { src: "/cs2/deactivation/Validation1.png", annotation: "Merchant OTP — 05 TIDs confirmed, enter representative contact for verification" },
+  { src: "/cs2/deactivation/Deactivation-confirmation.png", annotation: "Deactivation complete ✓ — confirmation sent to merchant, save copy" },
+];
+
+const servicingSlides = [
+  { src: "/cs2/deactivation/Deactivation1.png", annotation: "Servicing starts — old device removal: ticket with merchant info and TIDs to unmap" },
+  { src: "/cs2/deactivation/Unmapping1.png", annotation: "Phase 1 — Device unmapping: Total TIDs 02, Unmapped 00, begin unmapping" },
+  { src: "/cs2/deactivation/Unmapping5.png", annotation: "Unmap TID — old device serial + SIM confirmed, status logged (working/not working/missing)" },
+  { src: "/cs2/deactivation/Unmapping10.png", annotation: "Old devices unmapped ✓ — phase 1 complete, proceed to install replacement" },
+  { src: "/cs2/installation/Installation2.png", annotation: "Phase 2 — New device installation: map replacement TIDs in the same ticket" },
+  { src: "/cs2/installation/Mapping3.png", annotation: "Scan new device serial — same scan-first mapping flow as standalone installation" },
+  { src: "/cs2/installation/Mapping13.png", annotation: "New devices mapped ✓ — upload photos, verify OTP, close ticket" },
+  { src: "/cs2/installation/Confirmation1.png", annotation: "Servicing complete ✓ — old device out, new device live, confirmation sent" },
+];
+
+const revisitSlides = [
+  { src: "/cs2/edge-cases/Revisit1.png", annotation: "'Issues with the task?' — choose Revisit, select a rescheduled date and reason" },
+  { src: "/cs2/edge-cases/Revisit3.png", annotation: "Date selected: 23/12/2024 — reason: Merchant not present / shop closed" },
+  { src: "/cs2/edge-cases/Revisit5.png", annotation: "Other reason — free text comment captured: 'Merchant not picking up call'" },
+  { src: "/cs2/edge-cases/Revisit7.png", annotation: "Task rescheduled for 23rd December ✓ — reason logged, return to homepage" },
+];
+
+const problematicSlides = [
+  { src: "/cs2/edge-cases/Problematic1.png", annotation: "Problematic — choose from dropdown: technical issue, shop closed, wrong merchant, etc." },
+  { src: "/cs2/edge-cases/Problematic3.png", annotation: "Shop closed permanently — contact name + mobile captured for ops audit trail" },
+  { src: "/cs2/edge-cases/Problematic5.png", annotation: "Task marked as problematic ✓ — reason logged, ticket escalated to central ops" },
+];
+
+const partialTxnSlides = [
+  { src: "/cs2/partial-txns/partial-test-txns1.png", annotation: "Test transaction check — mandatory before proceeding, TID 45432 at 0% (not yet done)" },
+  { src: "/cs2/partial-txns/partial-test-txns3.png", annotation: "Mixed results — 6/8 done at 50%, failed TIDs highlighted for re-attempt or escalation" },
+  { src: "/cs2/partial-txns/partial-test-txns5.png", annotation: "Incomplete task — only 3/5 devices installed, save copy option to preserve progress" },
+];
 
 export default function CaseStudy2({ isOpen, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -26,7 +94,6 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // Sidebar scroll spy
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
@@ -436,114 +503,145 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 </h2>
 
                 <p className="cs-sec p">
-                  The Task Force App replaced the entire fragmented stack with one tool. The design was
-                  built around four key surfaces, each serving a distinct moment in the FE&rsquo;s day
-                  &mdash; from attendance to ticket closure.
+                  The Task Force App replaced the entire fragmented stack with one tool. Every surface was
+                  designed around a real moment in the FE&rsquo;s day &mdash; from the morning attendance
+                  swipe to ticket closure with merchant OTP.
                 </p>
 
-                {/* Surface 1 */}
+                {/* Surface 1 — Get Started */}
                 <div className="cs-v2-surface">
                   <div className="cs-v2-surface-meta">
                     <span className="cs-v2-surface-num">Surface 1</span>
                     <span className="cs-v2-surface-role">Start of day</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Attendance + Day Overview</h3>
+                  <h3 className="cs-v2-surface-title">Login, Attendance &amp; Ticket Homepage</h3>
                   <p className="cs-sec p">
-                    FEs open the app and immediately see their day: total open tickets, new tickets added
-                    since last session, and ticket type breakdown. They mark attendance via a deliberate
-                    swipe gesture before heading out. No more WhatsApp lists. No more paper notes. The
-                    start of work feels intentional.
+                    FEs open the app to a personalised greeting, see their full ticket count and type
+                    breakdown, then mark attendance via a deliberate swipe &mdash; making the start of
+                    the workday feel intentional. The homepage shows every ticket with colour-coded type,
+                    TAT status (Overdue / 1 day left / 2 days left), distance, and estimated travel time.
+                    Device and SIM inventory is visible at a glance, eliminating mismatches before an
+                    agent even leaves for their first visit. No more WhatsApp lists. No more paper notes.
                   </p>
-                  <SurfaceSlideshow
-                    tag="Attendance screen — swipe to start + day overview"
-                    slides={[
-                      "Attendance screen — today's task count, new tickets, type breakdown",
-                      "Swipe-to-start gesture — deliberate action before the workday begins",
-                      "Post-swipe state — day summary confirmed, proceed to task list",
-                    ]}
+                  <PhoneSlideshow
+                    slides={getStartedSlides}
+                    flowLabel="Login → Attendance → Homepage → Inventory"
                   />
                 </div>
 
-                {/* Surface 2 */}
+                {/* Surface 2 — Installation */}
                 <div className="cs-v2-surface">
                   <div className="cs-v2-surface-meta">
                     <span className="cs-v2-surface-num">Surface 2</span>
-                    <span className="cs-v2-surface-role">Task management</span>
+                    <span className="cs-v2-surface-role">Core flow</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Prioritised Ticket Homepage</h3>
+                  <h3 className="cs-v2-surface-title">Installation &mdash; Scan, Map &amp; Close</h3>
                   <p className="cs-sec p">
-                    Every ticket card shows ticket type (Installation / Deactivation / Servicing) with
-                    colour coding, merchant name, distance, estimated travel time, TAT status (Overdue,
-                    1 day left, 2 days left), and a priority flag for urgent installs. Agents sort by
-                    distance or priority &mdash; and plan their day directly in the app. Device and SIM
-                    inventory is visible at a glance, eliminating mismatches between what agents carry and
-                    what they&rsquo;re expected to install.
+                    The biggest workflow unlock. One ticket now contains multiple TIDs. All merchant and
+                    device details are pre-populated &mdash; the agent confirms, scans, and proceeds.
+                    Barcode scanning is the primary input for device serial numbers; manual entry is the
+                    fallback. SIM numbers are manual-first (80&ndash;90% of SIM barcodes are absent in
+                    the field). A celebratory animation plays after each device maps: <em>&ldquo;TID 1 of
+                    2 mapped successfully!&rdquo;</em> &mdash; a moment of delight in a repetitive flow.
                   </p>
-                  <SurfaceSlideshow
-                    tag="Ticket homepage — prioritised task list with TAT, distance & inventory"
-                    slides={[
-                      "Homepage — ticket cards with type, merchant name, distance, TAT status",
-                      "Priority view — urgent tickets flagged, overdue tickets highlighted",
-                      "Inventory panel — available device and SIM stock at a glance",
-                      "Sort & filter — by distance, priority, or ticket type",
-                    ]}
+                  <p className="cs-sec p">
+                    Compliance is baked in &mdash; not bolted on. The feature &amp; device checklist
+                    ensures training is verified. Photo categories (shop board, inside view, device back)
+                    are mandatory and contextual. A single merchant OTP covers all devices in the ticket,
+                    replacing the old per-device WhatsApp flow. The closure screen digitally replaces the
+                    physical DSC form.
+                  </p>
+                  <PhoneSlideshow
+                    slides={installationSlides}
+                    flowLabel="Ticket → Mapping → Checklist → Photos → OTP → Complete"
+                  />
+                  <FlowDiagram
+                    src="/cs2/flows/installation-journey.png"
+                    alt="Full installation flow diagram"
+                    label="Full flow — Installation journey"
                   />
                 </div>
 
-                {/* Surface 3 */}
+                {/* Surface 3 — Deactivation */}
                 <div className="cs-v2-surface">
                   <div className="cs-v2-surface-meta">
                     <span className="cs-v2-surface-num">Surface 3</span>
-                    <span className="cs-v2-surface-role">The core flow</span>
+                    <span className="cs-v2-surface-role">Device removal</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Multi-Device Mapping &mdash; Scan-First</h3>
+                  <h3 className="cs-v2-surface-title">Deactivation &mdash; Unmap &amp; Collect</h3>
                   <p className="cs-sec p">
-                    The biggest workflow unlock. One ticket can now contain multiple TIDs. The FE scans all
-                    devices sequentially within the same ticket, getting one merchant OTP at the end &mdash;
-                    not one per device. For Enterprise merchants with 10+ devices, this reduced installation
-                    time from 60+ minutes to under 10 minutes in pilot.
+                    Deactivation mirrors the installation flow in reverse. The FE scans each device
+                    to confirm identity, marks its status (working / not working / missing), and collects
+                    accessories &mdash; all within a single ticket flow. The device status log creates an
+                    audit trail that directly addresses the 8,000 device loss problem from the old stack.
+                    One merchant OTP at the end covers all unmapped devices, and the completion screen
+                    saves a deactivation copy for records.
                   </p>
-                  <p className="cs-sec p">
-                    All ticket and merchant details are pre-populated &mdash; the agent only confirms, scans,
-                    and proceeds. Barcode scanning is the primary input (faster); manual entry is the
-                    fallback. A small animation plays after each device maps: <em>&ldquo;TID 1 of 2 mapped
-                    successfully!&rdquo;</em> &mdash; a moment of delight in a high-pressure, repetitive flow.
-                  </p>
-                  <SurfaceSlideshow
-                    tag="Device mapping — scan-first, multi-device, progressive disclosure"
-                    slides={[
-                      "Ticket detail — pre-populated merchant and device info, one tap to begin",
-                      "Device scan — barcode scanner view with manual entry fallback",
-                      "TID mapped — celebratory animation state after each device confirmed",
-                      "Multi-device progress — sequential TID mapping within a single ticket",
-                      "SIM scan — secondary flow; manual entry is primary for 80–90% of cases",
-                    ]}
+                  <PhoneSlideshow
+                    slides={deactivationSlides}
+                    flowLabel="Ticket → Unmapping → Photos → OTP → Complete"
+                  />
+                  <FlowDiagram
+                    src="/cs2/flows/deactivation-journey.png"
+                    alt="Full deactivation flow diagram"
+                    label="Full flow — Deactivation journey"
                   />
                 </div>
 
-                {/* Surface 4 */}
+                {/* Surface 4 — Servicing */}
                 <div className="cs-v2-surface">
                   <div className="cs-v2-surface-meta">
                     <span className="cs-v2-surface-num">Surface 4</span>
-                    <span className="cs-v2-surface-role">Compliance + closure</span>
+                    <span className="cs-v2-surface-role">Device swap</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Compliance-First Ticket Closure</h3>
+                  <h3 className="cs-v2-surface-title">Servicing &mdash; Deactivation + Installation in One</h3>
                   <p className="cs-sec p">
-                    The closure flow enforces test transaction screenshots (mandatory), device photos
-                    (contextual &mdash; mandatory for installation, optional for breakfix), merchant OTP
-                    verification, and a digital merchant signature replacing the physical DSC form.
-                    &ldquo;Resolved on call&rdquo; is available as a closure option for minor issues,
-                    eliminating photo friction that research flagged as unnecessary for call-resolved tickets.
+                    Servicing is a device swap: the old device is collected and unmapped, then a replacement
+                    is installed and mapped &mdash; all within the same ticket. The app sequences this
+                    naturally: Phase 1 runs the full deactivation flow (scan to confirm old device,
+                    mark status, collect accessories), and Phase 2 runs the full installation flow (scan
+                    new serial, SIM entry, test transaction, photo upload, merchant OTP). No duplicate data
+                    entry. One ticket closure covers both.
                   </p>
-                  <SurfaceSlideshow
-                    tag="Ticket closure — compliance, digital signature, photo documentation"
-                    slides={[
-                      "Test transaction screenshot — mandatory capture integrated into the flow",
-                      "Photo documentation — mandatory and contextual categories clearly marked",
-                      "Merchant OTP verification — single OTP for all devices in the ticket",
-                      "Digital signature — merchant signs on-screen; replaces physical DSC form",
-                      "Ticket closed — completion state with summary",
-                    ]}
+                  <PhoneSlideshow
+                    slides={servicingSlides}
+                    flowLabel="Deactivation phase → Installation phase → Complete"
+                  />
+                  <FlowDiagram
+                    src="/cs2/flows/servicing-journey.png"
+                    alt="Full servicing flow diagram"
+                    label="Full flow — Servicing journey"
+                  />
+                </div>
+
+                {/* Surface 5 — Edge Cases */}
+                <div className="cs-v2-surface">
+                  <div className="cs-v2-surface-meta">
+                    <span className="cs-v2-surface-num">Surface 5</span>
+                    <span className="cs-v2-surface-role">Exception handling</span>
+                  </div>
+                  <h3 className="cs-v2-surface-title">Edge Cases &mdash; Revisit, Problematic &amp; Partial Txns</h3>
+                  <p className="cs-sec p">
+                    Not every visit goes to plan. These flows handle the three most common exceptions &mdash;
+                    applicable across installation, deactivation, and servicing. Revisit is for merchant
+                    unavailability: the agent selects a reschedule date and reason, which gets logged and
+                    surfaced to the manager. Problematic is for permanent closures or wrong merchant flags,
+                    with contact details captured for an ops audit trail. Partial test transactions handles
+                    the edge case where a multi-device install has incomplete test txns &mdash; showing
+                    per-TID progress and allowing partial closure.
+                  </p>
+
+                  <PhoneSlideshow
+                    slides={revisitSlides}
+                    flowLabel="Edge case — Revisit"
+                  />
+                  <PhoneSlideshow
+                    slides={problematicSlides}
+                    flowLabel="Edge case — Problematic"
+                  />
+                  <PhoneSlideshow
+                    slides={partialTxnSlides}
+                    flowLabel="Edge case — Partial test transactions"
                   />
                 </div>
 

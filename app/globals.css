@@ -507,6 +507,34 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
 .cs-h-tl-text { font-family: var(--body); font-size: 13px; line-height: 1.7; color: var(--cs-muted); }
 .cs-h-tl-text strong { color: var(--cs-text); font-weight: 600; }
 
+/* ── Phone Slideshow (Android mockup) ── */
+.ps-wrap { margin: 32px 0; display: flex; flex-direction: column; align-items: center; }
+.ps-flow-label { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--cs-dim); margin-bottom: 20px; align-self: flex-start; background: var(--cs-bg2); border: 1px solid var(--cs-border); padding: 4px 12px; }
+.ps-stage { display: flex; align-items: center; gap: 20px; }
+.ps-phone { position: relative; width: 256px; background: #131417; border-radius: 40px; padding: 14px 10px 10px; box-shadow: 0 0 0 1px rgba(255,255,255,0.06), inset 0 0 0 1px rgba(255,255,255,0.03), 0 28px 72px rgba(0,0,0,0.38), 0 4px 20px rgba(0,0,0,0.22); }
+.ps-phone::before { content: ''; position: absolute; right: -3px; top: 96px; width: 3px; height: 52px; background: #1c1d21; border-radius: 0 2px 2px 0; }
+.ps-phone::after { content: ''; position: absolute; left: -3px; top: 80px; width: 3px; height: 32px; background: #1c1d21; border-radius: 2px 0 0 2px; box-shadow: 0 44px 0 #1c1d21; }
+.ps-camera { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; background: #1e2028; border-radius: 50%; z-index: 2; box-shadow: 0 0 0 1px rgba(255,255,255,0.04); }
+.ps-screen { border-radius: 28px; overflow: hidden; background: #000; }
+.ps-screen img { width: 100%; height: auto; display: block; }
+.ps-home-bar { width: 72px; height: 4px; background: rgba(255,255,255,0.18); border-radius: 2px; margin: 8px auto 2px; }
+.ps-nav { width: 36px; height: 36px; background: var(--cs-bg); border: 1px solid var(--cs-border); color: var(--cs-text); font-size: 15px; display: flex; align-items: center; justify-content: center; cursor: none; transition: background .15s, color .15s; flex-shrink: 0; }
+.ps-nav:hover:not(:disabled) { background: var(--cs-text); color: var(--cs-bg); }
+.ps-nav:disabled { opacity: .18; }
+.ps-annotation { margin-top: 16px; font-family: var(--body); font-size: 12px; line-height: 1.55; color: var(--cs-muted); text-align: center; max-width: 290px; min-height: 36px; }
+.ps-dots { display: flex; align-items: center; justify-content: center; gap: 5px; margin-top: 10px; flex-wrap: wrap; max-width: 320px; }
+.ps-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cs-border); border: none; cursor: none; padding: 0; transition: background .15s, transform .15s; }
+.ps-dot.active { background: var(--cs-text); transform: scale(1.5); }
+.ps-dot:hover:not(.active) { background: var(--cs-muted); }
+.ps-counter { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--cs-dim); margin-top: 6px; }
+
+/* ── Flow Diagram ── */
+.fd-wrap { margin: 32px 0; border: 1px solid var(--cs-border); overflow: hidden; }
+.fd-label { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--cs-dim); padding: 10px 16px; border-bottom: 1px solid var(--cs-border); background: var(--cs-bg2); }
+.fd-scroll { overflow-x: auto; padding: 24px; -webkit-overflow-scrolling: touch; background: var(--cs-bg2); }
+.fd-scroll img { height: 460px; width: auto; display: block; max-width: none; }
+.fd-hint { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--cs-dim); text-align: center; padding: 8px 16px; border-top: 1px solid var(--cs-border); background: var(--cs-bg); }
+
 @media (max-width: 860px) {
   nav { padding: 16px 24px; }
   .nav-links { display: none; }
