@@ -530,9 +530,15 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
 
 /* ── Flow Diagram ── */
 .fd-wrap { margin: 32px 0; border: 1px solid var(--cs-border); overflow: hidden; }
-.fd-label { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--cs-dim); padding: 10px 16px; border-bottom: 1px solid var(--cs-border); background: var(--cs-bg2); }
-.fd-scroll { overflow-x: auto; padding: 24px; -webkit-overflow-scrolling: touch; background: var(--cs-bg2); }
-.fd-scroll img { height: 460px; width: auto; display: block; max-width: none; }
+.fd-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid var(--cs-border); background: var(--cs-bg2); }
+.fd-label { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--cs-dim); }
+.fd-zoom-controls { display: flex; align-items: center; gap: 8px; }
+.fd-zoom-btn { width: 26px; height: 26px; background: var(--cs-bg); border: 1px solid var(--cs-border); color: var(--cs-text); font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: none; transition: background .15s, color .15s; padding: 0; line-height: 1; }
+.fd-zoom-btn:hover:not(:disabled) { background: var(--cs-text); color: var(--cs-bg); }
+.fd-zoom-btn:disabled { opacity: .2; }
+.fd-zoom-level { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--cs-muted); min-width: 36px; text-align: center; }
+.fd-scroll { overflow: auto; padding: 24px; -webkit-overflow-scrolling: touch; background: var(--cs-bg2); max-height: 72vh; }
+.fd-scroll img { display: block; max-width: none; }
 .fd-hint { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; color: var(--cs-dim); text-align: center; padding: 8px 16px; border-top: 1px solid var(--cs-border); background: var(--cs-bg); }
 
 @media (max-width: 860px) {
