@@ -409,9 +409,8 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
 
 /* Full-width cover above sidebar */
 .cs-v2-cover { max-width: 1040px; margin: 0 auto; padding: 48px 48px 0; }
-.cs-v2-cover-img { width: 100%; aspect-ratio: 16/7; background: var(--cs-bg2); border: 1px solid var(--cs-border); display: flex; align-items: center; justify-content: center; margin-bottom: 40px; position: relative; overflow: hidden; }
-.cs-v2-cover-img::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(0,0,0,.015) 24px,rgba(0,0,0,.015) 25px); }
-.cs-v2-cover-img span { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--cs-dim); position: relative; }
+.cs-v2-cover-img { width: 100%; aspect-ratio: 16/7; background: var(--cs-bg2); border: 1px solid var(--cs-border); margin-bottom: 40px; position: relative; overflow: hidden; }
+.cs-v2-cover-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .cs-v2-cover-head { margin-bottom: 36px; }
 .cs-v2-overview { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--cs-border); }
 .cs-v2-overview-item { padding: 20px 24px; border-right: 1px solid var(--cs-border); }

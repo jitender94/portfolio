@@ -146,7 +146,8 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
           {/* Cover */}
           <div className="cs-v2-cover">
             <div className="cs-v2-cover-img">
-              <span>Task Force App — Cover</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/cs2/hero.png" alt="Field agent holding Task Force App in front of a merchant" />
             </div>
             <div className="cs-v2-cover-head">
               <div className="cs-tag">Razorpay &middot; 2025 &middot; Product Design</div>
