@@ -145,9 +145,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
 
           {/* Cover */}
           <div className="cs-v2-cover">
-            <div className="cs-v2-cover-img">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/cs2/hero.png" alt="Field agent holding Task Force App in front of a merchant" />
+            <div className="cs-v2-cover-img" role="img" aria-label="Field agent holding Task Force App in front of a merchant" style={{ backgroundImage: "url('/cs2/hero.jpg')" }}>
             </div>
             <div className="cs-v2-cover-head">
               <div className="cs-tag">Razorpay &middot; 2025 &middot; Product Design</div>
@@ -161,9 +159,9 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
             </div>
             <div className="cs-v2-overview">
               {[
-                ["Role", "Lead Product Designer"],
-                ["Timeline", "Aug 2024 – May 2025"],
-                ["Platform", "Android Mobile App"],
+                ["Role", "Research · Prototyping · Product Design"],
+                ["Timeline", "3–4 months"],
+                ["Platform", "PWA (Progressive Web App)"],
                 ["Reach", "276 agents, Pan-India"],
               ].map(([k, v]) => (
                 <div className="cs-v2-overview-item" key={k}>
@@ -245,17 +243,227 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
               <div className="cs-sec-v2" id="tf-s02">
                 <div className="cs-sec-v2-label">02 &middot; Research</div>
                 <h2 className="cs-sec-v2-h">
-                  Four research methods. One field visit changed everything.
+                  Context first. Then four research methods that changed the brief entirely.
                 </h2>
 
+                {/* ── CONTEXT ── */}
+                <div className="cs-research-subsect">Context</div>
+
+                {/* Who is a Field Executive */}
+                <h3 className="cs-v2-surface-title" style={{ marginBottom: 12 }}>Who is a Field Executive (FE)?</h3>
                 <p className="cs-sec p">
-                  Before a single wireframe was drawn, I spent time in the field. The research covered
-                  four methods: ethnographic field visits, a structured group discussion with 14 FEs, a call
-                  centre session, and a service centre visit. Each surfaced a distinct layer of the problem.
+                  A field engineer is someone who visits offline merchants to resolve tickets in person.
+                  FEs are assigned to specific areas within a city &mdash; tickets are routed to them
+                  by geography to minimise travel. They get daily targets and report to the city office
+                  each morning to collect the devices they&rsquo;ll need for installations.
+                </p>
+                <div className="cs-personas" style={{ marginBottom: 40 }}>
+                  {[
+                    ["Area-based assignment", "FEs cover specific zones. Tickets are allocated by pincode to minimise travel."],
+                    ["Daily targets", "Each FE receives a ticket list and collects devices from the city office every morning."],
+                    ["EOD reporting", "At end of day, FEs return to the city office, report back to their TL, and return collected devices."],
+                  ].map(([name, sub]) => (
+                    <div key={name} className="cs-persona">
+                      <div className="cs-persona-name">{name}</div>
+                      <div className="cs-persona-sub">{sub}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* What kind of requests */}
+                <h3 className="cs-v2-surface-title" style={{ marginBottom: 16 }}>What kind of requests do we get today?</h3>
+                <div className="cs-v2-request-types">
+                  {([
+                    ["01", "Installation", "New devices to be deployed at a merchant store.", "/cs2/research/Installation.png"],
+                    ["02", "Deactivation", "Device deactivation and collection from the merchant store.", "/cs2/research/Deactivation.png"],
+                    ["03", "Servicing", "Fixing of devices, including full device replacement.", "/cs2/research/Servicing.png"],
+                  ] as [string, string, string, string][]).map(([num, title, desc, img]) => (
+                    <div key={num} className="cs-v2-request-card">
+                      <div className="cs-v2-request-num">{num}</div>
+                      <div className="cs-v2-request-title">{title}</div>
+                      <div className="cs-v2-request-desc">{desc}</div>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img} alt={title + " illustration"} className="cs-v2-request-illus" />
+                    </div>
+                  ))}
+                </div>
+
+                {/* How do we get these requests — flow diagram */}
+                <h3 className="cs-v2-surface-title" style={{ marginBottom: 16 }}>How do we get these requests?</h3>
+                <div className="cs-v2-flow-wrap">
+                  <div className="cs-v2-flow-row">
+                    <div className="cs-v2-flow-col">
+                      <div className="cs-v2-flow-node">
+                        <div className="cs-v2-flow-node-title">Enquiry from merchants</div>
+                      </div>
+                      <div className="cs-v2-flow-sub-items">
+                        <div className="cs-v2-flow-sub">Installation (Bank / direct)</div>
+                        <div className="cs-v2-flow-sub">Deinstallation / servicing (Service centre)</div>
+                      </div>
+                    </div>
+                    <div className="cs-v2-flow-arr">&#8594;</div>
+                    <div className="cs-v2-flow-col">
+                      <div className="cs-v2-flow-node">
+                        <div className="cs-v2-flow-node-title" style={{ fontWeight: 700 }}>Setup team</div>
+                        <div className="cs-v2-flow-node-sub">(handles onboarding)</div>
+                      </div>
+                    </div>
+                    <div className="cs-v2-flow-arr">&#8594;</div>
+                    <div className="cs-v2-flow-col">
+                      <div className="cs-v2-flow-node">
+                        <div className="cs-v2-flow-node-title" style={{ fontWeight: 700 }}>Central team</div>
+                        <div className="cs-v2-flow-node-sub">(Manages tickets: creation / allocation)</div>
+                      </div>
+                      <div className="cs-v2-flow-sub-items">
+                        <div className="cs-v2-flow-sub">Portal (ticket creation, manage, inventory)</div>
+                      </div>
+                    </div>
+                    <div className="cs-v2-flow-arr">&#8594;</div>
+                    <div className="cs-v2-flow-col">
+                      <div className="cs-v2-flow-node cs-v2-flow-node-hl">
+                        <div className="cs-v2-flow-node-title">Field Executive</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current journey of a Field Executive */}
+                <h3 className="cs-v2-surface-title" style={{ marginBottom: 16 }}>Current journey of a Field Executive</h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/cs2/research/Current journey.png" alt="Current journey of a Field Executive" className="cs-v2-journey-img" />
+
+                {/* ── INSIGHTS ── */}
+                <div className="cs-research-subsect">Research Insights</div>
+
+                {/* Insight 01 */}
+                <div className="cs-v2-insight cs-v2-insight-dual">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 01</div>
+                    <div className="cs-v2-insight-title">FE day planning: receiving and prioritising tickets is a cumbersome process</div>
+                    <p className="cs-v2-insight-text">
+                      FEs receive ticket lists as dense, unformatted WhatsApp messages from their team lead.
+                      They then manually copy this onto paper and re-sort by pincode to create their own route plan.
+                      Any new tickets added mid-day disrupted the entire plan.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-1a.jpg" alt="WhatsApp messages with dense unformatted ticket list" className="cs-v2-insight-img" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-1b.jpg" alt="Handwritten paper list of merchants and pincodes" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 02 */}
+                <div className="cs-v2-insight cs-v2-insight-rev">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 02</div>
+                    <div className="cs-v2-insight-title">The process is not completely digital &mdash; physical service forms are still in use</div>
+                    <p className="cs-v2-insight-text">
+                      For every merchant visit, FEs filled out a physical Razorpay service form by hand &mdash;
+                      merchant name, address, device serial numbers, signatures. These were submitted at EOD
+                      and entered manually into the system, creating delays and transcription errors.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-2.jpg" alt="Physical Razorpay service form filled by hand at merchant site" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 03 */}
+                <div className="cs-v2-insight">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 03</div>
+                    <div className="cs-v2-insight-title">Merchant training is not given efficiently</div>
+                    <p className="cs-v2-insight-text">
+                      Device training was supposed to be mandatory at every installation. In practice, FEs were under
+                      time pressure and training was often rushed or skipped &mdash; especially for breakfix visits.
+                      Merchants were left operating devices they didn&rsquo;t fully understand.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-3.jpg" alt="Field executive showing a merchant how to use the device" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 04 */}
+                <div className="cs-v2-insight cs-v2-insight-rev">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 04</div>
+                    <div className="cs-v2-insight-title">80% of tickets are retail &mdash; but the 20% enterprise takes disproportionate time</div>
+                    <p className="cs-v2-insight-text">
+                      80% of tickets are retail merchants (1&ndash;5 TIDs). 20% are enterprise and mid-market (5+ TIDs).
+                      The enterprise segment drove the most friction: one ticket could require 5&ndash;15 separate
+                      WhatsApp bot sessions and physical form copies.
+                    </p>
+                  </div>
+                  <div className="cs-v2-pie">
+                    <div>
+                      <div className="cs-v2-pie-pct">80%</div>
+                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
+                        <div className="cs-v2-pie-bar-fill" style={{ width: "80%", height: "100%", background: "#1657d4" }} />
+                      </div>
+                      <div className="cs-v2-pie-label">Retail &mdash; 1 to 5 TIDs</div>
+                    </div>
+                    <div>
+                      <div className="cs-v2-pie-pct">20%</div>
+                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
+                        <div className="cs-v2-pie-bar-fill" style={{ width: "20%", height: "100%", background: "#93c5fd" }} />
+                      </div>
+                      <div className="cs-v2-pie-label">Enterprise &amp; mid-market &mdash; 5+ TIDs</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insight 05 */}
+                <div className="cs-v2-insight">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 05</div>
+                    <div className="cs-v2-insight-title">Over-reliance on the WhatsApp bot &mdash; which only worked 50% of the time</div>
+                    <p className="cs-v2-insight-text">
+                      The bot frequently displayed &ldquo;unable to support currently.&rdquo; It couldn&rsquo;t
+                      collect data, didn&rsquo;t support un-mapping (deactivation), and had serious security
+                      concerns. Every bot failure meant 45+ minutes on the call centre. FEs had stopped trusting it.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-5.jpg" alt="Razorpay POS WhatsApp support bot showing unable to support error" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 06 */}
+                <div className="cs-v2-insight cs-v2-insight-stack">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 06</div>
+                    <div className="cs-v2-insight-title">The Asti app (current solution) had fundamental experience and capability gaps</div>
+                    <p className="cs-v2-insight-text">
+                      Asti was a paid 3rd-party product &mdash; Razorpay had limited control over its roadmap.
+                      It didn&rsquo;t support multiple device installation or deactivation. FEs faced confusing
+                      user journeys, poor validation, poor error handling, a steep learning curve, and no iOS support.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs cs-v2-insight-imgs-wide">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-6a.jpg" alt="Asti app — Installation flow with fragmented fields" className="cs-v2-insight-img" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-6b.jpg" alt="Asti app — Break Fix flow" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* ── METHODS ── */}
+                <div className="cs-research-subsect">Research Methods</div>
+
+                <p className="cs-sec p">
+                  Before a single wireframe was drawn, I spent time in the field. Four methods &mdash;
+                  ethnographic visits, a structured group discussion with 14 FEs, a call centre session,
+                  and a service centre visit &mdash; each surfaced a distinct layer of the problem.
                 </p>
 
                 <div className="cs-v2-callout">
-                  <div className="cs-v2-callout-label">Field visit observation — Bengaluru</div>
+                  <div className="cs-v2-callout-label">Field visit observation &mdash; Bengaluru</div>
                   <div className="cs-v2-callout-text">
                     Every morning, agents received a WhatsApp message from their team lead &mdash; a list of
                     merchant names, ticket numbers, and pincodes. They copied this onto paper. Sorted by
@@ -509,6 +717,116 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   designed around a real moment in the FE&rsquo;s day &mdash; from the morning attendance
                   swipe to ticket closure with merchant OTP.
                 </p>
+
+                {/* ── Screen count hero + marquee ── */}
+                <div className="cs-v2-screen-hero">
+                  <div className="cs-v2-screen-stats">
+                    {[
+                      ["60+", "Screens designed"],
+                      ["7",   "Distinct flows"],
+                      ["276", "Agents shipped to"],
+                    ].map(([num, label]) => (
+                      <div key={label} className="cs-v2-screen-stat">
+                        <div className="cs-v2-screen-stat-num">{num}</div>
+                        <div className="cs-v2-screen-stat-label">{label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Row 1 — left to right */}
+                  <div className="cs-v2-marquee-wrap">
+                    <div className="cs-v2-marquee cs-v2-marquee-fwd">
+                      {([
+                        "/cs2/get-started/1.png",
+                        "/cs2/get-started/2.png",
+                        "/cs2/get-started/3.png",
+                        "/cs2/get-started/4.png",
+                        "/cs2/get-started/5.png",
+                        "/cs2/installation/Installation1.png",
+                        "/cs2/installation/Installation2.png",
+                        "/cs2/installation/Mapping3.png",
+                        "/cs2/installation/Mapping4.png",
+                        "/cs2/installation/Mapping6.png",
+                        "/cs2/installation/Mapping13.png",
+                        "/cs2/installation/Checklist1.png",
+                        "/cs2/installation/Upload1.png",
+                        "/cs2/installation/Validation1.png",
+                        "/cs2/installation/Confirmation1.png",
+                      ] as string[]).concat([
+                        "/cs2/get-started/1.png",
+                        "/cs2/get-started/2.png",
+                        "/cs2/get-started/3.png",
+                        "/cs2/get-started/4.png",
+                        "/cs2/get-started/5.png",
+                        "/cs2/installation/Installation1.png",
+                        "/cs2/installation/Installation2.png",
+                        "/cs2/installation/Mapping3.png",
+                        "/cs2/installation/Mapping4.png",
+                        "/cs2/installation/Mapping6.png",
+                        "/cs2/installation/Mapping13.png",
+                        "/cs2/installation/Checklist1.png",
+                        "/cs2/installation/Upload1.png",
+                        "/cs2/installation/Validation1.png",
+                        "/cs2/installation/Confirmation1.png",
+                      ]).map((src, i) => (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img key={i} src={src} alt="" className="cs-v2-marquee-img" />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Row 2 — right to left */}
+                  <div className="cs-v2-marquee-wrap">
+                    <div className="cs-v2-marquee cs-v2-marquee-rev">
+                      {([
+                        "/cs2/deactivation/Deactivation1.png",
+                        "/cs2/deactivation/Unmapping1.png",
+                        "/cs2/deactivation/Unmapping5.png",
+                        "/cs2/deactivation/Unmapping10.png",
+                        "/cs2/deactivation/Validation1.png",
+                        "/cs2/deactivation/Deactivation-confirmation.png",
+                        "/cs2/edge-cases/Revisit1.png",
+                        "/cs2/edge-cases/Revisit3.png",
+                        "/cs2/edge-cases/Revisit5.png",
+                        "/cs2/edge-cases/Revisit7.png",
+                        "/cs2/edge-cases/Problematic1.png",
+                        "/cs2/edge-cases/Problematic3.png",
+                        "/cs2/edge-cases/Problematic5.png",
+                        "/cs2/partial-txns/partial-test-txns1.png",
+                        "/cs2/partial-txns/partial-test-txns3.png",
+                        "/cs2/partial-txns/partial-test-txns5.png",
+                        "/cs2/get-started/7.png",
+                        "/cs2/get-started/8.png",
+                        "/cs2/installation/Upload8.png",
+                        "/cs2/installation/Validation3.png",
+                      ] as string[]).concat([
+                        "/cs2/deactivation/Deactivation1.png",
+                        "/cs2/deactivation/Unmapping1.png",
+                        "/cs2/deactivation/Unmapping5.png",
+                        "/cs2/deactivation/Unmapping10.png",
+                        "/cs2/deactivation/Validation1.png",
+                        "/cs2/deactivation/Deactivation-confirmation.png",
+                        "/cs2/edge-cases/Revisit1.png",
+                        "/cs2/edge-cases/Revisit3.png",
+                        "/cs2/edge-cases/Revisit5.png",
+                        "/cs2/edge-cases/Revisit7.png",
+                        "/cs2/edge-cases/Problematic1.png",
+                        "/cs2/edge-cases/Problematic3.png",
+                        "/cs2/edge-cases/Problematic5.png",
+                        "/cs2/partial-txns/partial-test-txns1.png",
+                        "/cs2/partial-txns/partial-test-txns3.png",
+                        "/cs2/partial-txns/partial-test-txns5.png",
+                        "/cs2/get-started/7.png",
+                        "/cs2/get-started/8.png",
+                        "/cs2/installation/Upload8.png",
+                        "/cs2/installation/Validation3.png",
+                      ]).map((src, i) => (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img key={i} src={src} alt="" className="cs-v2-marquee-img" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
 
                 {/* Surface 1 — Get Started */}
                 <div className="cs-v2-surface">

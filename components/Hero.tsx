@@ -9,11 +9,10 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.8, delay, ease: [0.23, 1, 0.32, 1] as const },
 });
 
-const COMPANIES = [
-  "Razorpay",
-  "Company Name",
-  "Company Name",
-  "Company Name",
+const COMPANIES: { name: string; logo: string }[] = [
+  { name: "Razorpay", logo: "/homepage/Razorpay.png" },
+  { name: "PayU",     logo: "/homepage/PayU.png"     },
+  { name: "ADP",      logo: "/homepage/ADP.png"      },
 ];
 
 export default function Hero() {
@@ -173,8 +172,11 @@ export default function Hero() {
         <motion.div className="logos-strip" {...fadeUp(0.65)}>
           <div className="logos-strip-label">Companies I&apos;ve worked with</div>
           <div className="logos-row">
-            {COMPANIES.map((name, i) => (
-              <span key={i} className="logo-item">{name}</span>
+            {COMPANIES.map(({ name, logo }, i) => (
+              <div key={i} className="logo-item">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={logo} alt={name} className="logo-img" />
+              </div>
             ))}
           </div>
         </motion.div>
