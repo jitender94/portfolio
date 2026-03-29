@@ -2,39 +2,27 @@
 
 import { motion } from "framer-motion";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
-};
-
 export default function About() {
   return (
     <section id="about">
       <motion.div
-        className="section-label"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
+        className="section-scroll-wrap"
+        initial={{ opacity: 0, y: 40, scale: 0.97, filter: "blur(4px)" }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
-        About
-      </motion.div>
-      <motion.div
-        className="section-title"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-      >
+      <div className="section-label">About</div>
+      <div className="section-title">
         A designer who<br /><em>builds things.</em>
-      </motion.div>
+      </div>
       <div className="about-grid">
         <motion.div
           className="about-text"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, delay: 0.15 }}
         >
           <p>
             I&apos;m a <strong>Senior Product Designer at Razorpay</strong>, where I work on
@@ -56,16 +44,21 @@ export default function About() {
             solved. I don&apos;t wait for someone else to fix the problem.
           </p>
           <p>
+            Outside work, I&apos;m a musician — I play guitar, write songs, sing, and compose.
+            Music and design share more than I expected. Both are about arranging elements until
+            something resonates.
+          </p>
+          <p>
             Currently based in <strong>Bengaluru</strong>. Open to senior IC roles and design
             leadership at product-first companies.
           </p>
         </motion.div>
         <motion.div
           className="about-sidebar"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, delay: 0.25 }}
         >
           <div className="sidebar-block">
             <div className="sidebar-label">Experience</div>
@@ -106,6 +99,34 @@ export default function About() {
             </div>
           </div>
           <div className="sidebar-block">
+            <div className="sidebar-label music-label">
+              <span className="eq-bars" aria-hidden="true">
+                <span className="eq-bar" />
+                <span className="eq-bar" />
+                <span className="eq-bar" />
+                <span className="eq-bar" />
+                <span className="eq-bar" />
+              </span>
+              When not designing
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Guitar</span>
+              <span className="sidebar-detail">Lead instrument</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Vocalist</span>
+              <span className="sidebar-detail">Lead &amp; harmonies</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Songwriter</span>
+              <span className="sidebar-detail">Original compositions</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Music composition</span>
+              <span className="sidebar-detail">Film &amp; ambient</span>
+            </div>
+          </div>
+          <div className="sidebar-block">
             <div className="sidebar-label">Let&apos;s talk</div>
             <div className="contact-list">
               <a href="mailto:jitenderjeet95@gmail.com" className="contact-row">
@@ -128,6 +149,7 @@ export default function About() {
           </div>
         </motion.div>
       </div>
+      </motion.div>
     </section>
   );
 }

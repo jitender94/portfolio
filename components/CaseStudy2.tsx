@@ -10,8 +10,8 @@ interface Props {
   onClose: () => void;
 }
 
-const SEC_IDS = ["tf-s01", "tf-s02", "tf-s03", "tf-s04", "tf-s05", "tf-s06"];
-const NAV_LABELS = ["Brief", "Research", "Problem", "Ideation", "Solution", "Outcome"];
+const SEC_IDS = ["tf-s01", "tf-s02", "tf-s03", "tf-s035", "tf-s04", "tf-s05", "tf-s06"];
+const NAV_LABELS = ["Initial brief", "Research", "Problem", "Defining success", "Ideation", "Solution", "Outcome"];
 
 /* ── Slide data ── */
 
@@ -52,14 +52,21 @@ const deactivationSlides = [
 ];
 
 const servicingSlides = [
-  { src: "/cs2/deactivation/Deactivation1.png", annotation: "Servicing starts — old device removal: ticket with merchant info and TIDs to unmap" },
-  { src: "/cs2/deactivation/Unmapping1.png", annotation: "Phase 1 — Device unmapping: Total TIDs 02, Unmapped 00, begin unmapping" },
+  { src: "/cs2/servicing/Servicing1.png", annotation: "Servicing ticket — merchant info and TIDs to swap, phase 1 begins" },
+  { src: "/cs2/servicing/Servicing2.png", annotation: "Servicing flow — old device removal and replacement sequenced in one ticket" },
   { src: "/cs2/deactivation/Unmapping5.png", annotation: "Unmap TID — old device serial + SIM confirmed, status logged (working/not working/missing)" },
   { src: "/cs2/deactivation/Unmapping10.png", annotation: "Old devices unmapped ✓ — phase 1 complete, proceed to install replacement" },
   { src: "/cs2/installation/Installation2.png", annotation: "Phase 2 — New device installation: map replacement TIDs in the same ticket" },
   { src: "/cs2/installation/Mapping3.png", annotation: "Scan new device serial — same scan-first mapping flow as standalone installation" },
-  { src: "/cs2/installation/Mapping13.png", annotation: "New devices mapped ✓ — upload photos, verify OTP, close ticket" },
-  { src: "/cs2/installation/Confirmation1.png", annotation: "Servicing complete ✓ — old device out, new device live, confirmation sent" },
+  { src: "/cs2/installation/Mapping13.png", annotation: "New devices mapped ✓ — proceed to photo documentation" },
+  { src: "/cs2/installation/Upload1.png", annotation: "Photo upload — FE captures device placement, serial label, and merchant setup" },
+  { src: "/cs2/installation/Upload4.png", annotation: "Uploading photos — multiple angles required before ticket can be closed" },
+  { src: "/cs2/installation/Upload8.png", annotation: "Photos uploaded ✓ — move to OTP verification with merchant" },
+  { src: "/cs2/installation/Validation1.png", annotation: "OTP verification — merchant receives OTP to confirm device is live and working" },
+  { src: "/cs2/installation/Validation3.png", annotation: "OTP verified ✓ — transaction confirmed, device active at merchant site" },
+  { src: "/cs2/installation/Checklist1.png", annotation: "Pre-closure checklist — FE confirms all steps: SIM active, test txn passed, photos done" },
+  { src: "/cs2/installation/Checklist2.png", annotation: "Checklist complete ✓ — all items signed off, ready to close ticket" },
+  { src: "/cs2/servicing/Servicing completed.png", annotation: "Servicing complete ✓ — old device out, new device live, confirmation sent" },
 ];
 
 const revisitSlides = [
@@ -95,9 +102,45 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  /* ── Scroll-triggered entrance animations ── */
+  useEffect(() => {
+    if (!isOpen) return;
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    let observer: IntersectionObserver | undefined;
+    // Delay until slide-in starts
+    const timer = window.setTimeout(() => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("is-visible");
+          });
+        },
+        { root: overlay, threshold: 0.01, rootMargin: "0px 0px 0px 0px" }
+      );
+      const targets = overlay.querySelectorAll(
+        ".cs-sec-v2, .cs-v2-insight, .cs-v2-surface, .cs-stat-hero-row, .cs-v2-persp-grid, .cs-v2-directions"
+      );
+      targets.forEach((el) => observer!.observe(el));
+    }, 300);
+    return () => {
+      window.clearTimeout(timer);
+      observer?.disconnect();
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
+    const getOffsetTop = (el: HTMLElement, container: HTMLElement): number => {
+      let top = 0;
+      let cur: HTMLElement | null = el;
+      while (cur && cur !== container) {
+        top += cur.offsetTop;
+        cur = cur.offsetParent as HTMLElement | null;
+      }
+      return top;
+    };
     const onScroll = () => {
       const scrollTop = overlay.scrollTop;
       const headerH = overlay.querySelector<HTMLElement>(".ol-header")?.offsetHeight ?? 57;
@@ -105,10 +148,13 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
       let current = SEC_IDS[0];
       SEC_IDS.forEach((id) => {
         const el = document.getElementById(id);
-        if (el && el.offsetTop - offset <= scrollTop) current = id;
+        if (el && getOffsetTop(el, overlay) - offset <= scrollTop) current = id;
       });
-      overlay.querySelectorAll<HTMLElement>(".cs-v2-navitem").forEach((item) => {
-        item.classList.toggle("active", item.getAttribute("data-sec") === current);
+      overlay.querySelectorAll<HTMLElement>(".cs-prog-step").forEach((step) => {
+        const sec = step.getAttribute("data-sec") ?? "";
+        step.classList.remove("current", "done");
+        if (sec === current) step.classList.add("current");
+        else if (SEC_IDS.indexOf(sec) < SEC_IDS.indexOf(current)) step.classList.add("done");
       });
     };
     overlay.addEventListener("scroll", onScroll);
@@ -120,7 +166,18 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
     const sec = document.getElementById(secId);
     if (!overlay || !sec) return;
     const headerH = overlay.querySelector<HTMLElement>(".ol-header")?.offsetHeight ?? 57;
-    overlay.scrollTo({ top: sec.offsetTop - headerH - 32, behavior: "smooth" });
+    const progH = overlay.querySelector<HTMLElement>(".cs-progress")?.offsetHeight ?? 36;
+    // Walk up offsetParent chain to get true offset within overlay
+    let top = 0;
+    let cur: HTMLElement | null = sec;
+    while (cur && cur !== overlay) { top += cur.offsetTop; cur = cur.offsetParent as HTMLElement | null; }
+    overlay.scrollTo({ top: top - headerH - progH - 16, behavior: "smooth" });
+    // Force-reveal all animated elements in this section immediately so
+    // content is never invisible when navigating via the progress nav
+    sec.classList.add("is-visible");
+    sec.querySelectorAll<HTMLElement>(
+      ".cs-v2-surface, .cs-v2-insight, .cs-stat-hero-row, .cs-v2-persp-grid, .cs-v2-directions"
+    ).forEach((el) => el.classList.add("is-visible"));
   };
 
   return (
@@ -145,7 +202,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
 
           {/* Cover */}
           <div className="cs-v2-cover">
-            <div className="cs-v2-cover-img" role="img" aria-label="Field agent holding Task Force App in front of a merchant" style={{ backgroundImage: "url('/cs2/hero.jpg')" }}>
+            <div className="cs-v2-cover-img" role="img" aria-label="Field agent holding Task Force App in front of a merchant" style={{ backgroundImage: "url('/cs2/hero-new.jpg')" }}>
             </div>
             <div className="cs-v2-cover-head">
               <div className="cs-tag">Razorpay &middot; 2025 &middot; Product Design</div>
@@ -153,7 +210,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
               <p className="cs-v2-hook">
                 276 field agents were planning 10&ndash;15 merchant visits a day off WhatsApp messages
                 and paper notes, using a bot that worked half the time and a vendor stack costing
-                ₹7 lakh a month. We rebuilt the entire field operations experience from scratch &mdash;
+                ₹7 lakh a month. We rebuilt the entire field operations experience from scratch ,
                 and 40% of agents adopted it in a single day.
               </p>
             </div>
@@ -172,79 +229,103 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
             </div>
           </div>
 
-          {/* Sidebar + Content */}
-          <div className="cs-v2-wrap">
-            {/* Sticky sidebar */}
-            <aside className="cs-v2-sidebar">
-              <div className="cs-v2-sidenav-label">Contents</div>
-              <ul className="cs-v2-sidenav">
-                {NAV_LABELS.map((label, i) => (
-                  <li
-                    key={i}
-                    className="cs-v2-navitem"
-                    data-sec={SEC_IDS[i]}
-                    onClick={() => scrollTo(SEC_IDS[i])}
-                  >
-                    <span className="cs-v2-navnum">0{i + 1}</span>
-                    {label}
-                  </li>
-                ))}
-              </ul>
-            </aside>
+          {/* Sticky section progress nav — matches CS1 style */}
+          <div className="cs-progress">
+            {NAV_LABELS.map((label, i) => (
+              <div
+                key={i}
+                className="cs-prog-step"
+                data-sec={SEC_IDS[i]}
+                onClick={() => scrollTo(SEC_IDS[i])}
+              >
+                0{i + 1} {label}
+              </div>
+            ))}
+          </div>
 
+          {/* Content */}
+          <div className="cs-v2-wrap">
             {/* Main content */}
             <div className="cs-v2-main">
 
-              {/* ── 01 · Brief ── */}
+              {/* ── 01 · Initial brief ── */}
               <div className="cs-sec-v2" id="tf-s01">
-                <div className="cs-sec-v2-label">01 &middot; Brief</div>
+                <div className="cs-sec-v2-label">01 &middot; Initial brief</div>
                 <h2 className="cs-sec-v2-h">
-                  Field agents were the backbone of merchant onboarding.
-                  Their tools were failing them.
+                  Field agents are the backbone of POS merchant onboarding. Their tools were failing them.
                 </h2>
-
                 <p className="cs-sec p">
-                  Razorpay POS deploys payment terminals across thousands of merchants in India. Behind every
-                  installation, deactivation, and repair is a Field Engineer &mdash; a frontline contractor
-                  managing 10&ndash;15 merchant visits per day, navigating broken tools, paper-based
-                  processes, and an unreliable WhatsApp bot that worked roughly half the time.
+                  The initial product brief surfaced systemic failures across analytics, operations, and
+                  business metrics. Four critical gaps were identified — each compounding the others,
+                  and each entirely preventable with the right tool.
                 </p>
 
-                <div className="cs-stat-hero-row">
-                  {[
-                    ["60+ min", "Per enterprise installation due to fragmented, manual workflows"],
-                    ["₹7L/month", "Vendor cost for old Asti + TAMS stack — both underperforming"],
-                    ["8,000", "Devices lost with zero validation or trackability — ₹1 Cr P&L hit"],
-                    ["~20%", "Of all field ticket service violations absorbed by Customer Support"],
-                  ].map(([num, label]) => (
-                    <div className="cs-stat-hero" key={num}>
-                      <div className="cs-stat-hero-num">{num}</div>
-                      <div className="cs-stat-hero-label">{label}</div>
-                    </div>
-                  ))}
+                <div className="cs-brief-cards">
+                  {/* Card 1 */}
+                  <div className="cs-brief-card">
+                    <svg className="cs-brief-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                      <circle cx="20" cy="20" r="15" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M20 12v8l5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    <div className="cs-brief-stat">60+ min</div>
+                    <div className="cs-brief-title">Installation bottlenecks</div>
+                    <div className="cs-brief-desc">Enterprise installations were taking 60+ minutes. Fragmented workflows across tools meant agents re-entered data multiple times with no single source of truth.</div>
+                  </div>
+                  {/* Card 2 */}
+                  <div className="cs-brief-card">
+                    <svg className="cs-brief-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                      <rect x="6" y="12" width="28" height="18" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M14 12V10a6 6 0 0112 0v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M20 22v-4M18 20h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    <div className="cs-brief-stat">₹7L/month</div>
+                    <div className="cs-brief-title">Vendor dependency</div>
+                    <div className="cs-brief-desc">The Asti + TAMS stack cost ₹7L/month and chronically underperformed. The WhatsApp bot fallback worked ~50% of the time — agents had stopped trusting both tools.</div>
+                  </div>
+                  {/* Card 3 */}
+                  <div className="cs-brief-card">
+                    <svg className="cs-brief-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                      <rect x="10" y="8" width="20" height="26" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M15 16h10M15 21h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      <circle cx="27" cy="29" r="5" fill="var(--cs-bg)" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M27 27v2.5l1.5 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                    </svg>
+                    <div className="cs-brief-stat">8,000</div>
+                    <div className="cs-brief-title">Zero device accountability</div>
+                    <div className="cs-brief-desc">8,000 devices left merchant premises with no validation or trackability — resulting in a ₹1 Cr P&L hit. No audit trail. No way to know where devices went.</div>
+                  </div>
+                  {/* Card 4 */}
+                  <div className="cs-brief-card">
+                    <svg className="cs-brief-icon" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                      <path d="M20 8C13.37 8 8 12.48 8 18c0 3.18 1.74 6.01 4.5 7.9V30l4.5-2.5c1 .3 2 .5 3 .5 6.63 0 12-4.48 12-10S26.63 8 20 8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                      <path d="M15 18h10M15 22h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    <div className="cs-brief-stat">7.5%</div>
+                    <div className="cs-brief-title">Post-closure service violations</div>
+                    <div className="cs-brief-desc">7.5% of closed tickets had service violations raised within 7 days — a signal that closures were happening without proper verification or merchant sign-off.</div>
+                  </div>
                 </div>
 
-                <p className="cs-sec p">
-                  Two vendors powered the old stack: SAP B1 via TAMS for backend, and Asti for frontend.
-                  Asti had persistent technical issues &mdash; agents stopped trusting it. The fallback was
-                  a WhatsApp bot with a ~50% success rate. When it failed, agents called Customer Support,
-                  adding 45+ minutes to what should have been a 5-minute task.
-                </p>
-
-                <p className="cs-sec p">
-                  Each agent visit cost Razorpay <strong>₹280</strong>. Repeat visits &mdash; caused
-                  entirely by tool failures &mdash; compounded fast. Merchant CSAT after field resolution
-                  hovered at ~80%, with no mechanism to explain device issues or verify installations were
-                  done correctly. Devices left merchant premises without any trackability check.
-                </p>
+                {/* Additional context — operational issues */}
+                <ul className="cs-brief-points">
+                  <li>The old stack ran on two vendors: SAP B1 via TAMS (backend) and Asti (frontend). Asti had persistent technical issues — agents stopped trusting it entirely.</li>
+                  <li>The WhatsApp bot fallback worked ~50% of the time. When it failed, agents called Customer Support, adding 45+ minutes to what should have been a 5-minute task.</li>
+                  <li>Each agent visit cost Razorpay <strong>₹280</strong>. Repeat visits caused purely by tool failures compounded directly into P&amp;L.</li>
+                  <li>Merchant CSAT after field resolution hovered at ~80%, with no mechanism to verify installations or explain device issues. Devices left premises without any trackability check.</li>
+                </ul>
               </div>
 
               {/* ── 02 · Research ── */}
               <div className="cs-sec-v2" id="tf-s02">
                 <div className="cs-sec-v2-label">02 &middot; Research</div>
                 <h2 className="cs-sec-v2-h">
-                  Context first. Then four research methods that changed the brief entirely.
+                  Going to the field made it clear - the problem wasn&rsquo;t just the tools. It was the entire process.
                 </h2>
+                <p className="cs-sec p">
+                  The PRD gave us the what. I needed the why. So before locking any problem statement,
+                  I went to the field — shadowed agents, ran group discussions, sat with the call centre.
+                  What I found changed the entire framing.
+                </p>
 
                 {/* ── CONTEXT ── */}
                 <div className="cs-research-subsect">Context</div>
@@ -253,7 +334,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 <h3 className="cs-v2-surface-title" style={{ marginBottom: 12 }}>Who is a Field Executive (FE)?</h3>
                 <p className="cs-sec p">
                   A field engineer is someone who visits offline merchants to resolve tickets in person.
-                  FEs are assigned to specific areas within a city &mdash; tickets are routed to them
+                  FEs are assigned to specific areas within a city tickets are routed to them
                   by geography to minimise travel. They get daily targets and report to the city office
                   each morning to collect the devices they&rsquo;ll need for installations.
                 </p>
@@ -332,152 +413,24 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/cs2/research/Current journey.png" alt="Current journey of a Field Executive" className="cs-v2-journey-img" />
 
-                {/* ── INSIGHTS ── */}
-                <div className="cs-research-subsect">Research Insights</div>
-
-                {/* Insight 01 */}
-                <div className="cs-v2-insight cs-v2-insight-dual">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 01</div>
-                    <div className="cs-v2-insight-title">FE day planning: receiving and prioritising tickets is a cumbersome process</div>
-                    <p className="cs-v2-insight-text">
-                      FEs receive ticket lists as dense, unformatted WhatsApp messages from their team lead.
-                      They then manually copy this onto paper and re-sort by pincode to create their own route plan.
-                      Any new tickets added mid-day disrupted the entire plan.
-                    </p>
-                  </div>
-                  <div className="cs-v2-insight-imgs">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-1a.jpg" alt="WhatsApp messages with dense unformatted ticket list" className="cs-v2-insight-img" />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-1b.jpg" alt="Handwritten paper list of merchants and pincodes" className="cs-v2-insight-img" />
-                  </div>
-                </div>
-
-                {/* Insight 02 */}
-                <div className="cs-v2-insight cs-v2-insight-rev">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 02</div>
-                    <div className="cs-v2-insight-title">The process is not completely digital &mdash; physical service forms are still in use</div>
-                    <p className="cs-v2-insight-text">
-                      For every merchant visit, FEs filled out a physical Razorpay service form by hand &mdash;
-                      merchant name, address, device serial numbers, signatures. These were submitted at EOD
-                      and entered manually into the system, creating delays and transcription errors.
-                    </p>
-                  </div>
-                  <div className="cs-v2-insight-imgs">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-2.jpg" alt="Physical Razorpay service form filled by hand at merchant site" className="cs-v2-insight-img" />
-                  </div>
-                </div>
-
-                {/* Insight 03 */}
-                <div className="cs-v2-insight">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 03</div>
-                    <div className="cs-v2-insight-title">Merchant training is not given efficiently</div>
-                    <p className="cs-v2-insight-text">
-                      Device training was supposed to be mandatory at every installation. In practice, FEs were under
-                      time pressure and training was often rushed or skipped &mdash; especially for breakfix visits.
-                      Merchants were left operating devices they didn&rsquo;t fully understand.
-                    </p>
-                  </div>
-                  <div className="cs-v2-insight-imgs">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-3.jpg" alt="Field executive showing a merchant how to use the device" className="cs-v2-insight-img" />
-                  </div>
-                </div>
-
-                {/* Insight 04 */}
-                <div className="cs-v2-insight cs-v2-insight-rev">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 04</div>
-                    <div className="cs-v2-insight-title">80% of tickets are retail &mdash; but the 20% enterprise takes disproportionate time</div>
-                    <p className="cs-v2-insight-text">
-                      80% of tickets are retail merchants (1&ndash;5 TIDs). 20% are enterprise and mid-market (5+ TIDs).
-                      The enterprise segment drove the most friction: one ticket could require 5&ndash;15 separate
-                      WhatsApp bot sessions and physical form copies.
-                    </p>
-                  </div>
-                  <div className="cs-v2-pie">
-                    <div>
-                      <div className="cs-v2-pie-pct">80%</div>
-                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
-                        <div className="cs-v2-pie-bar-fill" style={{ width: "80%", height: "100%", background: "#1657d4" }} />
-                      </div>
-                      <div className="cs-v2-pie-label">Retail &mdash; 1 to 5 TIDs</div>
-                    </div>
-                    <div>
-                      <div className="cs-v2-pie-pct">20%</div>
-                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
-                        <div className="cs-v2-pie-bar-fill" style={{ width: "20%", height: "100%", background: "#93c5fd" }} />
-                      </div>
-                      <div className="cs-v2-pie-label">Enterprise &amp; mid-market &mdash; 5+ TIDs</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Insight 05 */}
-                <div className="cs-v2-insight">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 05</div>
-                    <div className="cs-v2-insight-title">Over-reliance on the WhatsApp bot &mdash; which only worked 50% of the time</div>
-                    <p className="cs-v2-insight-text">
-                      The bot frequently displayed &ldquo;unable to support currently.&rdquo; It couldn&rsquo;t
-                      collect data, didn&rsquo;t support un-mapping (deactivation), and had serious security
-                      concerns. Every bot failure meant 45+ minutes on the call centre. FEs had stopped trusting it.
-                    </p>
-                  </div>
-                  <div className="cs-v2-insight-imgs">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-5.jpg" alt="Razorpay POS WhatsApp support bot showing unable to support error" className="cs-v2-insight-img" />
-                  </div>
-                </div>
-
-                {/* Insight 06 */}
-                <div className="cs-v2-insight cs-v2-insight-stack">
-                  <div className="cs-v2-insight-body">
-                    <div className="cs-v2-insight-num">Insight 06</div>
-                    <div className="cs-v2-insight-title">The Asti app (current solution) had fundamental experience and capability gaps</div>
-                    <p className="cs-v2-insight-text">
-                      Asti was a paid 3rd-party product &mdash; Razorpay had limited control over its roadmap.
-                      It didn&rsquo;t support multiple device installation or deactivation. FEs faced confusing
-                      user journeys, poor validation, poor error handling, a steep learning curve, and no iOS support.
-                    </p>
-                  </div>
-                  <div className="cs-v2-insight-imgs cs-v2-insight-imgs-wide">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-6a.jpg" alt="Asti app — Installation flow with fragmented fields" className="cs-v2-insight-img" />
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/cs2/research/insight-6b.jpg" alt="Asti app — Break Fix flow" className="cs-v2-insight-img" />
-                  </div>
-                </div>
-
                 {/* ── METHODS ── */}
                 <div className="cs-research-subsect">Research Methods</div>
 
-                <p className="cs-sec p">
-                  Before a single wireframe was drawn, I spent time in the field. Four methods &mdash;
-                  ethnographic visits, a structured group discussion with 14 FEs, a call centre session,
-                  and a service centre visit &mdash; each surfaced a distinct layer of the problem.
-                </p>
-
                 <div className="cs-v2-callout">
-                  <div className="cs-v2-callout-label">Field visit observation &mdash; Bengaluru</div>
+                  <div className="cs-v2-callout-label">Field visit observation · Bengaluru</div>
                   <div className="cs-v2-callout-text">
-                    Every morning, agents received a WhatsApp message from their team lead &mdash; a list of
+                    Every morning, agents received a WhatsApp message from their team lead — a list of
                     merchant names, ticket numbers, and pincodes. They copied this onto paper. Sorted by
                     pincode. That was their route plan.
                   </div>
                 </div>
 
                 <p className="cs-sec p">
-                  <strong>Method 1 &mdash; Field Visits (Ethnographic Research)</strong>
+                  <strong>Method 1: Field Visits (Ethnographic Research)</strong>
                 </p>
                 <p className="cs-sec p">
-                  I shadowed 2 FEs across different zones in Bengaluru through actual merchant visits &mdash;
-                  Babai Tiffins (HSR), Pepper Leaf Restaurant (Marathahalli), and Radha Krishna Chinese Fast
-                  Food (Bommanahalli). What I observed shaped every major design decision that followed.
+                  I shadowed 2 FEs across different zones in Bengaluru through actual merchant visits.
+                  What I observed shaped every major design decision that followed.
                 </p>
 
                 <div className="cs-personas" style={{ marginBottom: 28 }}>
@@ -497,66 +450,147 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 </div>
 
                 <p className="cs-sec p">
-                  <strong>Method 2 &mdash; Group Discussion with 14 Field Engineers</strong>
+                  <strong>Method 2: Group Discussion with 14 Field Engineers</strong>
                 </p>
                 <p className="cs-sec p">
-                  A cross-functional team (Product, Design, Engineering, Analytics) facilitated a structured
-                  session at the FE hub in Kalyan Nagar, Bengaluru. New tickets arrived at 11 AM and 4 PM,
-                  disrupting planned routes. 80% of tickets were retail (1&ndash;5 TIDs); 20% were
-                  enterprise (5+ TIDs). Agents sometimes visited the same location twice when two tickets
-                  had different device models at the same merchant. 10&ndash;20% of pre-visit calls found
-                  the ticket was raised by mistake &mdash; a wasted trip before it began.
+                  A cross-functional session at the Bengaluru FE hub. New tickets mid-day disrupted planned routes.
+                  Agents sometimes visited the same location twice on separate tickets. 10&ndash;20% of pre-visit calls
+                  found the ticket was raised by mistake — a wasted trip before it began.
                 </p>
 
                 <div className="cs-pullquote">
                   <div className="cs-pullquote-text">
-                    &ldquo;50% success rate on the bot is normal for us. When it fails we call support
-                    &mdash; 45 minutes, sometimes more.&rdquo;
+                    &ldquo;50% success rate on the bot is normal for us. When it fails we call support —
+                    45 minutes, sometimes more.&rdquo;
                   </div>
-                  <div className="cs-pullquote-cite">Field Engineer &mdash; group discussion, Kalyan Nagar</div>
+                  <div className="cs-pullquote-cite">Field Engineer group discussion, Kalyan Nagar</div>
                 </div>
 
                 <p className="cs-sec p">
-                  <strong>Method 3 &mdash; Call Centre Agent Session</strong>
+                  <strong>Method 3: Call Centre Agent Session</strong>
                 </p>
                 <p className="cs-sec p">
-                  A session with call centre agents revealed the downstream burden of field failures. ~50%
-                  of inbound calls were about battery life (1&ndash;2 hours vs a competitor benchmark of
-                  8&ndash;10 hours). ~30% were network issues. Agents spent 6&ndash;8 minutes per
-                  troubleshooting call with no SOPs or guiding tools, hopping across 3&ndash;4 portals per
-                  call. Merchant CSAT had dropped from ~80% in July 2024 to 72% by December 2024.
+                  ~50% of inbound calls were about battery life, ~30% network issues. Agents hopped across
+                  3&ndash;4 portals per call with no SOPs. A 48-hour resolution SLA was committed to merchants,
+                  but FEs regularly took 3&ndash;4 days — a trust gap enabled by zero digital accountability.
+                  Merchant CSAT dropped from ~80% in July 2024 to 72% by December.
                 </p>
 
-                <p className="cs-sec p">
-                  <strong>Method 4 &mdash; Service Centre Visit (March 2025)</strong>
-                </p>
-                <p className="cs-sec p">
-                  A direct visit to the Razorpay POS service centre surfaced the support-side tooling
-                  problem: PAX Portal, Zoho Assist, Ezetap CRM, and FreshDesk running simultaneously,
-                  constant context-switching. During the visit demo, Zoho Assist failed live &mdash; a
-                  fitting illustration of the reliability gap. No time filter on transaction search made
-                  high-volume enterprise merchants extremely slow to troubleshoot.
-                </p>
+                {/* ── INSIGHTS ── */}
+                <div className="cs-research-subsect">Research Insights</div>
 
-                <p className="cs-sec p">
-                  <strong>Competitive Analysis</strong>
-                </p>
-                <p className="cs-sec p">
-                  A detailed audit across Paytm PSA App, PhonePe ACE, Pine Labs (Map My India Workmate),
-                  and Bajaj Finserv (Myfinfi) showed Razorpay was behind on fundamentals all competitors
-                  had already solved &mdash; bulk workflows, route planning, and consolidated multi-device
-                  support in a single app. Pine Labs and Bajaj Finserv both offered salary tied to
-                  productivity; Paytm and PhonePe combined sales and service in the same app. Razorpay was
-                  starting from zero on all of these.
-                </p>
+                {/* Insight 01 */}
+                <div className="cs-v2-insight cs-v2-insight-dual">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 01</div>
+                    <div className="cs-v2-insight-title">FE day planning: receiving and prioritising tickets is a cumbersome process</div>
+                    <p className="cs-v2-insight-text">
+                      WhatsApp ticket list, copied to paper and re-sorted by pincode — any mid-day addition broke the plan.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-1a.jpg" alt="WhatsApp messages with dense unformatted ticket list" className="cs-v2-insight-img" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-1b.jpg" alt="Handwritten paper list of merchants and pincodes" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 02 */}
+                <div className="cs-v2-insight cs-v2-insight-rev">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 02</div>
+                    <div className="cs-v2-insight-title">The process is not completely digital — physical service forms are still in use</div>
+                    <p className="cs-v2-insight-text">
+                      Every visit required a handwritten service form — submitted at EOD and re-entered manually, creating delays and transcription errors.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-2.jpg" alt="Physical Razorpay service form filled by hand at merchant site" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 03 */}
+                <div className="cs-v2-insight">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 03</div>
+                    <div className="cs-v2-insight-title">Merchant training is not given efficiently</div>
+                    <p className="cs-v2-insight-text">
+                      Mandatory in theory, skipped under time pressure — merchants left to figure out their own devices.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-3.jpg" alt="Field executive showing a merchant how to use the device" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 04 */}
+                <div className="cs-v2-insight cs-v2-insight-rev">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 04</div>
+                    <div className="cs-v2-insight-title">80% of tickets are retail but the 20% enterprise takes disproportionate time</div>
+                    <p className="cs-v2-insight-text">
+                      80% retail volume — but a single enterprise ticket could require 15 separate bot sessions.
+                    </p>
+                  </div>
+                  <div className="cs-v2-pie">
+                    <div>
+                      <div className="cs-v2-pie-pct">80%</div>
+                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
+                        <div className="cs-v2-pie-bar-fill" style={{ width: "80%", height: "100%", background: "#1657d4" }} />
+                      </div>
+                      <div className="cs-v2-pie-label">Retail · 1 to 5 TIDs</div>
+                    </div>
+                    <div>
+                      <div className="cs-v2-pie-pct">20%</div>
+                      <div className="cs-v2-pie-bar-wrap" style={{ marginTop: 6, marginBottom: 4 }}>
+                        <div className="cs-v2-pie-bar-fill" style={{ width: "20%", height: "100%", background: "#93c5fd" }} />
+                      </div>
+                      <div className="cs-v2-pie-label">Enterprise &amp; mid-market · 5+ TIDs</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insight 05 */}
+                <div className="cs-v2-insight">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 05</div>
+                    <div className="cs-v2-insight-title">Over-reliance on the WhatsApp bot which only worked 50% of the time</div>
+                    <p className="cs-v2-insight-text">
+                      Frequent errors, no deactivation support, security gaps — every failure added 45+ min via the call centre. FEs had stopped trusting it.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-5.jpg" alt="Razorpay POS WhatsApp support bot showing unable to support error" className="cs-v2-insight-img" />
+                  </div>
+                </div>
+
+                {/* Insight 06 */}
+                <div className="cs-v2-insight cs-v2-insight-dual">
+                  <div className="cs-v2-insight-body">
+                    <div className="cs-v2-insight-num">Insight 06</div>
+                    <div className="cs-v2-insight-title">The Asti app (current solution) had fundamental experience and capability gaps</div>
+                    <p className="cs-v2-insight-text">
+                      No multi-device support, no deactivation, confusing flows, no iOS — a paid tool Razorpay couldn&rsquo;t roadmap, at ₹7L/month.
+                    </p>
+                  </div>
+                  <div className="cs-v2-insight-imgs">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-6a.jpg" alt="Asti app — Installation flow with fragmented fields" className="cs-v2-insight-img" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/cs2/research/insight-6b.jpg" alt="Asti app — Break Fix flow" className="cs-v2-insight-img" />
+                  </div>
+                </div>
               </div>
 
               {/* ── 03 · Problem ── */}
               <div className="cs-sec-v2" id="tf-s03">
                 <div className="cs-sec-v2-label">03 &middot; Problem</div>
                 <h2 className="cs-sec-v2-h">
-                  This wasn&rsquo;t a tooling problem. It was a trust problem &mdash;
-                  for agents, merchants, and Razorpay alike.
+                  The problems ran deeper than any single tool. Agents, merchants, and Razorpay were all losing trust in the same system.
                 </h2>
 
                 <p className="cs-sec p">
@@ -565,92 +599,140 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   the entire field experience.&rdquo;
                 </p>
 
-                <p className="cs-sec p">
-                  <strong>From the FE&rsquo;s perspective:</strong> No smart task list &mdash; forced to
-                  work off WhatsApp messages and paper notes. One device per ticket &mdash; enormous
-                  overhead for enterprise merchants with 5&ndash;15 devices. ~50% WhatsApp bot failure rate
-                  and Asti validation errors (NULL errors, &ldquo;device mapped to other terminal&rdquo;).
-                  Manually typing MID, TID, device model, and username every single visit. No device
-                  trackability &mdash; devices mapped without validation, enabling misplacement.
-                </p>
-
-                <p className="cs-sec p">
-                  <strong>From the Merchant&rsquo;s perspective:</strong> 60+ minute installation times for
-                  enterprise setups. FEs rarely explained device usage or root causes during breakfix visits
-                  &mdash; the wrong charger, SIM vs WiFi confusion never addressed. No post-install
-                  verification, no training quality, no brand touchpoint. Purely transactional handover.
-                </p>
-
-                <p className="cs-sec p">
-                  <strong>From Razorpay&rsquo;s perspective:</strong> No real-time FE visibility, no route
-                  planning, no location tracking. ₹7 lakh/month in vendor costs for tools agents weren&rsquo;t
-                  using. 8,000 devices lost with a ₹1 Cr P&L hit. Zero compliance enforcement &mdash; no
-                  photo proof mandate, no device validation, no digital signature.
-                </p>
+                <div className="cs-v2-persp-grid">
+                  {/* FE perspective */}
+                  <div className="cs-v2-persp-card">
+                    <div className="cs-v2-persp-header">
+                      <svg className="cs-v2-persp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                      </svg>
+                      <span className="cs-v2-persp-title">From the FE&rsquo;s perspective</span>
+                    </div>
+                    <ul className="cs-v2-persp-list">
+                      <li>Routes planned off WhatsApp + handwritten paper</li>
+                      <li>1 device per ticket → 5–15 bot sessions for enterprise</li>
+                      <li>Bot worked ~50% of the time</li>
+                      <li>Manual MID/TID entry on every visit</li>
+                      <li>Zero device trackability</li>
+                    </ul>
+                  </div>
+                  {/* Merchant perspective */}
+                  <div className="cs-v2-persp-card">
+                    <div className="cs-v2-persp-header">
+                      <svg className="cs-v2-persp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                      </svg>
+                      <span className="cs-v2-persp-title">From the Merchant&rsquo;s perspective</span>
+                    </div>
+                    <ul className="cs-v2-persp-list">
+                      <li>60+ min installs for enterprise setups</li>
+                      <li>No device training or usage explanation</li>
+                      <li>SIM vs WiFi issues left unresolved</li>
+                      <li>No post-install verification</li>
+                      <li>No Razorpay brand touchpoint at closure</li>
+                    </ul>
+                  </div>
+                  {/* Razorpay perspective */}
+                  <div className="cs-v2-persp-card">
+                    <div className="cs-v2-persp-header">
+                      <svg className="cs-v2-persp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                      </svg>
+                      <span className="cs-v2-persp-title">From Razorpay&rsquo;s perspective</span>
+                    </div>
+                    <ul className="cs-v2-persp-list">
+                      <li>₹7L/month on vendors agents had stopped trusting</li>
+                      <li>8,000 devices lost → ₹1 Cr P&amp;L hit</li>
+                      <li>No real-time FE visibility or route planning</li>
+                      <li>Zero compliance enforcement or audit trail</li>
+                      <li>Repeat visits at ₹280/trip bleeding operations</li>
+                    </ul>
+                  </div>
+                </div>
 
                 <div className="cs-v2-callout">
                   <div className="cs-v2-callout-label">North Star</div>
                   <div className="cs-v2-callout-text">
-                    &ldquo;A field agent should complete a device installation in under 5 minutes &mdash;
+                    &ldquo;A field agent should complete a device installation in under 5 minutes ,
                     with full compliance, zero manual data entry, and a merchant who knows exactly what
                     they&rsquo;ve signed up for.&rdquo;
                   </div>
                 </div>
 
+                <div className="cs-v2-hmw">
+                  <div className="cs-v2-hmw-label">How might we</div>
+                  <div className="cs-v2-hmw-text">
+                    How do we design a field tool that helps agents work without friction, gives merchants a
+                    trustworthy experience at every visit, and gives Razorpay the real-time visibility it
+                    needs, without adding overhead to anyone&rsquo;s day?
+                  </div>
+                </div>
+              </div>
+
+              {/* ── 03.5 · Defining success ── */}
+              <div className="cs-sec-v2" id="tf-s035">
+                <div className="cs-sec-v2-label">Defining success</div>
+                <h2 className="cs-sec-v2-h">
+                  We defined what success looks like before we ideated solutions.
+                </h2>
                 <p className="cs-sec p">
-                  Five design goals followed: replace the WhatsApp bot with a reliable, pre-populated task
-                  experience; enable multi-device servicing in a single ticket; digitise the entire field
-                  journey from attendance to closure; build in smart compliance (photo mandates, device
-                  validation, merchant OTP, digital signature); and make the app genuinely enjoyable to use
-                  &mdash; because adoption follows delight.
+                  Before moving to solutions, we defined success from every angle. A product that only helped
+                  the FE but ignored the merchant experience or helped compliance but frustrated
+                  agents would fail in the field.
                 </p>
+                <div className="cs-v2-success-grid">
+                  {[
+                    ["Reduces manual effort", "FEs receive a pre-populated task list with merchant details, device info, and route context upfront — eliminating the daily WhatsApp copy-paste and handwritten planning."],
+                    ["Improves FE efficiency", "Multiple devices serviced in a single ticket with scan-first mapping and auto-filled fields — so enterprise visits that took 60+ minutes complete in under 5."],
+                    ["Reduces ticket TAT", "Digital ownership of every task means no undocumented delays. Tickets close faster and on-time rates improve, directly lifting Merchant CSAT."],
+                    ["Gives Razorpay visibility", "Every action — photo proof, device validation, merchant OTP, digital signature — is captured in real time. Zero compliance gaps, and 8,000 device losses become preventable."],
+                    ["Gives delight", "Micro-interactions, illustrations, and continuous in-app feedback make the journey feel rewarding rather than bureaucratic — because agents who trust the tool will actually use it."],
+                  ].map(([heading, desc]) => (
+                    <div key={heading} className="cs-v2-success-card">
+                      <div className="cs-v2-success-heading">{heading}</div>
+                      <div className="cs-v2-success-desc">{desc}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* ── 04 · Ideation ── */}
               <div className="cs-sec-v2" id="tf-s04">
                 <div className="cs-sec-v2-label">04 &middot; Ideation</div>
                 <h2 className="cs-sec-v2-h">
-                  Three strategic directions. Eight homepage iterations.
-                  Two rounds of field testing.
+                  The hardest decision was not what to design. It was deciding what kind of product we were building at all.
                 </h2>
 
                 <p className="cs-sec p">
-                  Before screens, the strategic question was what kind of product to build &mdash; a patch
+                  Before screens, the strategic question was what kind of product to build a patch
                   on Asti, an extension of the WhatsApp bot, or a ground-up replacement. Three directions
                   were evaluated.
                 </p>
 
-                <div className="cs-v2-directions">
-                  <div className="cs-v2-dir killed">
-                    <div className="cs-v2-dir-letter">Direction A</div>
-                    <div className="cs-v2-dir-title">Patch Asti + improve the WhatsApp bot</div>
-                    <div className="cs-v2-dir-desc">
-                      Fix the existing tools. Reduce validation errors. Improve bot reliability. Killed
-                      early &mdash; agents had already lost trust in both tools. You can&rsquo;t design
-                      trust back into a product people associate with failure.
+                <div className="cs-directions">
+                  <div className="cs-dir killed">
+                    <div className="cs-dir-letter">A</div>
+                    <div className="cs-dir-body">
+                      <div className="cs-dir-title">Patch Asti + improve the WhatsApp bot</div>
+                      <div className="cs-dir-desc">Fix the existing tools. Reduce validation errors. Improve bot reliability. Killed early, as agents had already lost trust in both tools. You can&rsquo;t design trust back into a product people associate with failure.</div>
+                      <div className="cs-dir-verdict">✕ Killed: wrong foundation</div>
                     </div>
-                    <div className="cs-v2-dir-verdict">✕ Wrong foundation</div>
                   </div>
-                  <div className="cs-v2-dir killed">
-                    <div className="cs-v2-dir-letter">Direction B</div>
-                    <div className="cs-v2-dir-title">Better frontend wrapper on existing backend</div>
-                    <div className="cs-v2-dir-desc">
-                      A polished frontend over the same SAP B1 backend. Eliminated when engineering
-                      confirmed the backend was being migrated to SAP HANA &mdash; building a wrapper
-                      would mean rebuilding the frontend twice within 1&ndash;2 quarters.
+                  <div className="cs-dir killed">
+                    <div className="cs-dir-letter">B</div>
+                    <div className="cs-dir-body">
+                      <div className="cs-dir-title">Better frontend wrapper on existing backend</div>
+                      <div className="cs-dir-desc">A polished frontend over the same SAP B1 backend. Eliminated when engineering confirmed the backend was being migrated to SAP HANA. Building a wrapper would mean rebuilding the frontend twice within 1&ndash;2 quarters.</div>
+                      <div className="cs-dir-verdict">✕ Killed: tech debt would follow</div>
                     </div>
-                    <div className="cs-v2-dir-verdict">✕ Tech debt would follow</div>
                   </div>
-                  <div className="cs-v2-dir chosen" style={{ gridColumn: "1 / -1" }}>
-                    <div className="cs-v2-dir-letter">Direction C &mdash; Chosen</div>
-                    <div className="cs-v2-dir-title">Ground-up Task Force App with smart task management</div>
-                    <div className="cs-v2-dir-desc">
-                      Full replacement of Asti and the WhatsApp bot. Pre-populated task list, multi-device
-                      single-ticket mapping, barcode scan-first workflows, compliance enforcement, and
-                      inventory visibility &mdash; all in one reliable tool. Aligned with the SAP HANA
-                      migration roadmap. Eliminates vendor costs. Earns agent trust through reliability.
+                  <div className="cs-dir chosen">
+                    <div className="cs-dir-letter">C</div>
+                    <div className="cs-dir-body">
+                      <div className="cs-dir-title">Ground-up Task Force App with smart task management</div>
+                      <div className="cs-dir-desc">Full replacement of Asti and the WhatsApp bot. Pre-populated task list, multi-device single-ticket mapping, barcode scan-first workflows, compliance enforcement, and inventory visibility, all in one reliable tool. Aligned with the SAP HANA migration roadmap. Eliminates vendor costs. Earns agent trust through reliability.</div>
+                      <div className="cs-dir-verdict">✓ Chosen: clean slate, new trust, vendor eliminated</div>
                     </div>
-                    <div className="cs-v2-dir-verdict">✓ Clean slate. New trust. Vendor eliminated.</div>
                   </div>
                 </div>
 
@@ -658,50 +740,29 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   <strong>Key design decisions</strong>
                 </p>
 
-                <p className="cs-sec p">
-                  <em>Attendance + Day Overview &mdash; &ldquo;Swipe to Start&rdquo;:</em> Originally just
-                  an attendance check-in. Research showed agents had no overview of their day before
-                  heading out. The screen was evolved into a dual-purpose surface showing today&rsquo;s
-                  task count and type breakdown before work begins. The swipe gesture (vs a tap) was
-                  intentional &mdash; a deliberate action that marks the psychological start of the day.
-                </p>
-
-                <p className="cs-sec p">
-                  <em>Homepage &mdash; 8&ndash;10 iterations:</em> The homepage needed to balance task list
-                  with priority, distance, and TAT indicators; device/SIM inventory at a glance; and enough
-                  per-ticket context to avoid opening a ticket just to get the merchant&rsquo;s address.
-                  Getting the right information density for a screen used while standing in a
-                  merchant&rsquo;s shop took the most iteration of any single surface in the product.
-                </p>
-
-                <p className="cs-sec p">
-                  <em>Device Mapping &mdash; the core flow:</em> The most technically and experientially
-                  complex problem. Progressive disclosure (reveal only the next required step), scan-first
-                  (barcode as primary input, manual as fallback), and a small success animation after each
-                  device maps &mdash; together these made a multi-step, high-pressure flow feel manageable
-                  and even rewarding.
-                </p>
-
-                <p className="cs-sec p">
-                  <em>SIM scan as secondary:</em> Initial assumption was scan-first for SIM too. Research
-                  revealed 80&ndash;90% of SIM barcodes are absent or unreadable in the field. Manual entry
-                  was made the primary path; scanning became the faster fallback. The discovery came
-                  directly from user testing &mdash; not assumptions.
-                </p>
+                <div className="cs-personas" style={{ marginBottom: 32 }}>
+                  {[
+                    ["Swipe to Start", "Originally attendance-only. Evolved into a dual-purpose surface — today's task count + type breakdown — so agents have a full day overview before they leave. The swipe (vs tap) marks the psychological start of the workday."],
+                    ["Homepage — 8–10 iterations", "Balancing task list with priority, TAT, distance, and inventory at a glance. The hardest information-density problem: a screen used while standing in a merchant's shop."],
+                    ["Device Mapping", "Progressive disclosure + scan-first + a success animation after each device maps. Made a multi-step, high-pressure flow feel manageable and even rewarding."],
+                    ["SIM scan as secondary", "Initial assumption: scan-first for SIM too. User testing revealed 80–90% of SIM barcodes are absent in the field. Manual became primary; scan became the faster fallback."],
+                  ].map(([name, sub]) => (
+                    <div key={name} className="cs-persona">
+                      <div className="cs-persona-name">{name}</div>
+                      <div className="cs-persona-sub">{sub}</div>
+                    </div>
+                  ))}
+                </div>
 
                 <p className="cs-sec p">
                   <strong>User Testing</strong>
                 </p>
                 <p className="cs-sec p">
-                  Round 1 &mdash; guerrilla testing with 3 FEs using a clickable prototype &mdash; surfaced
-                  questions about validation errors carrying over, friction with multi-photo capture, and
-                  edge cases in the SIM unlinking flow during breakfix visits. Round 2 (December 13, 2024)
-                  &mdash; end-to-end testing with 14 FEs at the Razorpay office &mdash; produced a
-                  structured table of feedback, all of it actioned: SIM scan made secondary (manual primary
-                  for 80&ndash;90% of cases), progress bar reduced in prominence for repeat journeys,
-                  &ldquo;RRN&rdquo; replaced with &ldquo;Transaction Number&rdquo;, priority badge added
-                  after agents couldn&rsquo;t distinguish urgency at a glance, photo upload component
-                  redesigned with stronger tap affordance.
+                  Round 1 (guerrilla, 3 FEs): surfaced validation error edge cases, photo capture friction,
+                  and SIM unlinking issues during breakfix. Round 2 (Dec 13, 14 FEs at Razorpay office):
+                  all feedback actioned — SIM scan made secondary, progress bar reduced in prominence,
+                  &ldquo;RRN&rdquo; renamed to &ldquo;Transaction Number&rdquo;, priority badge added,
+                  photo upload redesigned with stronger tap affordance.
                 </p>
               </div>
 
@@ -709,12 +770,12 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
               <div className="cs-sec-v2" id="tf-s05">
                 <div className="cs-sec-v2-label">05 &middot; Solution</div>
                 <h2 className="cs-sec-v2-h">
-                  From paper notes to a single reliable tool &mdash; 60 minutes to under 5.
+                  One app for the entire day. Built around what field engineers actually do.
                 </h2>
 
                 <p className="cs-sec p">
                   The Task Force App replaced the entire fragmented stack with one tool. Every surface was
-                  designed around a real moment in the FE&rsquo;s day &mdash; from the morning attendance
+                  designed around a real moment in the FE&rsquo;s day from the morning attendance
                   swipe to ticket closure with merchant OTP.
                 </p>
 
@@ -733,7 +794,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     ))}
                   </div>
 
-                  {/* Row 1 — left to right */}
+                  {/* Single row — all screens */}
                   <div className="cs-v2-marquee-wrap">
                     <div className="cs-v2-marquee cs-v2-marquee-fwd">
                       {([
@@ -742,6 +803,8 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                         "/cs2/get-started/3.png",
                         "/cs2/get-started/4.png",
                         "/cs2/get-started/5.png",
+                        "/cs2/get-started/7.png",
+                        "/cs2/get-started/8.png",
                         "/cs2/installation/Installation1.png",
                         "/cs2/installation/Installation2.png",
                         "/cs2/installation/Mapping3.png",
@@ -750,14 +813,32 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                         "/cs2/installation/Mapping13.png",
                         "/cs2/installation/Checklist1.png",
                         "/cs2/installation/Upload1.png",
+                        "/cs2/installation/Upload8.png",
                         "/cs2/installation/Validation1.png",
+                        "/cs2/installation/Validation3.png",
                         "/cs2/installation/Confirmation1.png",
+                        "/cs2/deactivation/Deactivation1.png",
+                        "/cs2/deactivation/Unmapping1.png",
+                        "/cs2/deactivation/Unmapping5.png",
+                        "/cs2/deactivation/Unmapping10.png",
+                        "/cs2/deactivation/Validation1.png",
+                        "/cs2/deactivation/Deactivation-confirmation.png",
+                        "/cs2/edge-cases/Revisit1.png",
+                        "/cs2/edge-cases/Revisit3.png",
+                        "/cs2/edge-cases/Revisit7.png",
+                        "/cs2/edge-cases/Problematic1.png",
+                        "/cs2/edge-cases/Problematic5.png",
+                        "/cs2/partial-txns/partial-test-txns1.png",
+                        "/cs2/partial-txns/partial-test-txns3.png",
+                        "/cs2/partial-txns/partial-test-txns5.png",
                       ] as string[]).concat([
                         "/cs2/get-started/1.png",
                         "/cs2/get-started/2.png",
                         "/cs2/get-started/3.png",
                         "/cs2/get-started/4.png",
                         "/cs2/get-started/5.png",
+                        "/cs2/get-started/7.png",
+                        "/cs2/get-started/8.png",
                         "/cs2/installation/Installation1.png",
                         "/cs2/installation/Installation2.png",
                         "/cs2/installation/Mapping3.png",
@@ -766,19 +847,10 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                         "/cs2/installation/Mapping13.png",
                         "/cs2/installation/Checklist1.png",
                         "/cs2/installation/Upload1.png",
+                        "/cs2/installation/Upload8.png",
                         "/cs2/installation/Validation1.png",
+                        "/cs2/installation/Validation3.png",
                         "/cs2/installation/Confirmation1.png",
-                      ]).map((src, i) => (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img key={i} src={src} alt="" className="cs-v2-marquee-img" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Row 2 — right to left */}
-                  <div className="cs-v2-marquee-wrap">
-                    <div className="cs-v2-marquee cs-v2-marquee-rev">
-                      {([
                         "/cs2/deactivation/Deactivation1.png",
                         "/cs2/deactivation/Unmapping1.png",
                         "/cs2/deactivation/Unmapping5.png",
@@ -787,39 +859,12 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                         "/cs2/deactivation/Deactivation-confirmation.png",
                         "/cs2/edge-cases/Revisit1.png",
                         "/cs2/edge-cases/Revisit3.png",
-                        "/cs2/edge-cases/Revisit5.png",
                         "/cs2/edge-cases/Revisit7.png",
                         "/cs2/edge-cases/Problematic1.png",
-                        "/cs2/edge-cases/Problematic3.png",
                         "/cs2/edge-cases/Problematic5.png",
                         "/cs2/partial-txns/partial-test-txns1.png",
                         "/cs2/partial-txns/partial-test-txns3.png",
                         "/cs2/partial-txns/partial-test-txns5.png",
-                        "/cs2/get-started/7.png",
-                        "/cs2/get-started/8.png",
-                        "/cs2/installation/Upload8.png",
-                        "/cs2/installation/Validation3.png",
-                      ] as string[]).concat([
-                        "/cs2/deactivation/Deactivation1.png",
-                        "/cs2/deactivation/Unmapping1.png",
-                        "/cs2/deactivation/Unmapping5.png",
-                        "/cs2/deactivation/Unmapping10.png",
-                        "/cs2/deactivation/Validation1.png",
-                        "/cs2/deactivation/Deactivation-confirmation.png",
-                        "/cs2/edge-cases/Revisit1.png",
-                        "/cs2/edge-cases/Revisit3.png",
-                        "/cs2/edge-cases/Revisit5.png",
-                        "/cs2/edge-cases/Revisit7.png",
-                        "/cs2/edge-cases/Problematic1.png",
-                        "/cs2/edge-cases/Problematic3.png",
-                        "/cs2/edge-cases/Problematic5.png",
-                        "/cs2/partial-txns/partial-test-txns1.png",
-                        "/cs2/partial-txns/partial-test-txns3.png",
-                        "/cs2/partial-txns/partial-test-txns5.png",
-                        "/cs2/get-started/7.png",
-                        "/cs2/get-started/8.png",
-                        "/cs2/installation/Upload8.png",
-                        "/cs2/installation/Validation3.png",
                       ]).map((src, i) => (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img key={i} src={src} alt="" className="cs-v2-marquee-img" />
@@ -837,7 +882,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   <h3 className="cs-v2-surface-title">Login, Attendance &amp; Ticket Homepage</h3>
                   <p className="cs-sec p">
                     FEs open the app to a personalised greeting, see their full ticket count and type
-                    breakdown, then mark attendance via a deliberate swipe &mdash; making the start of
+                    breakdown, then mark attendance via a deliberate swipe making the start of
                     the workday feel intentional. The homepage shows every ticket with colour-coded type,
                     TAT status (Overdue / 1 day left / 2 days left), distance, and estimated travel time.
                     Device and SIM inventory is visible at a glance, eliminating mismatches before an
@@ -855,17 +900,17 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     <span className="cs-v2-surface-num">Surface 2</span>
                     <span className="cs-v2-surface-role">Core flow</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Installation &mdash; Scan, Map &amp; Close</h3>
+                  <h3 className="cs-v2-surface-title">Installation: Scan, Map and Close</h3>
                   <p className="cs-sec p">
                     The biggest workflow unlock. One ticket now contains multiple TIDs. All merchant and
-                    device details are pre-populated &mdash; the agent confirms, scans, and proceeds.
+                    device details are pre-populated the agent confirms, scans, and proceeds.
                     Barcode scanning is the primary input for device serial numbers; manual entry is the
                     fallback. SIM numbers are manual-first (80&ndash;90% of SIM barcodes are absent in
                     the field). A celebratory animation plays after each device maps: <em>&ldquo;TID 1 of
-                    2 mapped successfully!&rdquo;</em> &mdash; a moment of delight in a repetitive flow.
+                    2 mapped successfully!&rdquo;</em> a moment of delight in a repetitive flow.
                   </p>
                   <p className="cs-sec p">
-                    Compliance is baked in &mdash; not bolted on. The feature &amp; device checklist
+                    Compliance is baked in, not bolted on. The feature &amp; device checklist
                     ensures training is verified. Photo categories (shop board, inside view, device back)
                     are mandatory and contextual. A single merchant OTP covers all devices in the ticket,
                     replacing the old per-device WhatsApp flow. The closure screen digitally replaces the
@@ -888,11 +933,11 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     <span className="cs-v2-surface-num">Surface 3</span>
                     <span className="cs-v2-surface-role">Device removal</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Deactivation &mdash; Unmap &amp; Collect</h3>
+                  <h3 className="cs-v2-surface-title">Deactivation: Unmap and Collect</h3>
                   <p className="cs-sec p">
                     Deactivation mirrors the installation flow in reverse. The FE scans each device
                     to confirm identity, marks its status (working / not working / missing), and collects
-                    accessories &mdash; all within a single ticket flow. The device status log creates an
+                    accessories all within a single ticket flow. The device status log creates an
                     audit trail that directly addresses the 8,000 device loss problem from the old stack.
                     One merchant OTP at the end covers all unmapped devices, and the completion screen
                     saves a deactivation copy for records.
@@ -914,10 +959,10 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     <span className="cs-v2-surface-num">Surface 4</span>
                     <span className="cs-v2-surface-role">Device swap</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Servicing &mdash; Deactivation + Installation in One</h3>
+                  <h3 className="cs-v2-surface-title">Servicing: Deactivation into Installation, in one ticket</h3>
                   <p className="cs-sec p">
                     Servicing is a device swap: the old device is collected and unmapped, then a replacement
-                    is installed and mapped &mdash; all within the same ticket. The app sequences this
+                    is installed and mapped all within the same ticket. The app sequences this
                     naturally: Phase 1 runs the full deactivation flow (scan to confirm old device,
                     mark status, collect accessories), and Phase 2 runs the full installation flow (scan
                     new serial, SIM entry, test transaction, photo upload, merchant OTP). No duplicate data
@@ -940,14 +985,14 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     <span className="cs-v2-surface-num">Surface 5</span>
                     <span className="cs-v2-surface-role">Exception handling</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">Edge Cases &mdash; Revisit, Problematic &amp; Partial Txns</h3>
+                  <h3 className="cs-v2-surface-title">Edge Cases: Revisit, Problematic and Partial Transactions</h3>
                   <p className="cs-sec p">
-                    Not every visit goes to plan. These flows handle the three most common exceptions &mdash;
+                    Not every visit goes to plan. These flows handle the three most common exceptions ,
                     applicable across installation, deactivation, and servicing. Revisit is for merchant
                     unavailability: the agent selects a reschedule date and reason, which gets logged and
                     surfaced to the manager. Problematic is for permanent closures or wrong merchant flags,
                     with contact details captured for an ops audit trail. Partial test transactions handles
-                    the edge case where a multi-device install has incomplete test txns &mdash; showing
+                    the edge case where a multi-device install has incomplete test txns showing
                     per-TID progress and allowing partial closure.
                   </p>
 
@@ -968,7 +1013,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 {/* UX moments */}
                 <div style={{ marginTop: 56, paddingTop: 40, borderTop: "1px solid var(--cs-border)" }}>
                   <p className="cs-sec p" style={{ marginBottom: 24 }}>
-                    <strong>UX Goodness &mdash; moments designed to go beyond functional:</strong>
+                    <strong>UX goodness: moments designed to go beyond functional</strong>
                   </p>
                   <div className="cs-h-timeline">
                     {[
@@ -991,13 +1036,13 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     <span className="cs-v2-surface-num">Extension</span>
                     <span className="cs-v2-surface-role">Platformization</span>
                   </div>
-                  <h3 className="cs-v2-surface-title">QR Activation &mdash; 60 Days to 1 Day</h3>
+                  <h3 className="cs-v2-surface-title">QR Activation: 60 days reduced to 1</h3>
                   <p className="cs-sec p">
                     The Task Force App was extended beyond POS devices to handle QR activations across all
                     device types (WD10, AP101A, Soundbox, Stickers) for both OMNI and non-OMNI stacks via
                     configurable feature flags. Previously, setting up activation flows for a new bank
                     required 60&ndash;100 engineering days. With modular feature flags that auto-adapt to
-                    device type and bank specifications &mdash; this dropped to under 1 day.
+                    device type and bank specifications this dropped to under 1 day.
                   </p>
                   <p className="cs-sec p">
                     67K live QR devices (₹956 Cr GMV) were at risk during the OMNI migration since
@@ -1012,7 +1057,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
               <div className="cs-sec-v2" id="tf-s06">
                 <div className="cs-sec-v2-label">06 &middot; Outcome</div>
                 <h2 className="cs-sec-v2-h">
-                  Pan-India in May 2025. Five signals define success.
+                  Shipped to all 276 agents across India in May 2025. Here is what the data showed.
                 </h2>
 
                 <p className="cs-sec p">
@@ -1037,7 +1082,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 <p className="cs-sec p">
                   Average time to ticket closure improved from <strong>2.9 days → 1.9 days</strong>,
                   trending toward 1.5&ndash;1.6 days in June. Top-quartile agents (Q4) jumped from
-                  8.8 to 11.5 tickets closed per day &mdash; a <strong>30.3% improvement</strong> for
+                  8.8 to 11.5 tickets closed per day a <strong>30.3% improvement</strong> for
                   the most productive segment of the field team.
                 </p>
 
@@ -1045,7 +1090,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   Service violations (SVs) raised within 7 days of ticket closure dropped from
                   <strong> 7.5% → 5.9%</strong> (&minus;1.6pp). QR activation setup time for new banks
                   went from 60&ndash;100 engineering days to under 1 day. ₹24 lakh/year saved by
-                  eliminating the Asti vendor &mdash; with an additional ₹60 lakh/year in savings
+                  eliminating the Asti vendor with an additional ₹60 lakh/year in savings
                   expected once SAP B1 → SAP HANA migration completes in the next 1&ndash;2 quarters.
                   100% of new-bank QR activations now run through the unified app.
                 </p>
@@ -1053,11 +1098,11 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 <div className="cs-v2-reflect">
                   <div className="cs-v2-reflect-item">
                     <div className="cs-v2-reflect-label">What worked</div>
-                    <p>Going to the field before the first wireframe. The paper notepad, the physical service form, the WhatsApp bot screenshot &mdash; these weren&rsquo;t data points, they were the design brief. Every decision was traceable to something seen or heard on those visits. The decision to treat the agent app as a consumer-grade product &mdash; not a utility tool &mdash; paid off in adoption speed. 40% of agents adopted it in a single day.</p>
+                    <p>Going to the field before the first wireframe. The paper notepad, the physical service form, the WhatsApp bot screenshot these weren&rsquo;t data points, they were the design brief. Every decision was traceable to something seen or heard on those visits. The decision to treat the agent app as a consumer-grade product not a utility tool paid off in adoption speed. 40% of agents adopted it in a single day.</p>
                   </div>
                   <div className="cs-v2-reflect-item">
                     <div className="cs-v2-reflect-label">What I&rsquo;d do differently</div>
-                    <p>Push harder for map/route planning in the first release. Research showed it clearly &mdash; agents were visiting the same location twice because ticket aggregation by location wasn&rsquo;t available. I deprioritised it to ship faster. The multi-device mapping flow was also the hardest design problem I&rsquo;ve faced; I&rsquo;d prototype the scan interaction in code much earlier, before committing to Figma frames, to surface the state-management complexity sooner.</p>
+                    <p>Push harder for map/route planning in the first release. Research showed it clearly agents were visiting the same location twice because ticket aggregation by location wasn&rsquo;t available. I deprioritised it to ship faster. The multi-device mapping flow was also the hardest design problem I&rsquo;ve faced; I&rsquo;d prototype the scan interaction in code much earlier, before committing to Figma frames, to surface the state-management complexity sooner.</p>
                   </div>
                 </div>
               </div>

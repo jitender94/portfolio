@@ -18,7 +18,7 @@ export default function Nav() {
 
   return (
     <nav id="nav" className={`${scrolled ? "scrolled" : ""} ${light ? "light" : ""}`}>
-      <a className="nav-logo" href="#home">JS &mdash; Portfolio</a>
+      <a className="nav-logo" href="#home">jeet.design</a>
       <ul className="nav-links">
         <li><a href="#work">Work</a></li>
         <li><a href="#building">Building</a></li>

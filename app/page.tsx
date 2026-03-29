@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import CaseStudy1 from "@/components/CaseStudy1";
 import CaseStudy1v2 from "@/components/CaseStudy1v2";
 import CaseStudy2 from "@/components/CaseStudy2";
+import MusicPlayer from "@/components/MusicPlayer";
 
 export default function Home() {
   const [openCS, setOpenCS] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export default function Home() {
       <CaseStudy1 isOpen={openCS === "cs1"} onClose={() => setOpenCS(null)} onSwitch={() => setOpenCS("cs1v2")} />
       <CaseStudy1v2 isOpen={openCS === "cs1v2"} onClose={() => setOpenCS(null)} onSwitch={() => setOpenCS("cs1")} />
       <CaseStudy2 isOpen={openCS === "cs2"} onClose={() => setOpenCS(null)} />
+      <MusicPlayer />
     </>
   );
 }

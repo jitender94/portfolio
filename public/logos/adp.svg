@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60" fill="none">
+  <!-- ADP red block logo approximation -->
+  <g fill="#ED1C24">
+    <!-- A -->
+    <path d="M4 56 L20 8 L36 8 L52 56 L42 56 L38 44 L18 44 L14 56 Z M21 36 L28 16 L35 36 Z"/>
+    <!-- D -->
+    <path d="M60 8 L80 8 C96 8 104 20 104 32 C104 44 96 56 80 56 L60 56 Z M70 18 L78 18 C88 18 94 24 94 32 C94 40 88 46 78 46 L70 46 Z"/>
+    <!-- P -->
+    <path d="M112 8 L132 8 C145 8 152 15 152 25 C152 35 145 42 132 42 L122 42 L122 56 L112 56 Z M122 18 L130 18 C136 18 142 21 142 25 C142 29 136 32 130 32 L122 32 Z"/>
+    <!-- registered mark -->
+    <text x="155" y="18" font-size="12" font-family="Arial" fill="#ED1C24">®</text>
+  </g>
+</svg>

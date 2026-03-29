@@ -41,13 +41,11 @@ export default function Cursor() {
     };
 
     const onMove = (e: MouseEvent) => {
-      const x = e.clientX + "px";
-      const y = e.clientY + "px";
-      posRef.current = { x: e.clientX, y: e.clientY };
-      dot.style.left = x;
-      dot.style.top = y;
-      ring.style.left = x;
-      ring.style.top = y;
+      const { clientX: x, clientY: y } = e;
+      posRef.current = { x, y };
+      const t = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+      dot.style.transform = t;
+      ring.style.transform = t;
       applyLightBg();
     };
 

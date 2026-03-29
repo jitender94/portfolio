@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import SurfaceSlideshow from "./SurfaceSlideshow";
 
 interface Props {
   isOpen: boolean;
@@ -220,51 +221,64 @@ export default function CaseStudy1({ isOpen, onClose, onSwitch }: Props) {
                 <div><div className="cs-sec-label">04 &middot; Solution</div>
                 <h3>A three-surface system: 6-hour anxiety to 5-minute clarity</h3></div>
               </div>
-              <p>The final design was built around seven components across three surfaces, each serving a different moment in the merchant&rsquo;s debugging journey.</p>
-              <div className="cs-timeline">
-                <div className="cs-tl-item">
-                  <div className="cs-tl-label">Surface 1 — Entry point</div>
-                  <div className="cs-tl-text"><strong>Transactions Dashboard</strong> — Anomaly alert at summary level. Failed transactions auto-grouped by root cause. &ldquo;Is this us or Razorpay?&rdquo; answered in 5 seconds without leaving the page they were already on.</div>
+              <p>The final design was built around seven components across three surfaces, each serving a different moment in the merchant&rsquo;s debugging journey — from the first signal of a drop, to diagnosis, to post-mortem.</p>
+
+              {/* Surface 1 */}
+              <div className="cs-v2-surface">
+                <div className="cs-v2-surface-meta">
+                  <span className="cs-v2-surface-num">Surface 1</span>
+                  <span className="cs-v2-surface-role">Entry point</span>
                 </div>
-                <div className="cs-tl-item">
-                  <div className="cs-tl-label">Surface 2 — Diagnostic layer</div>
-                  <div className="cs-tl-text"><strong>Downtime Dashboard</strong> — &ldquo;Impacting Me&rdquo; view filtered by the merchant&rsquo;s active payment methods, ordered by business impact. Blueprint Visualizer shows live terminal-method health. 365-day planned downtime calendar with self-service alerts.</div>
-                </div>
-                <div className="cs-tl-item">
-                  <div className="cs-tl-label">Surface 3 — Post-mortem layer</div>
-                  <div className="cs-tl-text"><strong>InsightX integration</strong> — Downtime events overlaid on SR trend graphs. Built for leadership presentations and quarterly vendor reviews.</div>
-                </div>
+                <h3 className="cs-v2-surface-title">Transactions Dashboard</h3>
+                <p>When an SR drop occurs, the first place a merchant goes is Transactions. So we met them there. An anomaly banner surfaces at the summary level the moment a significant failure cluster is detected. Failed transactions are auto-grouped by root cause — so the question &ldquo;is this us or Razorpay?&rdquo; is answered before the merchant even has to ask. A single click opens the attributed downtime incident, with full context already loaded.</p>
+                <SurfaceSlideshow
+                  tag="Transactions Dashboard — anomaly detection + root-cause attribution"
+                  slides={[
+                    "Screen 1 — Transactions summary with anomaly alert banner",
+                    "Screen 2 — Failed transactions grouped by root cause",
+                    "Screen 3 — Transaction detail with downtime attribution",
+                  ]}
+                />
               </div>
-              <div className="cs-mockup">
-                <div className="cs-mockup-bar">
-                  <div className="cs-mockup-dot" style={{ background: "#e74c3c" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#f39c12" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#2ecc71" }} />
-                  <div className="cs-mockup-title">Transactions Dashboard — anomaly detection + root-cause attribution</div>
+
+              {/* Surface 2 */}
+              <div className="cs-v2-surface">
+                <div className="cs-v2-surface-meta">
+                  <span className="cs-v2-surface-num">Surface 2</span>
+                  <span className="cs-v2-surface-role">Diagnostic layer</span>
                 </div>
-                <div className="cs-mockup-content"><span>Surface 1 — Add your screenshot here</span></div>
-              </div>
-              <div className="cs-mockup">
-                <div className="cs-mockup-bar">
-                  <div className="cs-mockup-dot" style={{ background: "#e74c3c" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#f39c12" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#2ecc71" }} />
-                  <div className="cs-mockup-title">Downtime Dashboard — &ldquo;Impacting Me&rdquo; view + Blueprint Visualizer</div>
+                <h3 className="cs-v2-surface-title">Downtime Dashboard</h3>
+                <p>Once a merchant knows something is wrong, the Downtime Dashboard is where they diagnose it. The default &ldquo;Impacting Me&rdquo; view filters to the merchant&rsquo;s active payment methods only, ordered by business impact. The Blueprint Visualizer shows a live map of their unique terminal-method configuration with colour-coded health nodes, making Razorpay&rsquo;s rerouting activity visible in real time. A 365-day planned downtime calendar with self-service alert subscriptions removes the last remaining gap: advance notice.</p>
+                <div className="cs-callout">
+                  <div className="cs-callout-label">The most debated design decision</div>
+                  <div className="cs-callout-text">Engineering wanted one comprehensive ecosystem view. We held personalisation as default. The argument was settled by a specific usability finding: merchants scanning the full ecosystem view took 40+ seconds to find their relevant downtime. The personalised view surfaced it in under 5.</div>
                 </div>
-                <div className="cs-mockup-content"><span>Surface 2 — Add your screenshot here</span></div>
+                <SurfaceSlideshow
+                  tag="Downtime Dashboard — Impacting Me view + Blueprint Visualizer"
+                  slides={[
+                    "Screen 1 — Impacting Me view, filtered to merchant's active methods",
+                    "Screen 2 — Blueprint Visualizer — live terminal-method health map",
+                    "Screen 3 — Incident detail with impact timeline and resolution status",
+                    "Screen 4 — Planned downtime calendar with alert subscription",
+                  ]}
+                />
               </div>
-              <div className="cs-mockup">
-                <div className="cs-mockup-bar">
-                  <div className="cs-mockup-dot" style={{ background: "#e74c3c" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#f39c12" }} />
-                  <div className="cs-mockup-dot" style={{ background: "#2ecc71" }} />
-                  <div className="cs-mockup-title">InsightX — SR graph with downtime event overlay</div>
+
+              {/* Surface 3 */}
+              <div className="cs-v2-surface">
+                <div className="cs-v2-surface-meta">
+                  <span className="cs-v2-surface-num">Surface 3</span>
+                  <span className="cs-v2-surface-role">Post-mortem layer</span>
                 </div>
-                <div className="cs-mockup-content"><span>Surface 3 — Add your screenshot here</span></div>
-              </div>
-              <div className="cs-callout">
-                <div className="cs-callout-label">The most debated design decision</div>
-                <div className="cs-callout-text">Engineering wanted one comprehensive ecosystem view. We held personalisation as default. The argument was settled by a specific usability finding: merchants scanning the full ecosystem view took 40+ seconds to find their relevant downtime. The personalised view surfaced it in under 5.</div>
+                <h3 className="cs-v2-surface-title">InsightX Integration</h3>
+                <p>After an incident, leadership wants to know: how much GMV did we lose? Which vendor was responsible? How does this month compare to last? InsightX is already where merchants go for these reviews. We overlaid downtime events directly onto SR trend graphs — making causal links between incidents and revenue dips visible without leaving the analytics surface. Built for leadership presentations, vendor performance reviews, and quarterly reporting.</p>
+                <SurfaceSlideshow
+                  tag="InsightX — downtime events overlaid on SR trend graphs"
+                  slides={[
+                    "Screen 1 — SR trend graph with downtime event overlays",
+                    "Screen 2 — Vendor performance breakdown with incident history",
+                  ]}
+                />
               </div>
             </div>
 

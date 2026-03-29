@@ -2,11 +2,6 @@
 
 import { motion } from "framer-motion";
 
-const fadeUp = (delay = 0) => ({
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay } },
-});
-
 export default function Building() {
   const cards = [
     {
@@ -50,47 +45,39 @@ export default function Building() {
   return (
     <section id="building">
       <motion.div
-        className="section-label"
-        variants={fadeUp()}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
+        className="section-scroll-wrap"
+        initial={{ opacity: 0, y: 40, scale: 0.97, filter: "blur(4px)" }}
+        whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
-        Building, not just designing
+        <div className="section-label">Building, not just designing</div>
+        <div className="section-title">Where design<br /><em>meets code.</em></div>
+        <div className="dev-grid">
+          {cards.map((card, i) => (
+            <motion.a
+              key={i}
+              href={card.link}
+              className="dev-card"
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, delay: i * 0.09, ease: [0.23, 1, 0.32, 1] as [number,number,number,number] }}
+            >
+              <div className="dev-bg-glyph">{card.glyph}</div>
+              <div className="dev-type">{card.type}</div>
+              <div className="dev-title">{card.title}</div>
+              <div className="dev-desc">{card.desc}</div>
+              <div className="dev-tech">
+                {card.tech.map((t) => (
+                  <span key={t} className="tech-tag">{t}</span>
+                ))}
+              </div>
+              <span className="dev-link">{card.linkLabel}</span>
+            </motion.a>
+          ))}
+        </div>
       </motion.div>
-      <motion.div
-        className="section-title"
-        variants={fadeUp(0.1)}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-      >
-        Where design<br /><em>meets code.</em>
-      </motion.div>
-      <div className="dev-grid">
-        {cards.map((card, i) => (
-          <motion.a
-            key={i}
-            href={card.link}
-            className="dev-card"
-            variants={fadeUp(i * 0.08)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-          >
-            <div className="dev-bg-glyph">{card.glyph}</div>
-            <div className="dev-type">{card.type}</div>
-            <div className="dev-title">{card.title}</div>
-            <div className="dev-desc">{card.desc}</div>
-            <div className="dev-tech">
-              {card.tech.map((t) => (
-                <span key={t} className="tech-tag">{t}</span>
-              ))}
-            </div>
-            <span className="dev-link">{card.linkLabel}</span>
-          </motion.a>
-        ))}
-      </div>
     </section>
   );
 }

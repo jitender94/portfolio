@@ -40,6 +40,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${dmSerif.variable} ${dmMono.variable} ${syne.variable} ${plusJakarta.variable}`}
+        suppressHydrationWarning
       >
         {children}
       </body>
