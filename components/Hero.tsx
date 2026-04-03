@@ -165,10 +165,10 @@ export default function Hero() {
                 <motion.span
                   key={nameHovered ? "full" : "short"}
                   className="name-swap"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18, ease: "easeInOut" }}
                 >
                   {nameHovered ? "Jitender" : "Jeet"}
                 </motion.span>

@@ -121,8 +121,7 @@ nav.light .nav-cta:hover { background: #2a2a2a; }
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: left;
-  padding: 80px 72px 56px;
+  padding: 72px 9% 52px;
   overflow: hidden;
   transform-origin: center center;
   will-change: transform, border-radius, opacity;
@@ -177,32 +176,31 @@ nav.light .nav-cta:hover { background: #2a2a2a; }
   mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%);
   opacity: .3;
 }
-.hero-eyebrow { position: relative; z-index: 3; font-family: var(--body); font-size: 16px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); margin-bottom: 0; }
-/* Hero banner — layered "Hi! I'm" + arch photo + name */
+.hero-eyebrow { font-family: var(--body); font-size: 16px; font-weight: 400; color: var(--text-muted); }
 .hero-top-row {
   display: flex; flex-direction: row;
   align-items: flex-start; justify-content: space-between;
-  width: 100%; gap: 40px;
+  width: 100%; max-width: 980px; gap: 48px;
   margin-bottom: 40px;
   animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.12s both;
 }
 .hero-name-block {
   display: flex; flex-direction: column;
-  align-items: flex-start; justify-content: flex-start;
-  gap: 16px; flex: 1;
+  align-items: flex-start; gap: 14px; flex: 1;
+  min-width: 0;
 }
 .hero-banner-name {
-  font-family: var(--serif); font-size: clamp(52px, 8vw, 100px);
-  font-weight: 800; line-height: 0.95; letter-spacing: -.03em;
+  font-family: var(--serif); font-size: clamp(56px, 7.5vw, 104px);
+  font-weight: 800; line-height: 0.93; letter-spacing: -.03em;
   color: var(--text);
   cursor: default; white-space: nowrap;
-  display: inline-block; position: relative;
+  display: block; position: relative;
 }
-.name-sizer { visibility: hidden; display: block; pointer-events: none; user-select: none; }
-.name-swap { position: absolute; top: 0; left: 0; right: 0; }
+.name-sizer { visibility: hidden; display: block; pointer-events: none; user-select: none; white-space: nowrap; }
+.name-swap  { position: absolute; top: 0; left: 0; white-space: nowrap; }
 .hero-photo-block {
-  flex-shrink: 0; width: 180px; height: 220px;
-  border-radius: 16px; overflow: hidden;
+  flex-shrink: 0; width: 220px; height: 264px;
+  border-radius: 20px; overflow: hidden;
 }
 .hero-photo {
   width: 100%; height: 100%;
@@ -213,15 +211,15 @@ nav.light .nav-cta:hover { background: #2a2a2a; }
   to   { opacity: 1; transform: translateY(0); }
 }
 /* eyebrow inherits hero-top-row animation */
-.hero-intro   { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.40s both; position: relative; z-index: 3; font-family: var(--body); width: 100%; font-size: 16px; line-height: 1.8; color: var(--text-muted); margin-bottom: 0; }
-.hero-intro strong { color: var(--text); font-weight: 500; }
-.logos-strip  { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.65s both; position: relative; z-index: 3; margin-top: 36px; width: 100%; }
-.logos-strip-label { font-family: var(--mono); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; }
-.logos-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0; }
-.logo-item { display: flex; align-items: center; justify-content: center; opacity: 0.4; padding: 0 32px; transition: opacity .25s; border-right: 1px solid var(--border); }
-.logo-item:last-child { border-right: none; }
-.logo-item:hover { opacity: 0.75; }
-.logo-img { height: 45px; width: auto; max-width: 175px; object-fit: contain; filter: brightness(0) invert(1); }
+.hero-intro   { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.40s both; font-family: var(--body); width: 100%; max-width: 980px; font-size: 17px; line-height: 1.75; color: var(--text-muted); margin-bottom: 0; }
+.hero-intro strong { color: var(--text); font-weight: 600; }
+.logos-strip  { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.65s both; margin-top: 32px; width: 100%; max-width: 980px; }
+.logos-strip-label { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px; }
+.logos-row { display: flex; align-items: center; justify-content: flex-start; flex-wrap: wrap; gap: 0; }
+.logo-item { display: flex; align-items: center; justify-content: center; opacity: 0.38; padding: 0 28px 0 0; transition: opacity .25s; border-right: 1px solid var(--border); margin-right: 28px; }
+.logo-item:last-child { border-right: none; margin-right: 0; }
+.logo-item:hover { opacity: 0.7; }
+.logo-img { height: 40px; width: auto; max-width: 160px; object-fit: contain; filter: brightness(0) invert(1); }
 
 /* SECTIONS */
 section { padding: 120px 48px; position: relative; }
@@ -904,9 +902,10 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
   .nav-links { display: none; }
   section { padding: 80px 24px; }
   #home { padding: 80px 24px; }
-  .hero-card { padding: 76px 28px 44px; }
-  .hero-name { margin-bottom: 12px; }
-  .hero-eyebrow { margin-bottom: 16px; }
+  .hero-card { padding: 64px 6% 44px; }
+  .hero-top-row { gap: 24px; margin-bottom: 28px; }
+  .hero-photo-block { width: 140px; height: 168px; border-radius: 14px; }
+  .hero-banner-name { font-size: clamp(44px, 10vw, 72px); }
   .hero-role { margin-bottom: 20px; }
   .hero-intro { font-size: 14px; line-height: 1.65; }
   .logos-strip { margin-top: 28px; }
