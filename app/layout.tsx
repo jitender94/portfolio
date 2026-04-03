@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, DM_Mono, Syne, Plus_Jakarta_Sans } from "next/font/google";
+import { DM_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-
-const dmSerif = DM_Serif_Display({
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-  subsets: ["latin"],
-});
 
 const dmMono = DM_Mono({
   weight: ["300", "400", "500"],
@@ -15,14 +8,8 @@ const dmMono = DM_Mono({
   subsets: ["latin"],
 });
 
-const syne = Syne({
-  weight: ["600", "700", "800"],
-  variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  weight: ["400", "500", "600"],
+const spaceGrotesk = Space_Grotesk({
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-body",
   subsets: ["latin"],
 });
@@ -39,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmSerif.variable} ${dmMono.variable} ${syne.variable} ${plusJakarta.variable}`}
+        className={`${dmMono.variable} ${spaceGrotesk.variable}`}
         suppressHydrationWarning
       >
         {children}

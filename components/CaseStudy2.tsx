@@ -200,6 +200,20 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
             <span className="ol-num">Case Study 02</span>
           </div>
 
+          {/* Sticky section progress nav */}
+          <div className="cs-progress">
+            {NAV_LABELS.map((label, i) => (
+              <div
+                key={i}
+                className="cs-prog-step"
+                data-sec={SEC_IDS[i]}
+                onClick={() => scrollTo(SEC_IDS[i])}
+              >
+                0{i + 1} {label}
+              </div>
+            ))}
+          </div>
+
           {/* Cover */}
           <div className="cs-v2-cover">
             <div className="cs-v2-cover-img" role="img" aria-label="Field agent holding Task Force App in front of a merchant" style={{ backgroundImage: "url('/cs2/hero-new.jpg')" }}>
@@ -227,20 +241,6 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Sticky section progress nav — matches CS1 style */}
-          <div className="cs-progress">
-            {NAV_LABELS.map((label, i) => (
-              <div
-                key={i}
-                className="cs-prog-step"
-                data-sec={SEC_IDS[i]}
-                onClick={() => scrollTo(SEC_IDS[i])}
-              >
-                0{i + 1} {label}
-              </div>
-            ))}
           </div>
 
           {/* Content */}
