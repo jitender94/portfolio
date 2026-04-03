@@ -25,9 +25,6 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=monument-extended@800,400&display=swap" />
-      </head>
       <body
         className={`${dmMono.variable} ${spaceGrotesk.variable}`}
         suppressHydrationWarning
