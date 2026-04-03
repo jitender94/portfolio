@@ -153,35 +153,35 @@ export default function Hero() {
           </svg>
         </div>
 
-        <div className="hero-banner">
-          <div className="hero-banner-hi" aria-hidden="true">Hi! I&apos;m</div>
-          <div className="hero-arch-photo">
+        <div className="hero-top-row">
+          <div className="hero-name-block">
+            <div
+              className="hero-banner-name"
+              onMouseEnter={() => setNameHovered(true)}
+              onMouseLeave={() => setNameHovered(false)}
+            >
+              <span className="name-sizer" aria-hidden="true">Jitender</span>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={nameHovered ? "full" : "short"}
+                  className="name-swap"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+                >
+                  {nameHovered ? "Jitender" : "Jeet"}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+            <div className="hero-eyebrow">
+              Senior Product Designer &middot; Razorpay &middot; Bengaluru
+            </div>
+          </div>
+          <div className="hero-photo-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/jitender.png" alt="Jitender" />
+            <img src="/jitender.png" alt="Jitender" className="hero-photo" />
           </div>
-          <div
-            className="hero-banner-name"
-            onMouseEnter={() => setNameHovered(true)}
-            onMouseLeave={() => setNameHovered(false)}
-          >
-            <span className="name-sizer" aria-hidden="true">Jitender</span>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={nameHovered ? "full" : "short"}
-                className="name-swap"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-              >
-                {nameHovered ? "Jitender" : "Jeet"}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        <div className="hero-eyebrow">
-          Senior Product Designer &middot; Razorpay &middot; Bengaluru
         </div>
 
         <p className="hero-intro">

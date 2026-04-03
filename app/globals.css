@@ -19,7 +19,7 @@
   --cs-accent: #111111;
   --cs-accent-bg: rgba(0,0,0,0.04);
   --mono: var(--font-mono), monospace;
-  --serif: 'Monument Extended', sans-serif;
+  --serif: var(--font-serif), sans-serif;
   --sans: var(--font-body), sans-serif;
   --body: var(--font-body), sans-serif;
 }
@@ -121,8 +121,8 @@ nav.light .nav-cta:hover { background: #2a2a2a; }
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 96px 48px 56px;
+  text-align: left;
+  padding: 80px 72px 56px;
   overflow: hidden;
   transform-origin: center center;
   will-change: transform, border-radius, opacity;
@@ -177,48 +177,43 @@ nav.light .nav-cta:hover { background: #2a2a2a; }
   mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%);
   opacity: .3;
 }
-.hero-eyebrow { position: relative; z-index: 3; font-family: var(--mono); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent2); margin-bottom: 12px; }
+.hero-eyebrow { position: relative; z-index: 3; font-family: var(--body); font-size: 16px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text-muted); margin-bottom: 0; }
 /* Hero banner — layered "Hi! I'm" + arch photo + name */
-.hero-banner {
-  position: relative; z-index: 3;
-  display: flex; flex-direction: column; align-items: center;
-  width: 100%; margin-bottom: 4px;
+.hero-top-row {
+  display: flex; flex-direction: row;
+  align-items: flex-start; justify-content: space-between;
+  width: 100%; gap: 40px;
+  margin-bottom: 40px;
   animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.12s both;
 }
-.hero-banner-hi {
-  font-family: var(--serif); font-size: clamp(44px, 6.5vw, 84px);
-  font-weight: 800; line-height: 1; letter-spacing: -.025em;
-  color: var(--text); opacity: 0.13;
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  white-space: nowrap; z-index: 1; pointer-events: none; user-select: none;
+.hero-name-block {
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-start;
+  gap: 16px; flex: 1;
 }
-.hero-arch-photo {
-  position: relative; z-index: 2;
-  width: 172px; height: 232px;
-  border-radius: 86px 86px 0 0;
-  overflow: hidden;
-  margin-top: 24px;
-}
-.hero-arch-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 .hero-banner-name {
-  font-family: var(--serif); font-size: clamp(44px, 6.5vw, 84px);
-  font-weight: 800; line-height: 1; letter-spacing: -.025em;
+  font-family: var(--serif); font-size: clamp(52px, 8vw, 100px);
+  font-weight: 800; line-height: 0.95; letter-spacing: -.03em;
   color: var(--text);
-  position: relative; z-index: 3;
-  margin-top: -32px;
-  margin-bottom: 32px; /* restore flow space lost by negative margin-top */
-  cursor: default;
-  white-space: nowrap;
-  display: inline-block;
+  cursor: default; white-space: nowrap;
+  display: inline-block; position: relative;
 }
 .name-sizer { visibility: hidden; display: block; pointer-events: none; user-select: none; }
-.name-swap { position: absolute; top: 0; left: 0; right: 0; text-align: center; }
+.name-swap { position: absolute; top: 0; left: 0; right: 0; }
+.hero-photo-block {
+  flex-shrink: 0; width: 180px; height: 220px;
+  border-radius: 16px; overflow: hidden;
+}
+.hero-photo {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top; display: block;
+}
 @keyframes heroFadeUp {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero-eyebrow { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.28s both; }
-.hero-intro   { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.40s both; position: relative; z-index: 3; font-family: var(--body); max-width: 480px; font-size: 15px; line-height: 1.8; color: var(--text-muted); margin-bottom: 0; }
+/* eyebrow inherits hero-top-row animation */
+.hero-intro   { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.40s both; position: relative; z-index: 3; font-family: var(--body); width: 100%; font-size: 16px; line-height: 1.8; color: var(--text-muted); margin-bottom: 0; }
 .hero-intro strong { color: var(--text); font-weight: 500; }
 .logos-strip  { animation: heroFadeUp 0.8s cubic-bezier(0.23,1,0.32,1) 0.65s both; position: relative; z-index: 3; margin-top: 36px; width: 100%; }
 .logos-strip-label { font-family: var(--mono); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; }

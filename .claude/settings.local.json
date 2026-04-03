@@ -68,7 +68,8 @@
       "Bash(curl -sL -H \"Accept: text/css,*/*;q=0.1\" -H \"User-Agent: Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/120.0.0.0 Safari/537.36\" \"https://api.fontshare.com/v2/css?f[]=monument-extended@800,400&display=swap\")",
       "Bash(curl -sI \"https://api.fontshare.com/v2/fonts/download/monument-extended\")",
       "Bash(curl -sL \"https://api.fontshare.com/v2/fonts/monument-extended\" -H \"User-Agent: Mozilla/5.0\")",
-      "Bash(curl -sL \"https://api.fontshare.com/v2/fonts?q=monument&limit=5\" -H \"User-Agent: Mozilla/5.0\")"
+      "Bash(curl -sL \"https://api.fontshare.com/v2/fonts?q=monument&limit=5\" -H \"User-Agent: Mozilla/5.0\")",
+      "Bash(pkill -f 'next build')"
     ]
   }
 }

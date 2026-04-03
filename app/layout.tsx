@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const dmMono = DM_Mono({
@@ -14,6 +15,14 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
+const monument = localFont({
+  src: [
+    { path: "../public/fonts/MonumentExtended-Regular.otf",   weight: "400", style: "normal" },
+    { path: "../public/fonts/MonumentExtended-Ultrabold.otf", weight: "800", style: "normal" },
+  ],
+  variable: "--font-serif",
+});
+
 export const metadata: Metadata = {
   title: "Jitender's Portfolio",
   description:
@@ -26,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${dmMono.variable} ${spaceGrotesk.variable}`}
+        className={`${dmMono.variable} ${spaceGrotesk.variable} ${monument.variable}`}
         suppressHydrationWarning
       >
         {children}
