@@ -16,6 +16,7 @@ function CaseCard({
   hookText,
   heroImg,
   onClick,
+  ctaList,
 }: {
   num: string;
   tags: { label: string; hi?: boolean }[];
@@ -25,6 +26,7 @@ function CaseCard({
   hookText: string;
   heroImg?: string;
   onClick: () => void;
+  ctaList?: { label: string; action: () => void }[];
 }) {
   const hookRef = useRef<HTMLDivElement>(null);
 
@@ -78,7 +80,17 @@ function CaseCard({
         </div>
         <div className="case-title">{title}</div>
         <div className="case-hook" ref={hookRef} />
-        <div className="case-cta">View case study <span className="case-cta-arrow">→</span></div>
+        {ctaList ? (
+          <div className="case-cta-row">
+            {ctaList.map((c) => (
+              <button key={c.label} className="case-cta" onClick={(e) => { e.stopPropagation(); c.action(); }}>
+                {c.label} <span className="case-cta-arrow">→</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="case-cta">View case study <span className="case-cta-arrow">→</span></div>
+        )}
       </div>
     </motion.div>
   );
@@ -86,7 +98,13 @@ function CaseCard({
 
 export default function Work({ onOpenCS }: WorkProps) {
   return (
-    <section id="work">
+    <motion.section
+      id="work"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, amount: 0.04 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <motion.div
         className="section-scroll-wrap"
         initial={{ opacity: 0, y: 40, scale: 0.97, filter: "blur(4px)" }}
@@ -96,7 +114,7 @@ export default function Work({ onOpenCS }: WorkProps) {
       >
       <div className="section-label">Selected Work</div>
       <div className="section-title">
-        Case studies.<br /><em>Composed with Empathy.</em>
+        Case studies.<br /><span className="section-title-sub">Composed with Empathy.</span>
       </div>
       <div className="case-studies">
         <CaseCard
@@ -128,9 +146,13 @@ export default function Work({ onOpenCS }: WorkProps) {
           heroImg="/cs2/hero-new.jpg"
           hookText="276 field agents were planning their days off WhatsApp messages and paper notes, using a bot that worked half the time. I rebuilt the entire field operations experience from scratch — 40% adopted it in a single day."
           onClick={() => onOpenCS("cs2")}
+          ctaList={[
+            { label: "View Phase 1", action: () => onOpenCS("cs2") },
+            { label: "View Phase 2", action: () => onOpenCS("cs2-p2") },
+          ]}
         />
       </div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

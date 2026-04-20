@@ -12,8 +12,18 @@ const COMPANIES: { name: string; logo: string }[] = [
   { name: "ADP",      logo: "/homepage/ADP.png"      },
 ];
 
+const ROLES = ["Senior Product Designer, Razorpay", "Musician", "Solo Traveller"];
+
 export default function Hero() {
   const [nameHovered, setNameHovered] = useState(false);
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setRoleIndex((i) => (i + 1) % ROLES.length);
+    }, 2800);
+    return () => clearInterval(id);
+  }, []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
@@ -160,34 +170,49 @@ export default function Hero() {
               onMouseEnter={() => setNameHovered(true)}
               onMouseLeave={() => setNameHovered(false)}
             >
-              <span className="name-sizer" aria-hidden="true">Jitender</span>
+              <span className="name-sizer" aria-hidden="true">Jitender Sharma</span>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
-                  key={nameHovered ? "full" : "short"}
+                  key={nameHovered ? "short" : "full"}
                   className="name-swap"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.18, ease: "easeInOut" }}
                 >
-                  {nameHovered ? "Jitender" : "Jeet"}
+                  {nameHovered ? "Jeet" : "Jitender Sharma"}
                 </motion.span>
               </AnimatePresence>
             </div>
             <div className="hero-eyebrow">
-              Senior Product Designer &middot; Razorpay &middot; Bengaluru
+              <div className="hero-eyebrow-role-wrap">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={roleIndex}
+                    className="hero-eyebrow-role"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                  >
+                    {ROLES[roleIndex]}
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              <div className="hero-eyebrow-location">Bengaluru</div>
             </div>
           </div>
           <div className="hero-photo-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/jitender.png" alt="Jitender" className="hero-photo" />
+            <img src="/jitender.png" alt="Jitender Sharma" className="hero-photo" />
           </div>
         </div>
 
         <p className="hero-intro">
-          I design products that work &mdash; from the first research conversation to the
-          shipped interface. <strong>Research, product thinking, design, and code</strong> &mdash; the full loop.
-          Guitar and songwriting fill the rest.
+          A product designer based in Bengaluru, India, bringing digital products to life with pixels and code.<br />
+          Currently shaping B2B &amp; B2B2C experiences at Razorpay - from the first research conversation
+          to the shipped interface. Research, product thinking, design, and code - the full loop.<br />
+          Music, Travel &amp; fitness fill the rest.
         </p>
 
         <div className="logos-strip">

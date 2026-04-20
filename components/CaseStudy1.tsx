@@ -15,13 +15,21 @@ const SEC_IDS = ["cs1-s01", "cs1-s02", "cs1-s03", "cs1-s04", "cs1-s05", "cs1-s06
 export default function CaseStudy1({ isOpen, onClose, onSwitch }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Lock body scroll when open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  // ESC to close
+  useEffect(() => {
+    if (isOpen) { window.history.pushState({ overlay: "cs1" }, ""); }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const onPop = () => { onClose(); };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [onClose]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);

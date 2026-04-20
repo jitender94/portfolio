@@ -22,6 +22,16 @@ export default function CaseStudy1v2({ isOpen, onClose, onSwitch }: Props) {
   }, [isOpen]);
 
   useEffect(() => {
+    if (isOpen) { window.history.pushState({ overlay: "cs1v2" }, ""); }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const onPop = () => { onClose(); };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [onClose]);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);

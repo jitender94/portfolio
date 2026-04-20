@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PhoneSlideshow from "./PhoneSlideshow";
 import FlowDiagram from "./FlowDiagram";
@@ -90,11 +90,25 @@ const partialTxnSlides = [
 
 export default function CaseStudy2({ isOpen, onClose }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [briefExpanded, setBriefExpanded] = useState(false);
+  const [methodsExpanded, setMethodsExpanded] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      window.history.pushState({ overlay: "cs2" }, "");
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const onPop = () => { onClose(); };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [onClose]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -269,7 +283,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     </svg>
                     <div className="cs-brief-stat">60+ min</div>
                     <div className="cs-brief-title">Installation bottlenecks</div>
-                    <div className="cs-brief-desc">Enterprise installations were taking 60+ minutes. Fragmented workflows across tools meant agents re-entered data multiple times with no single source of truth.</div>
+                    <div className="cs-brief-desc">Enterprise setups took 60+ minutes. Multi-tool fragmentation forced agents to re-enter data with no single source of truth.</div>
                   </div>
                   {/* Card 2 */}
                   <div className="cs-brief-card">
@@ -280,7 +294,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     </svg>
                     <div className="cs-brief-stat">₹7L/month</div>
                     <div className="cs-brief-title">Vendor dependency</div>
-                    <div className="cs-brief-desc">The Asti + TAMS stack cost ₹7L/month and chronically underperformed. The WhatsApp bot fallback worked ~50% of the time — agents had stopped trusting both tools.</div>
+                    <div className="cs-brief-desc">Asti + TAMS cost ₹7L/month and routinely failed. Bot success rate was ~50% - agents had stopped trusting both tools.</div>
                   </div>
                   {/* Card 3 */}
                   <div className="cs-brief-card">
@@ -292,7 +306,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     </svg>
                     <div className="cs-brief-stat">8,000</div>
                     <div className="cs-brief-title">Zero device accountability</div>
-                    <div className="cs-brief-desc">8,000 devices left merchant premises with no validation or trackability — resulting in a ₹1 Cr P&L hit. No audit trail. No way to know where devices went.</div>
+                    <div className="cs-brief-desc">8,000 devices left premises unverified - a ₹1 Cr P&amp;L hit. No audit trail, no way to know where they went.</div>
                   </div>
                   {/* Card 4 */}
                   <div className="cs-brief-card">
@@ -300,19 +314,44 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                       <path d="M20 8C13.37 8 8 12.48 8 18c0 3.18 1.74 6.01 4.5 7.9V30l4.5-2.5c1 .3 2 .5 3 .5 6.63 0 12-4.48 12-10S26.63 8 20 8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
                       <path d="M15 18h10M15 22h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
-                    <div className="cs-brief-stat">7.5%</div>
+                    <div className="cs-brief-stat">16.5%</div>
                     <div className="cs-brief-title">Post-closure service violations</div>
-                    <div className="cs-brief-desc">7.5% of closed tickets had service violations raised within 7 days — a signal that closures were happening without proper verification or merchant sign-off.</div>
+                    <div className="cs-brief-desc">16.5% of closed tickets saw violations raised within 7 days - closures happening without verification or merchant sign-off.</div>
                   </div>
                 </div>
 
-                {/* Additional context — operational issues */}
-                <ul className="cs-brief-points">
-                  <li>The old stack ran on two vendors: SAP B1 via TAMS (backend) and Asti (frontend). Asti had persistent technical issues — agents stopped trusting it entirely.</li>
-                  <li>The WhatsApp bot fallback worked ~50% of the time. When it failed, agents called Customer Support, adding 45+ minutes to what should have been a 5-minute task.</li>
-                  <li>Each agent visit cost Razorpay <strong>₹280</strong>. Repeat visits caused purely by tool failures compounded directly into P&amp;L.</li>
-                  <li>Merchant CSAT after field resolution hovered at ~80%, with no mechanism to verify installations or explain device issues. Devices left premises without any trackability check.</li>
-                </ul>
+                {/* Accordion — more context */}
+                <div className="cs-brief-accordion">
+                  <button
+                    className="cs-brief-accordion-trigger"
+                    onClick={() => setBriefExpanded(v => !v)}
+                    aria-expanded={briefExpanded}
+                  >
+                    <span>More issues highlighted in Initial brief</span>
+                    <span className="cs-brief-accordion-icon">{briefExpanded ? "−" : "+"}</span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {briefExpanded && (
+                      <motion.div
+                        key="brief-extra"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                        style={{ overflow: "hidden" }}
+                      >
+                        <div className="cs-brief-accordion-body">
+                        <ul className="cs-brief-points">
+                          <li><strong>Dual-vendor stack failure:</strong> SAP B1 via TAMS (backend) and Asti (frontend) ran in silos. Asti had persistent technical issues - agents stopped trusting it entirely.</li>
+                          <li><strong>Bot fallback breakdown:</strong> WhatsApp bot worked ~50% of the time. When it failed, agents called Customer Support - adding 45+ minutes to a 5-minute task.</li>
+                          <li><strong>Repeat visits bleeding P&amp;L:</strong> Each agent visit cost ₹280. Repeat visits caused purely by tool failures compounded directly into P&amp;L.</li>
+                          <li><strong>Merchant satisfaction left unverified:</strong> CSAT after field resolution hovered at ~80%, with no mechanism to verify installs or explain device issues.</li>
+                        </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* ── 02 · Research ── */}
@@ -326,6 +365,15 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   I went to the field — shadowed agents, ran group discussions, sat with the call centre.
                   What I found changed the entire framing.
                 </p>
+
+                <div className="cs-v2-callout">
+                  <div className="cs-v2-callout-label">Field visit observation · Bengaluru</div>
+                  <div className="cs-v2-callout-text">
+                    Every morning, agents received a WhatsApp message from their team lead — a list of
+                    merchant names, ticket numbers, and pincodes. They copied this onto paper. Sorted by
+                    pincode. That was their route plan.
+                  </div>
+                </div>
 
                 {/* ── CONTEXT ── */}
                 <div className="cs-research-subsect">Context</div>
@@ -412,69 +460,6 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 <h3 className="cs-v2-surface-title" style={{ marginBottom: 16 }}>Current journey of a Field Executive</h3>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/cs2/research/Current journey.png" alt="Current journey of a Field Executive" className="cs-v2-journey-img" />
-
-                {/* ── METHODS ── */}
-                <div className="cs-research-subsect">Research Methods</div>
-
-                <div className="cs-v2-callout">
-                  <div className="cs-v2-callout-label">Field visit observation · Bengaluru</div>
-                  <div className="cs-v2-callout-text">
-                    Every morning, agents received a WhatsApp message from their team lead — a list of
-                    merchant names, ticket numbers, and pincodes. They copied this onto paper. Sorted by
-                    pincode. That was their route plan.
-                  </div>
-                </div>
-
-                <p className="cs-sec p">
-                  <strong>Method 1: Field Visits (Ethnographic Research)</strong>
-                </p>
-                <p className="cs-sec p">
-                  I shadowed 2 FEs across different zones in Bengaluru through actual merchant visits.
-                  What I observed shaped every major design decision that followed.
-                </p>
-
-                <div className="cs-personas" style={{ marginBottom: 28 }}>
-                  {[
-                    ["Paper Planning", "Daily routes built on WhatsApp list + hand-sorted notepad"],
-                    ["Physical Forms", "Merchant name, serial no., signature — all handwritten, per visit"],
-                    ["1 Device / Ticket", "5–15 devices = 5–15 separate WhatsApp bot sessions for bulk installs"],
-                    ["Bot Failures", "~50% success rate; every failure added 45+ min via call centre"],
-                    ["Battery Drain", "Always-on GPS drained personal phones significantly across the day"],
-                    ["Compliance as Theatre", "Bank checklists signed; training rarely given, especially for breakfix"],
-                  ].map(([name, sub]) => (
-                    <div key={name} className="cs-persona">
-                      <div className="cs-persona-name">{name}</div>
-                      <div className="cs-persona-sub">{sub}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <p className="cs-sec p">
-                  <strong>Method 2: Group Discussion with 14 Field Engineers</strong>
-                </p>
-                <p className="cs-sec p">
-                  A cross-functional session at the Bengaluru FE hub. New tickets mid-day disrupted planned routes.
-                  Agents sometimes visited the same location twice on separate tickets. 10&ndash;20% of pre-visit calls
-                  found the ticket was raised by mistake — a wasted trip before it began.
-                </p>
-
-                <div className="cs-pullquote">
-                  <div className="cs-pullquote-text">
-                    &ldquo;50% success rate on the bot is normal for us. When it fails we call support —
-                    45 minutes, sometimes more.&rdquo;
-                  </div>
-                  <div className="cs-pullquote-cite">Field Engineer group discussion, Kalyan Nagar</div>
-                </div>
-
-                <p className="cs-sec p">
-                  <strong>Method 3: Call Centre Agent Session</strong>
-                </p>
-                <p className="cs-sec p">
-                  ~50% of inbound calls were about battery life, ~30% network issues. Agents hopped across
-                  3&ndash;4 portals per call with no SOPs. A 48-hour resolution SLA was committed to merchants,
-                  but FEs regularly took 3&ndash;4 days — a trust gap enabled by zero digital accountability.
-                  Merchant CSAT dropped from ~80% in July 2024 to 72% by December.
-                </p>
 
                 {/* ── INSIGHTS ── */}
                 <div className="cs-research-subsect">Research Insights</div>
@@ -583,6 +568,68 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/cs2/research/insight-6b.jpg" alt="Asti app — Break Fix flow" className="cs-v2-insight-img" />
                   </div>
+                </div>
+
+                {/* ── RESEARCH METHODS ACCORDION ── */}
+                <div className="cs-brief-accordion">
+                  <button
+                    className="cs-brief-accordion-trigger"
+                    onClick={() => setMethodsExpanded(v => !v)}
+                    aria-expanded={methodsExpanded}
+                  >
+                    <span>Research Methods</span>
+                    <span className="cs-brief-accordion-icon">{methodsExpanded ? "−" : "+"}</span>
+                  </button>
+                  {methodsExpanded && (
+                    <div className="cs-brief-accordion-body">
+                      <p className="cs-sec p">
+                        <strong>Method 1: Field Visits (Ethnographic Research)</strong>
+                      </p>
+                      <p className="cs-sec p">
+                        I shadowed 2 FEs across different zones in Bengaluru through actual merchant visits.
+                        What I observed shaped every major design decision that followed.
+                      </p>
+                      <div className="cs-personas" style={{ marginBottom: 28 }}>
+                        {[
+                          ["Paper Planning", "Daily routes built on WhatsApp list + hand-sorted notepad"],
+                          ["Physical Forms", "Merchant name, serial no., signature — all handwritten, per visit"],
+                          ["1 Device / Ticket", "5–15 devices = 5–15 separate WhatsApp bot sessions for bulk installs"],
+                          ["Bot Failures", "~50% success rate; every failure added 45+ min via call centre"],
+                          ["Battery Drain", "Always-on GPS drained personal phones significantly across the day"],
+                          ["Compliance as Theatre", "Bank checklists signed; training rarely given, especially for breakfix"],
+                        ].map(([name, sub]) => (
+                          <div key={name} className="cs-persona">
+                            <div className="cs-persona-name">{name}</div>
+                            <div className="cs-persona-sub">{sub}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="cs-sec p">
+                        <strong>Method 2: Group Discussion with 14 Field Engineers</strong>
+                      </p>
+                      <p className="cs-sec p">
+                        A cross-functional session at the Bengaluru FE hub. New tickets mid-day disrupted planned routes.
+                        Agents sometimes visited the same location twice on separate tickets. 10&ndash;20% of pre-visit calls
+                        found the ticket was raised by mistake — a wasted trip before it began.
+                      </p>
+                      <div className="cs-pullquote">
+                        <div className="cs-pullquote-text">
+                          &ldquo;50% success rate on the bot is normal for us. When it fails we call support —
+                          45 minutes, sometimes more.&rdquo;
+                        </div>
+                        <div className="cs-pullquote-cite">Field Engineer group discussion, Kalyan Nagar</div>
+                      </div>
+                      <p className="cs-sec p">
+                        <strong>Method 3: Call Centre Agent Session</strong>
+                      </p>
+                      <p className="cs-sec p">
+                        ~50% of inbound calls were about battery life, ~30% network issues. Agents hopped across
+                        3&ndash;4 portals per call with no SOPs. A 48-hour resolution SLA was committed to merchants,
+                        but FEs regularly took 3&ndash;4 days — a trust gap enabled by zero digital accountability.
+                        Merchant CSAT dropped from ~80% in July 2024 to 72% by December.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -736,9 +783,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   </div>
                 </div>
 
-                <p className="cs-sec p">
-                  <strong>Key design decisions</strong>
-                </p>
+                <div className="cs-subsec-h">Key design decisions</div>
 
                 <div className="cs-personas" style={{ marginBottom: 32 }}>
                   {[
@@ -754,9 +799,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   ))}
                 </div>
 
-                <p className="cs-sec p">
-                  <strong>User Testing</strong>
-                </p>
+                <div className="cs-subsec-h">User Testing</div>
                 <p className="cs-sec p">
                   Round 1 (guerrilla, 3 FEs): surfaced validation error edge cases, photo capture friction,
                   and SIM unlinking issues during breakfix. Round 2 (Dec 13, 14 FEs at Razorpay office):
@@ -1030,27 +1073,7 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   </div>
                 </div>
 
-                {/* QR Extension */}
-                <div style={{ marginTop: 56, paddingTop: 40, borderTop: "1px solid var(--cs-border)" }}>
-                  <div className="cs-v2-surface-meta">
-                    <span className="cs-v2-surface-num">Extension</span>
-                    <span className="cs-v2-surface-role">Platformization</span>
-                  </div>
-                  <h3 className="cs-v2-surface-title">QR Activation: 60 days reduced to 1</h3>
-                  <p className="cs-sec p">
-                    The Task Force App was extended beyond POS devices to handle QR activations across all
-                    device types (WD10, AP101A, Soundbox, Stickers) for both OMNI and non-OMNI stacks via
-                    configurable feature flags. Previously, setting up activation flows for a new bank
-                    required 60&ndash;100 engineering days. With modular feature flags that auto-adapt to
-                    device type and bank specifications this dropped to under 1 day.
-                  </p>
-                  <p className="cs-sec p">
-                    67K live QR devices (₹956 Cr GMV) were at risk during the OMNI migration since
-                    existing workflows would be disrupted. The unified interface covered all of them without
-                    a separate tool or additional agent training. First-time activation success rate:
-                    80%+ for the Indian Bank pilot (21 devices, OMNI stack).
-                  </p>
-                </div>
+                {/* QR Extension moved to Phase 2 */}
               </div>
 
               {/* ── 06 · Outcome ── */}
@@ -1065,44 +1088,77 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                   (May 12&ndash;25) and post-period (May 26&ndash;June 6).
                 </p>
 
-                <div className="cs-stat-hero-row">
-                  {[
-                    ["+12.5%", "Tickets closed per day — 1,227 → 1,380"],
-                    ["−57%", "De-installation time — 4.82 days → 2.07 days"],
-                    ["+13.9%", "Agent productivity — 4.6 → 5.3 tickets/agent/day"],
-                    ["40%+", "Adoption in 1 day across all 276 agents on Pan-India rollout"],
-                  ].map(([num, label]) => (
-                    <div className="cs-stat-hero" key={num}>
-                      <div className="cs-stat-hero-num">{num}</div>
-                      <div className="cs-stat-hero-label">{label}</div>
-                    </div>
-                  ))}
+                <div className="cs-stat-hero-row cs-stat-hero-row--outcome">
+                  <div className="cs-stat-hero">
+                    <svg className="cs-brief-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div className="cs-stat-hero-num">+12.5%</div>
+                    <div className="cs-stat-hero-label">Tickets closed per day — 1,227 → 1,380</div>
+                  </div>
+                  <div className="cs-stat-hero">
+                    <svg className="cs-brief-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M12 7v5l3.5 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div className="cs-stat-hero-num">−57%</div>
+                    <div className="cs-stat-hero-label">De-installation time — 4.82 days → 2.07 days</div>
+                  </div>
+                  <div className="cs-stat-hero">
+                    <svg className="cs-brief-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M3 17l5-5 4 4 6-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M17 8h4v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div className="cs-stat-hero-num">+13.9%</div>
+                    <div className="cs-stat-hero-label">Agent productivity — 4.6 → 5.3 tickets/agent/day</div>
+                  </div>
+                  <div className="cs-stat-hero">
+                    <svg className="cs-brief-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M8.5 12l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <div className="cs-stat-hero-num">40%+</div>
+                    <div className="cs-stat-hero-label">Adoption in 1 day across all 276 agents on Pan-India rollout</div>
+                  </div>
                 </div>
 
-                <p className="cs-sec p">
-                  Average time to ticket closure improved from <strong>2.9 days → 1.9 days</strong>,
-                  trending toward 1.5&ndash;1.6 days in June. Top-quartile agents (Q4) jumped from
-                  8.8 to 11.5 tickets closed per day a <strong>30.3% improvement</strong> for
-                  the most productive segment of the field team.
-                </p>
-
-                <p className="cs-sec p">
-                  Service violations (SVs) raised within 7 days of ticket closure dropped from
-                  <strong> 7.5% → 5.9%</strong> (&minus;1.6pp). QR activation setup time for new banks
-                  went from 60&ndash;100 engineering days to under 1 day. ₹24 lakh/year saved by
-                  eliminating the Asti vendor with an additional ₹60 lakh/year in savings
-                  expected once SAP B1 → SAP HANA migration completes in the next 1&ndash;2 quarters.
-                  100% of new-bank QR activations now run through the unified app.
-                </p>
+                <ul className="cs-brief-points" style={{ marginTop: 24 }}>
+                  <li>Avg ticket closure: <strong>2.9 days → 1.9 days</strong>, trending toward 1.5–1.6 days in June</li>
+                  <li>Top-quartile agents (Q4): 8.8 → 11.5 tickets/day — <strong>30.3% improvement</strong></li>
+                  <li>Service violations within 7 days of closure: <strong>16.5% → 5.9%</strong> (−10.6pp)</li>
+                  <li>₹24 lakh/year saved by eliminating the Asti vendor</li>
+                  <li>Additional ₹60 lakh/year expected once SAP B1 → SAP HANA migration completes</li>
+                  <li>100% of new-bank QR activations now run through the unified app</li>
+                </ul>
 
                 <div className="cs-v2-reflect">
                   <div className="cs-v2-reflect-item">
-                    <div className="cs-v2-reflect-label">What worked</div>
-                    <p>Going to the field before the first wireframe. The paper notepad, the physical service form, the WhatsApp bot screenshot these weren&rsquo;t data points, they were the design brief. Every decision was traceable to something seen or heard on those visits. The decision to treat the agent app as a consumer-grade product not a utility tool paid off in adoption speed. 40% of agents adopted it in a single day.</p>
+                    <div className="cs-v2-persp-header">
+                      <svg className="cs-v2-persp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/>
+                      </svg>
+                      <span className="cs-v2-persp-title">What worked</span>
+                    </div>
+                    <ul className="cs-v2-persp-list">
+                      <li>Field visits before the first wireframe — notepads and service forms were the real design brief</li>
+                      <li>Every decision traced to something seen or heard on those field visits</li>
+                      <li>Treating the app as consumer-grade, not a utility tool, drove trust</li>
+                      <li>40% of agents adopted it in a single day</li>
+                    </ul>
                   </div>
                   <div className="cs-v2-reflect-item">
-                    <div className="cs-v2-reflect-label">What I&rsquo;d do differently</div>
-                    <p>Push harder for map/route planning in the first release. Research showed it clearly agents were visiting the same location twice because ticket aggregation by location wasn&rsquo;t available. I deprioritised it to ship faster. The multi-device mapping flow was also the hardest design problem I&rsquo;ve faced; I&rsquo;d prototype the scan interaction in code much earlier, before committing to Figma frames, to surface the state-management complexity sooner.</p>
+                    <div className="cs-v2-persp-header">
+                      <svg className="cs-v2-persp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 8v4m0 4h.01M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/>
+                      </svg>
+                      <span className="cs-v2-persp-title">What I&rsquo;d do differently</span>
+                    </div>
+                    <ul className="cs-v2-persp-list">
+                      <li>Push harder for map/route planning in v1 — agents visited same locations twice</li>
+                      <li>Ticket aggregation by location was clearly needed but deprioritised to ship</li>
+                      <li>Prototype the multi-device scan interaction in code earlier — Figma hid the state complexity</li>
+                      <li>Surface interaction edge cases before committing to full frame sets</li>
+                    </ul>
                   </div>
                 </div>
               </div>
