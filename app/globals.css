@@ -919,7 +919,7 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
 }
 /* Guitar — left edge */
 .hm-guitar {
-  width: 72px; opacity: 0.18;
+  width: 48px; height: 96px; opacity: 0.18;
   left: 5%; top: 10%;
   animation: hmFloat0 7s ease-in-out infinite;
 }
@@ -931,13 +931,13 @@ footer { padding: 36px 48px; border-top: 1px solid var(--border); display: flex;
 }
 /* Beamed notes — lower left */
 .hm-notes-l {
-  width: 62px; opacity: 0.22;
+  width: 66px; height: 50px; opacity: 0.22;
   left: 12%; bottom: 20%;
   animation: hmFloat2 8s ease-in-out infinite 0.6s;
 }
 /* Single note — mid right */
 .hm-notes-r {
-  width: 34px; opacity: 0.18;
+  width: 30px; height: 49px; opacity: 0.18;
   right: 17%; top: 40%;
   animation: hmFloat3 5.5s ease-in-out infinite 2s;
 }

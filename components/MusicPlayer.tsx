@@ -63,7 +63,7 @@ export default function MusicPlayer() {
     <>
       {/* Preload audio silently */}
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <audio ref={audioRef} src={AUDIO_SRC} preload="none" />
+      <audio ref={audioRef} src={AUDIO_SRC} preload="auto" />
 
       <div className={`music-fab${on ? " is-on" : ""}`}>
         <button

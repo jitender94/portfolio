@@ -113,46 +113,55 @@ export default function Hero() {
         {/* Subtle music element illustrations — background decoration */}
         <div className="hero-music-bg" aria-hidden="true">
           {/* Guitar — top left */}
-          <svg className="hm-icon hm-guitar" viewBox="0 0 48 110" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="18" y="2" width="12" height="18" rx="4"/>
-            <line x1="20" y1="6" x2="16" y2="6"/><circle cx="15" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-            <line x1="20" y1="11" x2="16" y2="11"/><circle cx="15" cy="11" r="1.5" fill="currentColor" stroke="none"/>
-            <line x1="28" y1="6" x2="32" y2="6"/><circle cx="33" cy="6" r="1.5" fill="currentColor" stroke="none"/>
-            <line x1="28" y1="11" x2="32" y2="11"/><circle cx="33" cy="11" r="1.5" fill="currentColor" stroke="none"/>
-            <line x1="24" y1="20" x2="24" y2="48"/>
-            <rect x="20" y="20" width="8" height="28" rx="2"/>
-            <path d="M20 48 C8 50 4 60 4 70 C4 85 13 96 24 96 C35 96 44 85 44 70 C44 60 40 50 28 48 Z"/>
-            <circle cx="24" cy="70" r="9"/>
-            <line x1="18" y1="88" x2="30" y2="88"/>
+          <svg className="hm-icon hm-guitar" viewBox="0 0 40 80" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            {/* Headstock */}
+            <rect x="16" y="2" width="8" height="14" rx="3"/>
+            {/* Tuning pegs */}
+            <circle cx="13" cy="6"  r="2" fill="currentColor" stroke="none"/>
+            <circle cx="27" cy="6"  r="2" fill="currentColor" stroke="none"/>
+            <circle cx="13" cy="12" r="2" fill="currentColor" stroke="none"/>
+            <circle cx="27" cy="12" r="2" fill="currentColor" stroke="none"/>
+            {/* Neck */}
+            <rect x="17" y="16" width="6" height="24" rx="1.5"/>
+            {/* Body */}
+            <ellipse cx="20" cy="56" rx="14" ry="16"/>
+            {/* Sound hole */}
+            <circle cx="20" cy="56" r="5"/>
+            {/* Bridge */}
+            <rect x="14" y="66" width="12" height="3" rx="1"/>
           </svg>
 
           {/* Microphone — top right */}
           <svg className="hm-icon hm-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <rect x="9" y="2" width="6" height="11" rx="3"/>
             <path d="M5 10a7 7 0 0 0 14 0"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-            <line x1="8" y1="23" x2="16" y2="23"/>
+            <line x1="12" y1="17" x2="12" y2="22"/>
+            <line x1="8" y1="22" x2="16" y2="22"/>
           </svg>
 
           {/* Beamed eighth notes — mid left */}
-          <svg className="hm-icon hm-notes-l" viewBox="0 0 36 28" fill="currentColor" stroke="none">
-            <circle cx="5" cy="22" r="4"/>
-            <circle cx="22" cy="19" r="4"/>
-            <rect x="8.5" y="7" width="2" height="15"/>
-            <rect x="25.5" y="4" width="2" height="15"/>
-            <rect x="8.5" y="7" width="19" height="2.5"/>
+          <svg className="hm-icon hm-notes-l" viewBox="0 0 44 36" fill="currentColor" stroke="none">
+            {/* Note heads */}
+            <ellipse cx="8" cy="29" rx="6" ry="4.5" transform="rotate(-15 8 29)"/>
+            <ellipse cx="30" cy="24" rx="6" ry="4.5" transform="rotate(-15 30 24)"/>
+            {/* Stems */}
+            <rect x="13" y="5" width="2.5" height="24"/>
+            <rect x="35" y="2" width="2.5" height="22"/>
+            {/* Beam — diagonal connecting stem tops */}
+            <polygon points="13,5 37.5,2 37.5,6 13,9"/>
           </svg>
 
           {/* Single quarter note — mid right */}
-          <svg className="hm-icon hm-notes-r" viewBox="0 0 18 28" fill="currentColor" stroke="none">
-            <circle cx="5" cy="22" r="4.5"/>
-            <rect x="8.5" y="4" width="2.5" height="18"/>
+          <svg className="hm-icon hm-notes-r" viewBox="0 0 22 36" fill="currentColor" stroke="none">
+            <ellipse cx="8" cy="29" rx="6.5" ry="5" transform="rotate(-15 8 29)"/>
+            <rect x="13.5" y="4" width="2.5" height="25"/>
           </svg>
 
-          {/* Treble clef — bottom right */}
-          <svg className="hm-icon hm-clef" viewBox="0 0 32 64" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M16 60 C10 60 6 56 6 51 C6 44 12 40 18 38 C22 36 26 32 26 26 C26 18 20 12 14 10 C10 8 8 6 8 3 C8 1 10 0 12 0 C16 0 20 4 20 10 L20 50 C20 56 18 60 16 60 Z"/>
-            <path d="M10 30 C10 30 6 32 6 37 C6 42 10 45 15 45"/>
+          {/* Headphones — bottom right */}
+          <svg className="hm-icon hm-clef" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 14v2a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3"/>
+            <path d="M21 14v2a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h1"/>
+            <path d="M3 14a9 9 0 0 1 18 0"/>
           </svg>
 
           {/* Small note — top center-right */}
