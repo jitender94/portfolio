@@ -53,7 +53,7 @@ export default function Building({ onOpenPlugin }: Props) {
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="section-label">Building, not just designing</div>
-        <div className="section-title">Where design<br /><em>meets code.</em></div>
+        <div className="section-title">Where design <em>meets code.</em></div>
         <div className="dev-grid">
           {cards.map((card, i) => (
             <motion.div

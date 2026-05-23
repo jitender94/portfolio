@@ -114,7 +114,7 @@ export default function Work({ onOpenCS }: WorkProps) {
       >
       <div className="section-label">Selected Work</div>
       <div className="section-title">
-        Case studies.<br /><span className="section-title-sub">Composed with Empathy.</span>
+        Case studies. <span className="section-title-sub">Composed with Empathy.</span>
       </div>
       <div className="case-studies">
         <CaseCard

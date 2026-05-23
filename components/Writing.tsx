@@ -38,7 +38,7 @@ export default function Writing() {
         <div className="section-label">Writing</div>
         <div className="writing-header-row">
           <div className="section-title" style={{ marginBottom: 0 }}>
-            Thinking out<br /><em>loud.</em>
+            Thinking out <em>loud.</em>
           </div>
           <a
             href="https://medium.com/@uxjeet"

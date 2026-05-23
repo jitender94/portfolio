@@ -69,7 +69,25 @@
       "Bash(curl -sI \"https://api.fontshare.com/v2/fonts/download/monument-extended\")",
       "Bash(curl -sL \"https://api.fontshare.com/v2/fonts/monument-extended\" -H \"User-Agent: Mozilla/5.0\")",
       "Bash(curl -sL \"https://api.fontshare.com/v2/fonts?q=monument&limit=5\" -H \"User-Agent: Mozilla/5.0\")",
-      "Bash(pkill -f 'next build')"
+      "Bash(pkill -f 'next build')",
+      "WebFetch(domain:github.com)",
+      "Bash(uipro init:*)",
+      "Bash(python3 .claude/skills/ui-ux-pro-max/scripts/search.py \"product designer portfolio dark minimal elegant\" --design-system -p \"Jitender Portfolio\")",
+      "Bash(python3.11 .claude/skills/ui-ux-pro-max/scripts/search.py \"product designer portfolio dark minimal\" --design-system)",
+      "Bash(python3.9 .claude/skills/ui-ux-pro-max/scripts/search.py \"product designer portfolio dark minimal\" --design-system)",
+      "Bash(echo -n \"<svg xmlns=''''http://www.w3.org/2000/svg'''' width=''''28'''' height=''''28'''' viewBox=''''0 0 28 28''''><defs><filter id=''''sh'''' x=''''-40%'''' y=''''-40%'''' width=''''180%'''' height=''''180%''''><feDropShadow dx=''''1'''' dy=''''1.5'''' stdDeviation=''''2'''' flood-color=''''rgba\\(0,0,0,0.35\\)''''/></filter></defs><path d=''''M3 2L3 21L7 17L11 25L14 23.5L10 15.5L18 15.5Z'''' fill=''''white'''' stroke=''''white'''' stroke-width=''''2.5'''' stroke-linejoin=''''round'''' filter=''''url\\(#sh\\)''''/><path d=''''M3 2L3 21L7 17L11 25L14 23.5L10 15.5L18 15.5Z'''' fill=''''black''''/></svg>\")",
+      "Bash(sed -i '' 's/cursor: none; transition: background .15s, color .15s; }/cursor: inherit; transition: background .15s, color .15s; }/g' /Users/jitendersharma/Documents/Portfolio/portfolio/app/globals.css)",
+      "Bash(__NEW_LINE_0e3e8f0de990b17d__ sed:*)",
+      "Bash(rm /Users/jitendersharma/Documents/Portfolio/portfolio/app/building/page.tsx)",
+      "Bash(rmdir /Users/jitendersharma/Documents/Portfolio/portfolio/app/building/)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:uxjeet.medium.com)",
+      "Bash(npx skills *)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(python3 -m json.tool)",
+      "Bash(mkdir -p ~/.claude/skills)",
+      "Bash(cp -r /Users/jitendersharma/Documents/Portfolio/portfolio/.agents/skills/* ~/.claude/skills/)"
     ]
   }
 }
