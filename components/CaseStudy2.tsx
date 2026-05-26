@@ -8,6 +8,7 @@ import FlowDiagram from "./FlowDiagram";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  onSwitch?: () => void;
 }
 
 const SEC_IDS = ["tf-s01", "tf-s02", "tf-s03", "tf-s035", "tf-s04", "tf-s05", "tf-s06"];
@@ -88,7 +89,7 @@ const partialTxnSlides = [
   { src: "/cs2/partial-txns/partial-test-txns5.png", annotation: "Incomplete task — only 3/5 devices installed, save copy option to preserve progress" },
 ];
 
-export default function CaseStudy2({ isOpen, onClose }: Props) {
+export default function CaseStudy2({ isOpen, onClose, onSwitch }: Props) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [briefExpanded, setBriefExpanded] = useState(false);
   const [methodsExpanded, setMethodsExpanded] = useState(false);
@@ -211,6 +212,14 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
             <button className="ol-back" onClick={onClose}>
               &larr; Back to portfolio
             </button>
+            {onSwitch && (
+              <div className="ol-header-center">
+                <div className="cs-layout-toggle">
+                  <button className="cs-layout-btn active">Layout A</button>
+                  <button className="cs-layout-btn" onClick={onSwitch}>Layout B</button>
+                </div>
+              </div>
+            )}
             <span className="ol-num">Case Study 02</span>
           </div>
 
@@ -226,6 +235,16 @@ export default function CaseStudy2({ isOpen, onClose }: Props) {
                 0{i + 1} {label}
               </div>
             ))}
+            {onSwitch && (
+              <button className="cs-layout-switch" onClick={onSwitch} title="Switch to vertical slide presentation">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <rect x="2" y="2" width="12" height="3" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+                  <rect x="2" y="6.5" width="12" height="3" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+                  <rect x="2" y="11" width="12" height="3" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+                </svg>
+                View Layout B
+              </button>
+            )}
           </div>
 
           {/* Cover */}

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
 
 export default function AboutPage() {
   return (
@@ -28,34 +29,37 @@ export default function AboutPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.15 }}
               >
+
                 <p>
-                  I&apos;m a <strong>Senior Product Designer at Razorpay</strong>, where I work on
-                  payment infrastructure and merchant-facing products.
+                  Senior Product Designer with <strong>7+ years of experience</strong> building
+                  scalable fintech products across <strong>Razorpay</strong> and{" "}
+                  <strong>PayU</strong>. I work at the intersection of product thinking, systems
+                  design, AI, and execution — designing everything from checkout and payments to POS
+                  ecosystems, internal tools, and 0→1 platform experiences.
                 </p>
                 <p>
-                  My approach to design is rooted in the belief that{" "}
-                  <em>understanding the problem is most of the work</em>. I start with research,
-                  interviews, data, competitive analysis — before touching a single frame.
+                  I enjoy simplifying complex problems, collaborating deeply with cross-functional
+                  teams, and building products that create measurable business and user impact. Over
+                  the last year, I&apos;ve also been actively exploring{" "}
+                  <strong>AI-assisted workflows</strong>, design engineering, and frontend
+                  prototyping to push the boundaries of how designers can build and ship faster.
                 </p>
                 <p>
-                  Over the past several years, I&apos;ve worked on products that handle real money at
-                  scale. What sets my work apart is the ability to{" "}
-                  <strong>hold the full stack</strong>: from shaping product strategy to shipping
-                  production-quality UI.
+                  Beyond product work, I&apos;m passionate about design culture, learning, and
+                  mentoring — regularly facilitating internal sessions on design craft, AI workflows,
+                  and product thinking.
                 </p>
                 <p>
-                  I built my first Figma plugin because I was frustrated with a workflow gap no tool
-                  solved. I don&apos;t wait for someone else to fix the problem.
+                  Outside work, you&apos;ll probably find me performing live music somewhere in
+                  Bangalore 🎶
                 </p>
-                <p>
-                  Outside work, I&apos;m a musician — I play guitar, write songs, sing, and compose.
-                  Music and design share more than I expected. Both are about arranging elements until
-                  something resonates.
-                </p>
-                <p>
-                  Currently based in <strong>Bengaluru</strong>. Open to senior IC roles and design
-                  leadership at product-first companies.
-                </p>
+                <a
+                  href="/resume.pdf"
+                  download
+                  className="about-resume-cta"
+                >
+                  Download Résumé <span className="about-resume-arrow">→</span>
+                </a>
               </motion.div>
 
               <motion.div
@@ -68,38 +72,15 @@ export default function AboutPage() {
                   <div className="sidebar-label">Experience</div>
                   <div className="sidebar-row">
                     <span className="sidebar-name">Razorpay</span>
-                    <span className="sidebar-detail">2022 &ndash; Present</span>
+                    <span className="sidebar-detail">Nov 2023 &ndash; Present</span>
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Previous Company</span>
-                    <span className="sidebar-detail">20XX &ndash; 20XX</span>
+                    <span className="sidebar-name">PayU Payments</span>
+                    <span className="sidebar-detail">Nov 2020 &ndash; Oct 2023</span>
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Previous Company</span>
-                    <span className="sidebar-detail">20XX &ndash; 20XX</span>
-                  </div>
-                </div>
-                <div className="sidebar-block">
-                  <div className="sidebar-label">Capabilities</div>
-                  <div className="sidebar-row">
-                    <span className="sidebar-name">Product Strategy</span>
-                    <span className="sidebar-detail">Primary</span>
-                  </div>
-                  <div className="sidebar-row">
-                    <span className="sidebar-name">UX Research</span>
-                    <span className="sidebar-detail">Primary</span>
-                  </div>
-                  <div className="sidebar-row">
-                    <span className="sidebar-name">Interaction Design</span>
-                    <span className="sidebar-detail">Primary</span>
-                  </div>
-                  <div className="sidebar-row">
-                    <span className="sidebar-name">Frontend Dev</span>
-                    <span className="sidebar-detail">Strong secondary</span>
-                  </div>
-                  <div className="sidebar-row">
-                    <span className="sidebar-name">Design Systems</span>
-                    <span className="sidebar-detail">Strong secondary</span>
+                    <span className="sidebar-name">ADP Pvt Ltd</span>
+                    <span className="sidebar-detail">Oct 2017 &ndash; Nov 2019</span>
                   </div>
                 </div>
                 <div className="sidebar-block">
@@ -114,73 +95,55 @@ export default function AboutPage() {
                     When not designing
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Guitar</span>
-                    <span className="sidebar-detail">Lead instrument</span>
+                    <span className="sidebar-name">Musician <span style={{opacity:0.5, fontWeight:400}}>(singer-songwriter)</span></span>
+                    <span className="sidebar-detail">Guitar, vocals &amp; originals</span>
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Vocalist</span>
-                    <span className="sidebar-detail">Lead &amp; harmonies</span>
+                    <span className="sidebar-name">Travelling</span>
+                    <span className="sidebar-detail">Solo adventures</span>
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Songwriter</span>
-                    <span className="sidebar-detail">Original compositions</span>
+                    <span className="sidebar-name">Sports</span>
+                    <span className="sidebar-detail">Running, cricket, basketball</span>
                   </div>
                   <div className="sidebar-row">
-                    <span className="sidebar-name">Music composition</span>
-                    <span className="sidebar-detail">Film &amp; ambient</span>
-                  </div>
-                </div>
-                <div className="sidebar-block">
-                  <div className="sidebar-label">Let&apos;s talk</div>
-                  <div className="contact-list">
-                    <a href="mailto:jitenderjeet95@gmail.com" className="contact-row">
-                      <span className="contact-label">Email</span>
-                      jitenderjeet95@gmail.com
-                    </a>
-                    <a href="https://linkedin.com/in/yourhandle" className="contact-row">
-                      <span className="contact-label">LinkedIn</span>
-                      linkedin.com/in/yourhandle
-                    </a>
-                    <a href="https://github.com/yourhandle" className="contact-row">
-                      <span className="contact-label">GitHub</span>
-                      github.com/yourhandle
-                    </a>
-                    <a href="https://twitter.com/yourhandle" className="contact-row">
-                      <span className="contact-label">Twitter</span>
-                      @yourhandle
-                    </a>
+                    <span className="sidebar-name">Cooking</span>
+                    <span className="sidebar-detail">Amateur chef</span>
                   </div>
                 </div>
               </motion.div>
             </div>
 
-            {/* Photos section — add personality/life photos here */}
-            <motion.div
-              className="about-photos"
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <div className="about-photos-label">Life outside the screen</div>
-              <div className="about-photos-grid">
-                {/* Replace src values with actual photo paths */}
-                <div className="about-photo-slot">
-                  <div className="about-photo-placeholder">Photo 1</div>
-                </div>
-                <div className="about-photo-slot">
-                  <div className="about-photo-placeholder">Photo 2</div>
-                </div>
-                <div className="about-photo-slot">
-                  <div className="about-photo-placeholder">Photo 3</div>
-                </div>
-                <div className="about-photo-slot">
-                  <div className="about-photo-placeholder">Photo 4</div>
-                </div>
-              </div>
-            </motion.div>
-
           </motion.div>
         </section>
+
+        {/* Photos — separate light section */}
+        <section className="about-photos-section">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="about-photos-label">Life outside the screen</div>
+            <div className="about-photos-grid">
+              {/* Replace src values with actual photo paths */}
+              <div className="about-photo-slot">
+                <div className="about-photo-placeholder">Photo 1</div>
+              </div>
+              <div className="about-photo-slot">
+                <div className="about-photo-placeholder">Photo 2</div>
+              </div>
+              <div className="about-photo-slot">
+                <div className="about-photo-placeholder">Photo 3</div>
+              </div>
+              <div className="about-photo-slot">
+                <div className="about-photo-placeholder">Photo 4</div>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+        <Footer />
       </main>
     </>
   );

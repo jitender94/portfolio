@@ -1,21 +1,6 @@
 import type { Metadata } from "next";
-import { DM_Mono } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
-
-const dmMono = DM_Mono({
-  weight: ["300", "400", "500"],
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
-
-const monument = localFont({
-  src: [
-    { path: "../public/fonts/MonumentExtended-Regular.otf",   weight: "400", style: "normal" },
-    { path: "../public/fonts/MonumentExtended-Ultrabold.otf", weight: "800", style: "normal" },
-  ],
-  variable: "--font-serif",
-});
+import AgentationDevToolbar from "./AgentationDevToolbar";
 
 export const metadata: Metadata = {
   title: "Jitender's Portfolio",
@@ -28,11 +13,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={`${dmMono.variable} ${monument.variable}`}
-        suppressHydrationWarning
-      >
+      <body suppressHydrationWarning>
         {children}
+        {/* Dev-only: visual-feedback toolbar (click any element → copy
+            structured markdown → paste into chat). NODE_ENV check is
+            statically replaced by Next.js — stripped from production builds. */}
+        {process.env.NODE_ENV === "development" && <AgentationDevToolbar />}
       </body>
     </html>
   );

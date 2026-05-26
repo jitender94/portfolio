@@ -3,9 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 
-// Hero text uses CSS @keyframes heroFadeUp for guaranteed visibility.
-// Framer Motion is kept only for the hero-card scroll effects (scale / borderRadius / opacity).
-
 const COMPANIES: { name: string; logo: string }[] = [
   { name: "Razorpay", logo: "/homepage/Razorpay.png" },
   { name: "PayU",     logo: "/homepage/PayU.png"     },
@@ -24,79 +21,12 @@ export default function Hero() {
     }, 2800);
     return () => clearInterval(id);
   }, []);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
   const scale = useTransform(scrollY, [0, 750], [1, 0.86]);
-  const borderRadius = useTransform(scrollY, [0, 750], [0, 24]);
+  const borderRadius = useTransform(scrollY, [0, 750], [0, 0]);
   const innerOpacity = useTransform(scrollY, [300, 750], [1, 0.62]);
-
-  // Particle canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const pts = Array.from({ length: 100 }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.0002,
-      vy: (Math.random() - 0.5) * 0.0002,
-      r: Math.random() * 1.1 + 0.4,
-    }));
-
-    let animId: number;
-
-    function resize() {
-      if (!canvas) return;
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    function draw() {
-      if (!canvas || !ctx) return;
-      const W = canvas.width, H = canvas.height;
-      ctx.clearRect(0, 0, W, H);
-
-      for (let a = 0; a < pts.length; a++) {
-        for (let b = a + 1; b < pts.length; b++) {
-          const dx = (pts[a].x - pts[b].x) * W;
-          const dy = (pts[a].y - pts[b].y) * H;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 90) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(139,92,246,${0.2 * (1 - d / 90)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(pts[a].x * W, pts[a].y * H);
-            ctx.lineTo(pts[b].x * W, pts[b].y * H);
-            ctx.stroke();
-          }
-        }
-      }
-
-      for (const p of pts) {
-        ctx.beginPath();
-        ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(196,181,253,0.5)";
-        ctx.fill();
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > 1) p.vx *= -1;
-        if (p.y < 0 || p.y > 1) p.vy *= -1;
-      }
-      animId = requestAnimationFrame(draw);
-    }
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
 
   return (
     <section id="home" ref={sectionRef}>
@@ -104,74 +34,6 @@ export default function Hero() {
         className="hero-card"
         style={{ scale, borderRadius, opacity: innerOpacity }}
       >
-        <div className="blob-a" />
-        <div className="blob-b" />
-        <div className="blob-c" />
-        <canvas id="particle-canvas" ref={canvasRef} />
-        <div className="hero-grid" />
-
-        {/* Subtle music element illustrations — background decoration */}
-        <div className="hero-music-bg" aria-hidden="true">
-          {/* Guitar — top left */}
-          <svg className="hm-icon hm-guitar" viewBox="0 0 40 80" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            {/* Headstock */}
-            <rect x="16" y="2" width="8" height="14" rx="3"/>
-            {/* Tuning pegs */}
-            <circle cx="13" cy="6"  r="2" fill="currentColor" stroke="none"/>
-            <circle cx="27" cy="6"  r="2" fill="currentColor" stroke="none"/>
-            <circle cx="13" cy="12" r="2" fill="currentColor" stroke="none"/>
-            <circle cx="27" cy="12" r="2" fill="currentColor" stroke="none"/>
-            {/* Neck */}
-            <rect x="17" y="16" width="6" height="24" rx="1.5"/>
-            {/* Body */}
-            <ellipse cx="20" cy="56" rx="14" ry="16"/>
-            {/* Sound hole */}
-            <circle cx="20" cy="56" r="5"/>
-            {/* Bridge */}
-            <rect x="14" y="66" width="12" height="3" rx="1"/>
-          </svg>
-
-          {/* Microphone — top right */}
-          <svg className="hm-icon hm-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="9" y="2" width="6" height="11" rx="3"/>
-            <path d="M5 10a7 7 0 0 0 14 0"/>
-            <line x1="12" y1="17" x2="12" y2="22"/>
-            <line x1="8" y1="22" x2="16" y2="22"/>
-          </svg>
-
-          {/* Beamed eighth notes — mid left */}
-          <svg className="hm-icon hm-notes-l" viewBox="0 0 44 36" fill="currentColor" stroke="none">
-            {/* Note heads */}
-            <ellipse cx="8" cy="29" rx="6" ry="4.5" transform="rotate(-15 8 29)"/>
-            <ellipse cx="30" cy="24" rx="6" ry="4.5" transform="rotate(-15 30 24)"/>
-            {/* Stems */}
-            <rect x="13" y="5" width="2.5" height="24"/>
-            <rect x="35" y="2" width="2.5" height="22"/>
-            {/* Beam — diagonal connecting stem tops */}
-            <polygon points="13,5 37.5,2 37.5,6 13,9"/>
-          </svg>
-
-          {/* Single quarter note — mid right */}
-          <svg className="hm-icon hm-notes-r" viewBox="0 0 22 36" fill="currentColor" stroke="none">
-            <ellipse cx="8" cy="29" rx="6.5" ry="5" transform="rotate(-15 8 29)"/>
-            <rect x="13.5" y="4" width="2.5" height="25"/>
-          </svg>
-
-          {/* Headphones — bottom right */}
-          <svg className="hm-icon hm-clef" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 14v2a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3"/>
-            <path d="M21 14v2a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h1"/>
-            <path d="M3 14a9 9 0 0 1 18 0"/>
-          </svg>
-
-          {/* Small note — top center-right */}
-          <svg className="hm-icon hm-note-sm" viewBox="0 0 18 24" fill="currentColor" stroke="none">
-            <circle cx="5" cy="19" r="4"/>
-            <rect x="8.5" y="3" width="2" height="16"/>
-            <rect x="8.5" y="3" width="8" height="2"/>
-          </svg>
-        </div>
-
         <div className="hero-top-row">
           <div className="hero-name-block">
             <div
@@ -218,10 +80,10 @@ export default function Hero() {
         </div>
 
         <p className="hero-intro">
-          A product designer based in Bengaluru, India, bringing digital products to life with pixels and code.<br />
-          Currently shaping B2B &amp; B2B2C experiences at Razorpay - from the first research conversation
-          to the shipped interface. Research, product thinking, design, and code - the full loop.<br />
-          Music, Travel &amp; fitness fill the rest.
+          Senior Product Designer with 7+ years shipping scalable fintech products at Razorpay and PayU.<br />
+          I work the full loop — research, product thinking, design, and code — from the first conversation
+          to the shipped interface.<br />
+          Music, travel &amp; fitness fill the rest.
         </p>
 
         <div className="logos-strip">

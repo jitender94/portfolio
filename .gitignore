@@ -45,3 +45,31 @@ next-env.d.ts
 .agents/
 skills-lock.json
 
+# Playwright MCP screenshot cache
+.playwright-mcp/
+
+# Debug / test screenshots at repo root (real assets live under public/)
+/*.png
+
+# Local-only HTML preview test pages in public/
+public/cursor-preview.html
+public/hero-animation-demo.html
+public/hero-animation.html
+public/plectrum-preview.html
+
+# Session notes
+LAYOUT_B_FIX.md
+
+# Planning / scratch work
+planning/
+
+# Local debug utilities (not part of the deployed site)
+public/code-structure.html
+
+# Large source .mov videos — kept locally only. Compressed .mp4 versions
+# (smaller) live alongside them in public/cs1/ and are what the case study
+# actually loads.
+public/cs1/Dashboard_video.mov
+public/cs1/Email_video.mov
+public/cs1/Flow1_Video.mov
+

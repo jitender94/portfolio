@@ -97,7 +97,7 @@ export default function CaseStudy1v2({ isOpen, onClose, onSwitch }: Props) {
             </div>
             <div className="cs-v2-cover-head">
               <div className="cs-tag">Razorpay &middot; 2025 &middot; Product Design</div>
-              <h1 className="cs-v2-title">Downtime Dashboard 2.0</h1>
+              <h1 className="cs-v2-title">Ecosystem health, downtimes &amp; alerting</h1>
               <p className="cs-v2-hook">
                 Merchants were discovering payment failures 2&ndash;4 hours late — through customer
                 complaints — while Razorpay was quietly rerouting traffic and saving transactions

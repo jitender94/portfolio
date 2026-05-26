@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 
 interface Props {
   onOpenPlugin: () => void;
+  onOpenBlade: () => void;
+  onOpenPortfolio: () => void;
 }
 
-export default function Building({ onOpenPlugin }: Props) {
+export default function Building({ onOpenPlugin, onOpenBlade, onOpenPortfolio }: Props) {
   const cards = [
     {
       glyph: "Fx",
@@ -20,11 +22,11 @@ export default function Building({ onOpenPlugin }: Props) {
     {
       glyph: "{ }",
       type: "Frontend Development",
-      title: "Project Name, What you built",
-      desc: "What this is, what problem it solves, your specific contribution. One key technical challenge you solved and how.",
-      tech: ["React", "TypeScript", "Tailwind"],
-      onClick: () => {},
-      linkLabel: "View project →",
+      title: "Optimizer Dashboard, Vibe to Blade",
+      desc: "Built an analytics dashboard from Claude Design, then led a 7-phase migration to Razorpay's Blade Design System — combining automated tooling with manual refinement to hit 92% compliance.",
+      tech: ["React 18", "TypeScript", "Blade v12"],
+      onClick: onOpenBlade,
+      linkLabel: "View case study →",
     },
     {
       glyph: "↑",
@@ -32,7 +34,7 @@ export default function Building({ onOpenPlugin }: Props) {
       title: "Portfolio Website, Built in code",
       desc: "You're looking at it. Next.js, Tailwind, Framer Motion — no templates. Design decisions extend to how things are built.",
       tech: ["Next.js", "Tailwind", "Framer Motion"],
-      onClick: () => {},
+      onClick: onOpenPortfolio,
       linkLabel: "How it was built →",
     },
   ];

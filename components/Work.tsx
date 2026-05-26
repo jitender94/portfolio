@@ -15,6 +15,7 @@ function CaseCard({
   delay,
   hookText,
   heroImg,
+  heroImgFit = "cover",
   onClick,
   ctaList,
 }: {
@@ -25,6 +26,7 @@ function CaseCard({
   delay: number;
   hookText: string;
   heroImg?: string;
+  heroImgFit?: "cover" | "contain";
   onClick: () => void;
   ctaList?: { label: string; action: () => void }[];
 }) {
@@ -68,7 +70,9 @@ function CaseCard({
       transition={{ duration: 0.75, delay, ease: [0.23, 1, 0.32, 1] as [number,number,number,number] }}
     >
       {heroImg && (
-        <div className="case-hero-img" style={{ backgroundImage: `url('${heroImg}')` }} />
+        <div className="case-hero-wrap">
+          <div className="case-hero-img" style={{ backgroundImage: `url('${heroImg}')`, backgroundSize: heroImgFit }} />
+        </div>
       )}
       <div className="case-body">
         <div className="case-tags">
@@ -125,10 +129,10 @@ export default function Work({ onOpenCS }: WorkProps) {
             { label: "0→1 Feature" },
             { label: "Razorpay" },
           ]}
-          title="Downtime Dashboard 2.0"
+          title="Ecosystem health, downtimes & alerting"
           year="2025"
           delay={0.1}
-          heroImg="/homepage/cs1-hero.png"
+          heroImg="/cs1/hero_image.png"
           hookText="17,000 support tickets a year because merchants couldn't tell if a payment failure was their code, the bank, or Razorpay. I redesigned the dashboard so they never had to guess again."
           onClick={() => onOpenCS("cs1")}
         />
@@ -143,7 +147,8 @@ export default function Work({ onOpenCS }: WorkProps) {
           title="Task Force App"
           year="2025"
           delay={0.22}
-          heroImg="/cs2/hero-new.jpg"
+          heroImg="/cs1/FE_App_Mock.png"
+          heroImgFit="contain"
           hookText="276 field agents were planning their days off WhatsApp messages and paper notes, using a bot that worked half the time. I rebuilt the entire field operations experience from scratch — 40% adopted it in a single day."
           onClick={() => onOpenCS("cs2")}
           ctaList={[
