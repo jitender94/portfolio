@@ -115,6 +115,37 @@ export default function BladeCS({ isOpen, onClose }: Props) {
     return () => observer.disconnect();
   }, [isOpen]);
 
+  /* Mobile zoom-to-fit: scale .cs1-si cards so the full desktop layout
+     fits the mobile viewport width. zoom (unlike transform) affects layout
+     flow, so scroll heights stay correct automatically.
+     Also collapses slide min-height via JS to avoid empty gaps below cards. */
+  useEffect(() => {
+    const DESKTOP_W = 860;
+    const applyZoom = () => {
+      const vw = window.innerWidth;
+      const isMobile = vw < DESKTOP_W;
+      const scale = isMobile ? String(vw / DESKTOP_W) : '';
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-si').forEach(el => {
+        el.style.zoom = scale;
+      });
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-slide').forEach(el => {
+        el.style.minHeight = isMobile ? '0' : '';
+      });
+    };
+    if (isOpen) {
+      applyZoom();
+      window.addEventListener('resize', applyZoom);
+      return () => window.removeEventListener('resize', applyZoom);
+    } else {
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-si').forEach(el => {
+        el.style.zoom = '';
+      });
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-slide').forEach(el => {
+        el.style.minHeight = '';
+      });
+    }
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (

@@ -466,7 +466,7 @@ footer {
   scroll-snap-align: start;
   scroll-snap-stop: always;
   margin-bottom: 0;
-  overflow-y: visible; overflow-x: hidden;  /* no inner scroll — content flows to its natural height */
+  overflow-y: visible; overflow-x: visible;  /* no inner scroll — content flows to its natural height */
   display: flex; flex-direction: column; align-items: center;
   padding: 32px 40px 0;  /* bottom-0: card's own 48px padding provides closure; no extra strip */
   background-color: #f5f5f7;
@@ -489,7 +489,7 @@ footer {
 /* v2 */
 .cs1-si {
   flex: 1;
-  width: 100%; max-width: 1080px;
+  width: 100%; max-width: 1080px; min-width: 860px;
   background: #ffffff;
   border: 1px solid rgba(0,0,0,0.09);
   padding: 48px 64px;
@@ -1948,7 +1948,7 @@ footer {
 .ol-back { font-family: var(--mono); font-size: 13.8px; letter-spacing: .08em; color: #40566d; background: none; border: none; padding: 0; display: flex; align-items: center; gap: 9.2px; transition: color .2s; }
 .ol-back:hover { color: #0a0a0a; }
 .ol-num { font-family: var(--mono); font-size: 13.8px; letter-spacing: .1em; color: var(--cs-dim); }
-.ol-body { max-width: 800px; margin: 0 auto; padding: 80px 48px 120px; }
+.ol-body { max-width: 800px; min-width: 700px; margin: 0 auto; padding: 80px 48px 120px; }
 .cs-tag { font-family: var(--mono); font-size: 12.6px; letter-spacing: .2em; text-transform: uppercase; color: var(--cs-accent); margin-bottom: 18.4px; }
 .cs-title { font-family: var(--serif); font-weight: 800; font-size: clamp(29.9px,3.68vw,52.9px); line-height: 1.05; letter-spacing: 0.01em; margin-bottom: 27.6px; color: var(--cs-text); }
 .cs-title em { font-style: normal; font-weight: 400; color: var(--cs-accent); }
@@ -2539,16 +2539,16 @@ footer {
 
 /* WRITING */
 .writing-header-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; }
-.writing-all-link { font-family: var(--body-font); font-size: 14.9px; font-weight: 500; letter-spacing: -0.01em; color: #1566F1; text-decoration: none; padding-bottom: 4.6px; transition: color .2s; }
+.writing-all-link { font-family: var(--body-font); font-size: 14.9px; font-weight: 500; letter-spacing: -0.01em; color: #1566F1; text-decoration: none; padding-bottom: 4.6px; transition: color .2s; white-space: nowrap; }
 .writing-all-link:hover { color: #3d7ef3; }
 .writing-list { display: flex; flex-direction: column; }
 .writing-row { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: 32px; row-gap: 10px; align-items: center; padding: 24px 0; border-top: 1px solid rgba(0,0,0,0.08); text-decoration: none; cursor: pointer; transition: border-color .2s; }
 .writing-row:last-child { border-bottom: 1px solid rgba(0,0,0,0.08); }
 .writing-row:hover { border-color: rgba(0,0,0,0.18); }
 .writing-row-meta { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 10px; }
-.writing-pub { font-family: var(--body-font); font-size: 12.6px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #1566F1; }
-.writing-dot { width: 3px; height: 3px; border-radius: 50%; background: #cccccc; }
-.writing-date, .writing-time { font-family: var(--body-font); font-size: 12.6px; font-weight: 400; letter-spacing: -0.01em; color: #888888; }
+.writing-pub { font-family: var(--body-font); font-size: 12.6px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #1566F1; white-space: nowrap; }
+.writing-dot { width: 3px; height: 3px; border-radius: 50%; background: #cccccc; flex-shrink: 0; }
+.writing-date, .writing-time { font-family: var(--body-font); font-size: 12.6px; font-weight: 400; letter-spacing: -0.01em; color: #888888; white-space: nowrap; }
 .writing-row-title { grid-column: 1; grid-row: 2; font-family: var(--display-font); font-size: 20.7px; font-weight: 600; letter-spacing: -0.031em; color: #1d1d1f; line-height: 1.1; transition: color .2s; }
 .writing-row:hover .writing-row-title { color: #1566F1; }
 .writing-arrow { grid-column: 2; grid-row: 1 / 3; font-family: var(--body-font); font-size: 20.7px; color: #aaaaaa; transition: transform .2s, color .2s; align-self: center; }
@@ -2672,7 +2672,7 @@ footer { padding: 36px 48px; display: flex; justify-content: center; align-items
 .cs-v2-navnum { font-size: 10.3px; opacity: 0.5; }
 /* Content area — sidebar + main layout */
 .cs-v2-wrap {
-  max-width: 1200px; margin: 0 auto; padding: 48px 32px 80px;
+  max-width: 1200px; min-width: 900px; margin: 0 auto; padding: 48px 32px 80px;
   display: flex; gap: 64px; align-items: flex-start;
 }
 
@@ -3059,7 +3059,7 @@ footer { padding: 36px 48px; display: flex; justify-content: center; align-items
 @media (max-width: 860px) {
   nav { padding: 0 24px; }
   .nav-links { display: none; }
-  section { padding: 80px 48px; }
+  section { padding: 80px 24px; }
   #home { padding: 80px 24px; }
   .hero-card { padding: 64px 6% 44px; }
   .hero-top-row { flex-direction: column; align-items: center; gap: 20px; margin-bottom: 28px; }
@@ -3081,28 +3081,21 @@ footer { padding: 36px 48px; display: flex; justify-content: center; align-items
   .case-body { padding: 24px 24px 28px; }
   .case-num { display: none; }
   .dev-grid, .about-grid { grid-template-columns: 1fr; }
-  .cs-meta, .cs-stats { grid-template-columns: 1fr 1fr; }
-  .ol-body { padding: 48px 24px 80px; }
-  .ol-header { padding: 16px 24px; }
-  footer { flex-direction: column; gap: 10px; text-align: center; }
-  .cs-progress { display: none; }
-  .cs-pill-row { flex-direction: column; }
-  .cs-ut-tiers { grid-template-columns: 1fr; }
-  .cs-personas { flex-wrap: wrap; }
-  .cs-persona { min-width: calc(50% - 1px); }
-  .cs-v2-topnav-list { padding: 0 20px; }
-  .cs-v2-wrap { padding: 40px 20px 80px; }
-  .cs-v2-cover { padding: 24px 24px 0; }
-  .cs-v2-overview { grid-template-columns: 1fr 1fr; }
-  .cs-v2-reflect { grid-template-columns: 1fr; }
-  .cs-brief-cards { grid-template-columns: 1fr; }
-  .cs-stat-hero-row { grid-template-columns: 1fr 1fr; }
-  .cs-v2-directions { grid-template-columns: 1fr; }
-  .cs-v2-request-types { grid-template-columns: 1fr; }
-  .cs-v2-insight, .cs-v2-insight-rev { grid-template-columns: 1fr; }
-  .cs-v2-insight-imgs { height: 200px; }
-  .cs-h-timeline { flex-direction: column; }
-  .cs-layout-toggle { display: none; }
+  footer { flex-direction: column; gap: 10px; text-align: center; padding: 28px 24px; }
+  .footer-content { flex-direction: column; gap: 6px; align-items: center; }
+  .footer-copy, .footer-note { white-space: normal; text-align: center; }
+  .footer-divider { display: none; }
+  /* Contact strip — stack label above value on narrow screens */
+  #contact { padding: 80px 24px; }
+  .contact-strip-row { flex-wrap: wrap; gap: 4px 0; align-items: flex-start; }
+  .contact-strip-key { min-width: 100%; }
+  .contact-strip-val { font-size: 16px; flex: 1; overflow-wrap: break-word; word-break: break-word; }
+  .contact-strip-arrow { align-self: center; }
+  /* Case study slides: zoom-to-fit on mobile — JS scales .cs1-si to exact viewport ratio;
+     CSS provides a close baseline so there is no unstyled flash on first paint.
+     min-height removed so slides collapse to their zoomed content height (no empty gaps). */
+  .cs1-slide { padding: 0; min-height: 0; }
+  .cs1-si    { zoom: 0.44; } /* ≈ 375/860 — JS overrides to exact per-device ratio */
 }
 
 /* ── CS2 Phase 2 image placeholder ──────────────── */
@@ -3522,11 +3515,4 @@ footer { padding: 36px 48px; display: flex; justify-content: center; align-items
   border-top: 1px solid var(--cs-border) !important;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .bd-method-grid { grid-template-columns: 1fr; }
-  .bd-screenshot-row { grid-template-columns: 1fr; }
-  .bd-coverage-item { flex-direction: column; gap: 4px; }
-  .bd-coverage-item-detail { text-align: left; }
-  .bd-challenge-body { padding-left: 0; }
-}
+/* BladeCS bd-* responsive rules removed — case studies render at desktop width on all screens */
