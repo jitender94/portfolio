@@ -31,47 +31,49 @@ const SLIDES = [
   "Current Experience",         // 9  — Bluestone story (Akash + 3 tabs)
   "Current Experience Detail",  // 10 — NEW: 3-step dashboard navigation + screenshots
   "Data & Attribution",         // 11
-  "Design Problem Statement",   // 12 — HERO
-  "Problem Statements",         // 13
-  "Vision & Outcomes",          // 14
-  "Design",                     // 15 — HERO
-  "Iterations",                 // 16
-  "Usability Testing",          // 17
-  "Solution",                   // 18 — HERO
-  "Final Designs",              // 19 — Section intro
-  "Dashboard Journey",          // 20 — Journey 1 intro + video
-  "Dashboard Screen 1",         // 21
-  "Dashboard Screen 2",         // 22
-  "Dashboard Screen 3",         // 23
-  "Dashboard Screen 4",         // 24
-  "Dashboard Screen 5",         // 25
-  "Dashboard Screen 6",         // 26
-  "Email Journey",              // 27 — Journey 2 header
-  "Email Journey Video",        // 28 — Email journey video
-  "Email Screen 1",             // 29
-  "Email Screen 2",             // 30
-  "Email Screen 3",             // 31
-  "Email Screen 4",             // 32
-  "Email Screen 5",             // 33
-  "Email Screen 6",             // 34
-  "Email Screen 7",             // 35
-  "Email Screen 8",             // 36
-  "Results & Learnings",        // 37
+  "Attribution & Merchant Impact", // 12 — Image + Annotations + Merchant Insights
+  "Design Problem Statement",   // 13 — HERO
+  "Problem Statements",         // 14
+  "Vision & Outcomes",          // 15
+  "Ideation",                   // 16 — HERO
+  "Iterations",                 // 17
+  "Usability Testing",          // 18
+  "Final Designs",              // 19 — HERO
+  "Before & After",             // 20 — Before/After comparison
+  "Final Designs",              // 21 — Section intro
+  "Dashboard Journey",          // 22 — Journey 1 intro + video
+  "Dashboard Screen 1",         // 23
+  "Dashboard Screen 2",         // 24
+  "Dashboard Screen 3",         // 25
+  "Dashboard Screen 4",         // 26
+  "Dashboard Screen 5",         // 27
+  "Dashboard Screen 6",         // 28
+  "Email Journey",              // 29 — Journey 2 header
+  "Email Journey Video",        // 30 — Email journey video
+  "Email Screen 1",             // 31
+  "Email Screen 2",             // 32
+  "Email Screen 3",             // 33
+  "Email Screen 4",             // 34
+  "Email Screen 5",             // 35
+  "Email Screen 6",             // 36
+  "Email Screen 7",             // 37
+  "Email Screen 8",             // 38
+  "Results & Learnings",        // 39
 ];
 
-/* Hero slides get a diamond dot in the footer (shifted by +1 after slide 10 insert). */
-const HERO_SLIDES = new Set([1, 5, 8, 12, 15, 18]);
+/* Hero slides get a diamond dot in the footer (shifted by +1 after slide 12 insert). */
+const HERO_SLIDES = new Set([1, 5, 8, 13, 16, 19]);
 
-/* Footer section groups (Research range extended; everything after shifted by +1). */
+/* Footer section groups (Research extended to 12; everything after shifted by +1). */
 const SECTIONS = [
   { label: "Intro",      range: [0, 0]   as [number, number] },
   { label: "Context",    range: [1, 4]   as [number, number] },
   { label: "Problem",    range: [5, 7]   as [number, number] },
-  { label: "Research",   range: [8, 11]  as [number, number] },
-  { label: "Synthesis",  range: [12, 14] as [number, number] },
-  { label: "Design",     range: [15, 17] as [number, number] },
-  { label: "Solution",   range: [18, 36] as [number, number] },
-  { label: "Results",    range: [37, 37] as [number, number] },
+  { label: "Research",   range: [8, 12]  as [number, number] },
+  { label: "Synthesis",  range: [13, 15] as [number, number] },
+  { label: "Ideation",      range: [16, 18] as [number, number] },
+  { label: "Final Designs", range: [19, 38] as [number, number] },
+  { label: "Results",       range: [39, 39] as [number, number] },
 ];
 
 export default function CaseStudy1({ isOpen, onClose }: Props) {
@@ -159,6 +161,37 @@ export default function CaseStudy1({ isOpen, onClose }: Props) {
     const refs = slideRefs.current;
     refs.forEach(ref => { if (ref) observer.observe(ref); });
     return () => observer.disconnect();
+  }, [isOpen]);
+
+  /* Mobile zoom-to-fit: scale .cs1-si cards so the full desktop layout
+     fits the mobile viewport width. zoom (unlike transform) affects layout
+     flow, so scroll heights stay correct automatically.
+     Also collapses slide min-height via JS to avoid empty gaps below cards. */
+  useEffect(() => {
+    const DESKTOP_W = 860;
+    const applyZoom = () => {
+      const vw = window.innerWidth;
+      const isMobile = vw < DESKTOP_W;
+      const scale = isMobile ? String(vw / DESKTOP_W) : '';
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-si').forEach(el => {
+        el.style.zoom = scale;
+      });
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-slide').forEach(el => {
+        el.style.minHeight = isMobile ? '0' : '';
+      });
+    };
+    if (isOpen) {
+      applyZoom();
+      window.addEventListener('resize', applyZoom);
+      return () => window.removeEventListener('resize', applyZoom);
+    } else {
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-si').forEach(el => {
+        el.style.zoom = '';
+      });
+      stageRef.current?.querySelectorAll<HTMLElement>('.cs1-slide').forEach(el => {
+        el.style.minHeight = '';
+      });
+    }
   }, [isOpen]);
 
   return (
@@ -265,32 +298,34 @@ function SlideContent({ index }: { index: number }) {
     case  9: return <SlideCurrentExp />;
     case 10: return <SlideCurrentExpDetail />;
     case 11: return <SlideDataAttribution />;
-    case 12: return <SlideHeroDesignProblem />;
-    case 13: return <SlideHMW />;
-    case 14: return <SlideVision />;
-    case 15: return <SlideHeroDesign />;
-    case 16: return <SlideIterations />;
-    case 17: return <SlideTesting />;
-    case 18: return <SlideHeroSolution />;
-    case 19: return <SlideFinalDesignsHeader />;
-    case 20: return <SlideDashboardJourneyIntro />;
-    case 21: return <SlideDashboardScreen screen={1} />;
-    case 22: return <SlideDashboardScreen screen={2} />;
-    case 23: return <SlideDashboardScreen screen={3} />;
-    case 24: return <SlideDashboardScreen screen={4} />;
-    case 25: return <SlideDashboardScreen screen={5} />;
-    case 26: return <SlideDashboardScreen screen={6} />;
-    case 27: return <SlideEmailJourneyHeader />;
-    case 28: return <SlideEmailJourneyIntro />;
-    case 29: return <SlideEmailScreen screen={1} />;
-    case 30: return <SlideEmailScreen screen={2} />;
-    case 31: return <SlideEmailScreen screen={3} />;
-    case 32: return <SlideEmailScreen screen={4} />;
-    case 33: return <SlideEmailScreen screen={5} />;
-    case 34: return <SlideEmailScreen screen={6} />;
-    case 35: return <SlideEmailScreen screen={7} />;
-    case 36: return <SlideEmailScreen screen={8} />;
-    case 37: return <SlideOutcome />;
+    case 12: return <SlideImageAnnotationsMerchantInsights />;
+    case 13: return <SlideHeroDesignProblem />;
+    case 14: return <SlideHMW />;
+    case 15: return <SlideVision />;
+    case 16: return <SlideHeroDesign />;
+    case 17: return <SlideIterations />;
+    case 18: return <SlideTesting />;
+    case 19: return <SlideHeroSolution />;
+    case 20: return <SlideBeforeAfter />;
+    case 21: return <SlideFinalDesignsHeader />;
+    case 22: return <SlideDashboardJourneyIntro />;
+    case 23: return <SlideDashboardScreen screen={1} />;
+    case 24: return <SlideDashboardScreen screen={2} />;
+    case 25: return <SlideDashboardScreen screen={3} />;
+    case 26: return <SlideDashboardScreen screen={4} />;
+    case 27: return <SlideDashboardScreen screen={5} />;
+    case 28: return <SlideDashboardScreen screen={6} />;
+    case 29: return <SlideEmailJourneyHeader />;
+    case 30: return <SlideEmailJourneyIntro />;
+    case 31: return <SlideEmailScreen screen={1} />;
+    case 32: return <SlideEmailScreen screen={2} />;
+    case 33: return <SlideEmailScreen screen={3} />;
+    case 34: return <SlideEmailScreen screen={4} />;
+    case 35: return <SlideEmailScreen screen={5} />;
+    case 36: return <SlideEmailScreen screen={6} />;
+    case 37: return <SlideEmailScreen screen={7} />;
+    case 38: return <SlideEmailScreen screen={8} />;
+    case 39: return <SlideOutcome />;
     default: return null;
   }
 }
@@ -369,7 +404,7 @@ function SlideHeroDesign() {
   return (
     <SectionHero
       num="05"
-      title="Design"
+      title="Ideation"
       sub="Four iteration rounds with Lovable and Figma Make, two concepts killed, one idea no competitor had built."
       illustration="/cs1/Design.png"
     />
@@ -391,7 +426,7 @@ function SlideHeroSolution() {
   return (
     <SectionHero
       num="06"
-      title="Solution"
+      title="Final Designs"
       sub="Three surfaces. One coherent system. Merchants go from panic to decision in under two minutes."
       illustration="/cs1/Design.png"
     />
@@ -931,6 +966,22 @@ function SlideCurrentExpDetail() {
           The existing dashboard shows <strong>what</strong> failed (4 buckets), but never <strong>why</strong>. A merchant looking at &ldquo;30% Banking-related failures&rdquo; has no way to know if that&rsquo;s caused by an Axis UPI downtime, an HDFC server timeout, or a bug in their own integration.
         </p>
       </div>
+
+      {/* Support-data stats — what this costs on the ground when a merchant escalates. */}
+      <div className="cs1-slide-label" style={{ marginTop: 32, marginBottom: 12 }}>What this costs on the ground</div>
+      <div className="cs1-stat-grid">
+        {[
+          ["6+ hrs",    "Typical wait for Razorpay RCA after merchant escalation"],
+          ["₹80K/day",  "Marketing campaign pause cost while waiting for root cause"],
+          ["War room",  "Engineering team pulled in every time a merchant escalated"],
+          ["No path",   "Zero self-serve resolution flow for downtime queries"],
+        ].map(([num, label]) => (
+          <div className="cs1-stat" key={num}>
+            <div className="cs1-stat-n">{num}</div>
+            <div className="cs1-stat-l">{label}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -965,29 +1016,33 @@ function SlideDataAttribution() {
   return (
     <div className="cs1-si">
       <div className="cs1-slide-label">Research &middot; 02</div>
-      <h2 className="cs1-slide-h">~1,900 tickets a month.<br />All asking the same question.</h2>
-      <div className="cs1-stat-grid" style={{ marginBottom: 28 }}>
-        {[
-          ["17,000+",  "Support tickets annually from merchants asking \"why are my payments failing?\""],
-          ["~1,900",   "Tickets per month — SR drops, latency spikes, OTP failures, capture issues"],
-          ["5–10%",    "Of incidents proactively communicated by Razorpay. 90%+ were merchant-reported."],
-          ["0",        "Tickets where the root cause was automatically attributed to a specific downtime"],
-        ].map(([num, label]) => (
-          <div className="cs1-stat" key={num}>
-            <div className="cs1-stat-n">{num}</div>
-            <div className="cs1-stat-l">{label}</div>
-          </div>
-        ))}
+
+      {/* The Big Picture - Title */}
+      <h2 className="cs1-slide-h">The Big Picture</h2>
+
+      {/* Subheading */}
+      <div className="cs1-slide-label" style={{ marginBottom: 20 }}>Lack of payment failure RCA</div>
+
+      {/* Big picture image */}
+      <div style={{ marginBottom: 28 }}>
+        <img
+          src="/cs1/big_picture.png"
+          alt="Attribution gap — failure RCA data + Slack escalation evidence"
+          style={{
+            width: '100%',
+            height: 'auto',
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+          }}
+        />
       </div>
-      <SurfaceSlideshow
-        tag="Attribution gap — failure RCA data + Slack escalation evidence"
-        slides={["/cs1/s18.png", "/cs1/s19.png"]}
-      />
-      <div className="cs1-insight-trio" style={{ marginTop: 28 }}>
+
+      {/* Three-column insight section — the "three column" the user meant */}
+      <div className="cs1-insight-trio" style={{ marginBottom: 40 }}>
         {[
-          { icon: "📉", text: "Merchants complain about frequent payment failures and low SR — even when Razorpay's SR is high by industry standards. They blame the gateway, not the bank." },
-          { icon: "🤔", text: "Only a few merchants even knew the SR Dashboard existed. For those who did, it showed no clear error codes — no attribution, no merchant-specific impact." },
-          { icon: "😰", text: "In the current day, merchants simply see 4 generic buckets: Customer-related, Banking-related, Business-related, Others. No root cause, no action path." },
+          { icon: "📉", text: "Merchants often complain about frequent payment failure and low success rates, despite SR being high among industry standards." },
+          { icon: "🤔", text: "In the current day only few merchants see our SR dashboard, this too doesn't provide visibility of clear error codes." },
+          { icon: "😰", text: "Today, merchants simply see an overview of 4 buckets of failure/error • Customer related • Banking related • Business related and Others" },
         ].map(({ icon, text }) => (
           <div className="cs1-insight-col" key={icon}>
             <div className="cs1-insight-emoji">{icon}</div>
@@ -996,45 +1051,91 @@ function SlideDataAttribution() {
         ))}
       </div>
 
-      {/* Support-data stats — moved here from User Problems slide.
-          What this costs on the ground when a merchant escalates. */}
-      <div className="cs1-slide-label" style={{ marginTop: 32, marginBottom: 12 }}>What this costs on the ground</div>
-      <div className="cs1-stat-grid">
-        {[
-          ["6+ hrs",    "Typical wait for Razorpay RCA after merchant escalation"],
-          ["₹80K/day",  "Marketing campaign pause cost while waiting for root cause"],
-          ["War room",  "Engineering team pulled in every time a merchant escalated"],
-          ["No path",   "Zero self-serve resolution flow for downtime queries"],
-        ].map(([num, label]) => (
-          <div className="cs1-stat" key={num}>
-            <div className="cs1-stat-n">{num}</div>
-            <div className="cs1-stat-l">{label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="cs1-north-star" style={{ marginTop: 28 }}>
-        <div className="cs1-ns-label">The critical insight</div>
-        <div className="cs1-ns-text">Merchants don&rsquo;t think in &ldquo;downtimes&rdquo; — they think in <em>payment failures and SR drops</em>. In the current system, we cannot attribute a payment failure to a downtime occurring or that occurred.</div>
-      </div>
-      <div className="cs1-quotes" style={{ marginTop: 24 }}>
-        <blockquote className="cs1-bq">
-          <p>&ldquo;Why is latency of my payments higher right now?&rdquo;</p>
-          <cite>Merchant ticket category #1</cite>
-        </blockquote>
-        <blockquote className="cs1-bq">
-          <p>&ldquo;Why are my payments failing / not getting captured / OTP screen not appearing?&rdquo;</p>
-          <cite>Merchant ticket category #2</cite>
-        </blockquote>
-      </div>
-      <p className="cs1-slide-p cs1-slide-p--sm" style={{ marginTop: 20 }}>
-        Only a few merchants even knew the Downtime Dashboard existed — and for those who did, it didn&rsquo;t connect to their transaction failures. The SR dashboard existed but showed no clear error codes, no attribution, and no merchant-specific impact view.
-      </p>
     </div>
   );
 }
 
-/* ── Slide 10 — Problem Statements (HMW) ── */
+/* ── Slide 12 — Image + Annotations + Merchant Insights ── */
+function SlideImageAnnotationsMerchantInsights() {
+  return (
+    <div className="cs1-si">
+      <div className="cs1-slide-label">Research &middot; 03</div>
+
+      {/* Image + Annotations Section */}
+      <div style={{ marginBottom: 48, display: "grid", gridTemplateColumns: "60% 40%", gap: 28, alignItems: "flex-start" }}>
+        {/* Image on the left (60%) */}
+        <div>
+          <img
+            src="/cs1/Slack.png"
+            alt="Slack screenshot showing merchant escalation"
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: 8,
+              display: "block"
+            }}
+          />
+        </div>
+
+        {/* Annotations on the right (40%) */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Annotation 1: Hand emoji callout */}
+          <div style={{
+            background: "var(--cs-bg2)",
+            border: "1px solid var(--cs-border)",
+            padding: 20,
+            borderRadius: 8,
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--cs-text)"
+          }}>
+            <p style={{ margin: 0 }}>👉 Merchants don&rsquo;t concern themselves with downtimes as such, but they do with increased payment failures and low SR. They enquire the reasons for the failure — one of which is a downtime or unavailability of payment systems</p>
+          </div>
+
+          {/* Annotation 2: Alarm emoji callout */}
+          <div style={{
+            background: "var(--cs-bg2)",
+            border: "1px solid var(--cs-border)",
+            padding: 20,
+            borderRadius: 8,
+            fontSize: 14,
+            lineHeight: 1.6,
+            color: "var(--cs-text)"
+          }}>
+            <p style={{ margin: 0 }}>🚨 In the current day, we cannot attribute a payment failure to a downtime occurring or that occurred</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Merchant Insights Section — Exactly as shown in Figma */}
+      <div>
+        <h2 className="cs1-slide-h">📊 Merchants Insights</h2>
+
+        <p style={{ fontSize: 16, fontWeight: 600, color: "var(--cs-text)", marginBottom: 28 }}>~1900 tickets a month (17k+ annually) by merchants asking:</p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, marginBottom: 28 }}>
+          {[
+            { icon: "🕐", text: "Why latency of their payments is higher right now?" },
+            { icon: "📊", text: "Why is SR low?" },
+            { icon: "📱", text: "If there is downtime?" },
+            { icon: "💳", text: "Why are my payments failing/ not getting captured / OTP screen not appearing" },
+          ].map(({ icon, text }) => (
+            <div key={text} style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+              <div style={{ fontSize: 24, flexShrink: 0 }}>{icon}</div>
+              <p style={{ fontSize: 15, color: "var(--cs-text)", margin: 0, lineHeight: 1.6 }}>{text}</p>
+            </div>
+          ))}
+        </div>
+
+        <a href="https://docs.google.com/spreadsheets/d/1n16kzGBYM40TmEaEA_e8JGEAGfRb8uFv-4Qise_Reqs/edit?gid=865352467#gid=865352467" target="_blank" rel="noopener noreferrer" style={{ color: "#0099ff", textDecoration: "underline", fontSize: 14, fontWeight: 600 }}>
+          Tickets data
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ── Slide 13 — Problem Statements (HMW) ── */
 function SlideHMW() {
   return (
     <div className="cs1-si">
@@ -1095,7 +1196,7 @@ function SlideVision() {
 function SlideIterations() {
   return (
     <div className="cs1-si">
-      <div className="cs1-slide-label">Design &middot; 01</div>
+      <div className="cs1-slide-label">Ideation &middot; 01</div>
       <h2 className="cs1-slide-h">Four rounds of iteration,<br />two AI tools, one concept no competitor had</h2>
       <div className="cs1-highlight" style={{ marginBottom: 28 }}>
         <div className="cs1-highlight-label">✨ AI-assisted iteration approach</div>
@@ -1154,7 +1255,7 @@ function SlideIterations() {
 function SlideTesting() {
   return (
     <div className="cs1-si">
-      <div className="cs1-slide-label">Design &middot; 02</div>
+      <div className="cs1-slide-label">Ideation &middot; 02</div>
       <h2 className="cs1-slide-h">Moderated sessions<br />across three merchant tiers</h2>
       <p className="cs1-slide-p">Tested the v4 prototype with 5 merchants from the SME and Mid-Market segment. Sessions were moderated and recorded via Marvin.</p>
       <div className="cs1-tiers">
@@ -1183,10 +1284,6 @@ function SlideTesting() {
         <p>&ldquo;Now it doesn&rsquo;t stop at seeing failures — I can immediately confirm if a downtime caused them, click through to see GMV and SR impact, or share downtime details with my team. This saves hours and lets us act quickly.&rdquo;</p>
         <cite>Ananya Sharma, Product Manager at Bluestone.com</cite>
       </blockquote>
-      <SurfaceSlideshow
-        tag="Before vs After — Transaction failure view redesign"
-        slides={["/cs1/s27.png"]}
-      />
     </div>
   );
 }
@@ -1195,11 +1292,55 @@ function SlideTesting() {
    FINAL DESIGNS — Two-journey structure
 ───────────────────────────────────────────────────────── */
 
+/* ── Slide 20 — Before & After ── */
+function SlideBeforeAfter() {
+  return (
+    <div className="cs1-si" style={{
+      padding: 0,
+      overflow: "hidden",
+      position: "relative",
+      background: "#ffffff",
+    }}>
+      {/* Dot-grid pattern layer */}
+      <div aria-hidden="true" style={{
+        position: "absolute",
+        inset: 0,
+        pointerEvents: "none",
+        backgroundImage: "radial-gradient(circle, rgba(0,153,255,0.35) 1.5px, transparent 1.5px)",
+        backgroundSize: "22px 22px",
+        maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 62%)",
+        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 62%)",
+      }} />
+      {/* Heading area */}
+      <div style={{ padding: "48px 64px 24px", position: "relative" }}>
+        <div className="cs1-slide-label">Final Designs &middot; Before &amp; After</div>
+        <h2 className="cs1-slide-h" style={{ marginBottom: 0 }}>Before &amp; After</h2>
+      </div>
+      {/* Soft gradient blob at the bottom */}
+      <div aria-hidden="true" style={{
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: "220px",
+        pointerEvents: "none",
+        background: "radial-gradient(ellipse 80% 100% at 50% 100%, rgba(0,153,255,0.13) 0%, rgba(120,80,255,0.07) 45%, transparent 70%)",
+      }} />
+      {/* Full-bleed image */}
+      <img
+        src="/cs1/Before_After.png"
+        alt="Before and after — transaction failure view redesign"
+        style={{ display: "block", width: "100%", height: "auto", position: "relative" }}
+      />
+    </div>
+  );
+}
+
 /* ── Slide 18 — Final Designs Section Header ── */
 function SlideFinalDesignsHeader() {
   return (
     <div className="cs1-si">
-      <div className="cs1-slide-label">Solution &middot; Final Designs</div>
+      <div className="cs1-slide-label">Final Designs &middot; Overview</div>
       <h2 className="cs1-slide-h">Two journeys.<br />Three surfaces.<br />One coherent system.</h2>
       <p className="cs1-slide-p">
         Merchants discover downtimes through two paths: proactively monitoring the dashboard, or reactively receiving an email alert. Both journeys converge on the same three core surfaces.
