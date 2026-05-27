@@ -7,6 +7,10 @@ import SurfaceSlideshow from "./SurfaceSlideshow";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  /** Optional — if provided, page.tsx wires this to switch to CaseStudy1v2.
+   *  Currently unused inside CS1 itself (no Layout A/B toggle rendered yet),
+   *  but accepted so the page-level prop pass typechecks in production builds. */
+  onSwitch?: () => void;
 }
 
 /* ─── 38 slides: two-journey structure with all mockups ───
@@ -134,17 +138,19 @@ export default function CaseStudy1({ isOpen, onClose }: Props) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        let best: { idx: number; ratio: number } | null = null;
+        let bestIdx = -1;
+        let bestRatio = 0;
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
           const idx = slideRefs.current.indexOf(entry.target as HTMLDivElement);
-          if (idx !== -1 && entry.intersectionRatio > (best?.ratio ?? 0)) {
-            best = { idx, ratio: entry.intersectionRatio };
+          if (idx !== -1 && entry.intersectionRatio > bestRatio) {
+            bestIdx = idx;
+            bestRatio = entry.intersectionRatio;
           }
         });
-        if (best !== null) {
-          setSlide(best.idx);
-          slideIdxRef.current = best.idx;
+        if (bestIdx !== -1) {
+            setSlide(bestIdx);
+            slideIdxRef.current = bestIdx;
         }
       },
       { root: stage, threshold: [0.3, 0.5, 0.7] },
