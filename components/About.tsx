@@ -25,23 +25,23 @@ export default function About() {
           transition={{ duration: 0.7, delay: 0.15 }}
         >
           <p>
-            Senior Product Designer with <strong>7+ years of experience</strong> building
-            scalable fintech products across <strong>Razorpay</strong> and{" "}
-            <strong>PayU</strong>. I work at the intersection of product thinking, systems
-            design, AI, and execution — designing everything from checkout and payments to POS
-            ecosystems, internal tools, and 0→1 platform experiences.
+            Senior Product Designer with <strong>7+ years of experience</strong> defining and
+            shipping scalable fintech products at <strong>Razorpay</strong> and{" "}
+            <strong>PayU</strong>. Experienced in leading design across complex, cross-functional
+            teams — from setting product direction and shaping roadmaps to raising the design bar
+            through mentorship and process.
           </p>
           <p>
-            I enjoy simplifying complex problems, collaborating deeply with cross-functional
-            teams, and building products that create measurable business and user impact. Over
-            the last year, I&apos;ve also been actively exploring{" "}
-            <strong>AI-assisted workflows</strong>, design engineering, and frontend
-            prototyping to push the boundaries of how designers can build and ship faster.
+            An early AI adopter who actively integrates AI into the design workflow, constantly
+            exploring new tools and techniques to build more delightful, user-centric products
+            faster and with greater impact. Pioneered <strong>AI-assisted design workflows</strong>{" "}
+            at Razorpay — one of the first designers to raise a PR for frontend Dashboard work
+            using internal/external MCPs, and a Top-10 finalist at the Razorpay AI Hackathon.
           </p>
           <p>
-            Beyond product work, I&apos;m passionate about design culture, learning, and
-            mentoring — regularly facilitating internal sessions on design craft, AI workflows,
-            and product thinking.
+            Beyond product work, I drive design culture through learning and mentorship —
+            facilitating <strong>15+ sessions</strong> on design craft, AI workflows, and product
+            thinking across the team.
           </p>
           <p>
             Outside work, you&apos;ll probably find me performing live music somewhere in
@@ -66,8 +66,41 @@ export default function About() {
               <span className="sidebar-detail">Nov 2020 &ndash; Oct 2023</span>
             </div>
             <div className="sidebar-row">
+              <span className="sidebar-name">Freelance UX Designer</span>
+              <span className="sidebar-detail">Feb 2020 &ndash; Nov 2020</span>
+            </div>
+            <div className="sidebar-row">
               <span className="sidebar-name">ADP Pvt Ltd</span>
               <span className="sidebar-detail">Oct 2017 &ndash; Nov 2019</span>
+            </div>
+          </div>
+          <div className="sidebar-block">
+            <div className="sidebar-label">Skills</div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Design</span>
+              <span className="sidebar-detail">UX, Interaction, Systems, Prototyping</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">AI &amp; Engineering</span>
+              <span className="sidebar-detail">Claude Code, Figma Make, React, HTML/CSS</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Product Thinking</span>
+              <span className="sidebar-detail">0→1, B2B SaaS, Data-driven Design</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">Tools</span>
+              <span className="sidebar-detail">Figma, Marvin, Hotjar, Notion, Jira</span>
+            </div>
+          </div>
+          <div className="sidebar-block">
+            <div className="sidebar-label">Education</div>
+            <div className="sidebar-row">
+              <span className="sidebar-name">BE Computer Engineering</span>
+              <span className="sidebar-detail">2013 &ndash; 2017</span>
+            </div>
+            <div className="sidebar-row">
+              <span className="sidebar-name" style={{ opacity: 0.6, fontWeight: 400, fontSize: 13 }}>University of Pune &middot; First Class with Distinction</span>
             </div>
           </div>
           <div className="sidebar-block">
