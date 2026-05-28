@@ -37,32 +37,33 @@ const SLIDES = [
   "Vision & Outcomes",          // 15
   "Ideation",                   // 16 — HERO
   "Iterations",                 // 17
-  "Usability Testing",          // 18
-  "Final Designs",              // 19 — HERO
-  "Before & After",             // 20 — Before/After comparison
-  "Final Designs",              // 21 — Section intro
-  "Dashboard Journey",          // 22 — Journey 1 intro + video
-  "Dashboard Screen 1",         // 23
-  "Dashboard Screen 2",         // 24
-  "Dashboard Screen 3",         // 25
-  "Dashboard Screen 4",         // 26
-  "Dashboard Screen 5",         // 27
-  "Dashboard Screen 6",         // 28
-  "Email Journey",              // 29 — Journey 2 header
-  "Email Journey Video",        // 30 — Email journey video
-  "Email Screen 1",             // 31
-  "Email Screen 2",             // 32
-  "Email Screen 3",             // 33
-  "Email Screen 4",             // 34
-  "Email Screen 5",             // 35
-  "Email Screen 6",             // 36
-  "Email Screen 7",             // 37
-  "Email Screen 8",             // 38
-  "Results & Learnings",        // 39
+  "AI Iterations",              // 18 — AI mockups + text
+  "Usability Testing",          // 19
+  "Final Designs",              // 20 — HERO
+  "Before & After",             // 21 — Before/After comparison
+  "Final Designs",              // 22 — Section intro
+  "Dashboard Journey",          // 23 — Journey 1 intro + video
+  "Dashboard Screen 1",         // 24
+  "Dashboard Screen 2",         // 25
+  "Dashboard Screen 3",         // 26
+  "Dashboard Screen 4",         // 27
+  "Dashboard Screen 5",         // 28
+  "Dashboard Screen 6",         // 29
+  "Email Journey",              // 30 — Journey 2 header
+  "Email Journey Video",        // 31 — Email journey video
+  "Email Screen 1",             // 32
+  "Email Screen 2",             // 33
+  "Email Screen 3",             // 34
+  "Email Screen 4",             // 35
+  "Email Screen 5",             // 36
+  "Email Screen 6",             // 37
+  "Email Screen 7",             // 38
+  "Email Screen 8",             // 39
+  "Results & Learnings",        // 40
 ];
 
 /* Hero slides get a diamond dot in the footer (shifted by +1 after slide 12 insert). */
-const HERO_SLIDES = new Set([1, 5, 8, 13, 16, 19]);
+const HERO_SLIDES = new Set([1, 5, 8, 13, 16, 20]);
 
 /* Footer section groups (Research extended to 12; everything after shifted by +1). */
 const SECTIONS = [
@@ -71,9 +72,9 @@ const SECTIONS = [
   { label: "Problem",    range: [5, 7]   as [number, number] },
   { label: "Research",   range: [8, 12]  as [number, number] },
   { label: "Synthesis",  range: [13, 15] as [number, number] },
-  { label: "Ideation",      range: [16, 18] as [number, number] },
-  { label: "Final Designs", range: [19, 38] as [number, number] },
-  { label: "Results",       range: [39, 39] as [number, number] },
+  { label: "Ideation",      range: [16, 19] as [number, number] },
+  { label: "Final Designs", range: [20, 39] as [number, number] },
+  { label: "Results",       range: [40, 40] as [number, number] },
 ];
 
 export default function CaseStudy1({ isOpen, onClose }: Props) {
@@ -304,28 +305,29 @@ function SlideContent({ index }: { index: number }) {
     case 15: return <SlideVision />;
     case 16: return <SlideHeroDesign />;
     case 17: return <SlideIterations />;
-    case 18: return <SlideTesting />;
-    case 19: return <SlideHeroSolution />;
-    case 20: return <SlideBeforeAfter />;
-    case 21: return <SlideFinalDesignsHeader />;
-    case 22: return <SlideDashboardJourneyIntro />;
-    case 23: return <SlideDashboardScreen screen={1} />;
-    case 24: return <SlideDashboardScreen screen={2} />;
-    case 25: return <SlideDashboardScreen screen={3} />;
-    case 26: return <SlideDashboardScreen screen={4} />;
-    case 27: return <SlideDashboardScreen screen={5} />;
-    case 28: return <SlideDashboardScreen screen={6} />;
-    case 29: return <SlideEmailJourneyHeader />;
-    case 30: return <SlideEmailJourneyIntro />;
-    case 31: return <SlideEmailScreen screen={1} />;
-    case 32: return <SlideEmailScreen screen={2} />;
-    case 33: return <SlideEmailScreen screen={3} />;
-    case 34: return <SlideEmailScreen screen={4} />;
-    case 35: return <SlideEmailScreen screen={5} />;
-    case 36: return <SlideEmailScreen screen={6} />;
-    case 37: return <SlideEmailScreen screen={7} />;
-    case 38: return <SlideEmailScreen screen={8} />;
-    case 39: return <SlideOutcome />;
+    case 18: return <SlideAIIterations />;
+    case 19: return <SlideTesting />;
+    case 20: return <SlideHeroSolution />;
+    case 21: return <SlideBeforeAfter />;
+    case 22: return <SlideFinalDesignsHeader />;
+    case 23: return <SlideDashboardJourneyIntro />;
+    case 24: return <SlideDashboardScreen screen={1} />;
+    case 25: return <SlideDashboardScreen screen={2} />;
+    case 26: return <SlideDashboardScreen screen={3} />;
+    case 27: return <SlideDashboardScreen screen={4} />;
+    case 28: return <SlideDashboardScreen screen={5} />;
+    case 29: return <SlideDashboardScreen screen={6} />;
+    case 30: return <SlideEmailJourneyHeader />;
+    case 31: return <SlideEmailJourneyIntro />;
+    case 32: return <SlideEmailScreen screen={1} />;
+    case 33: return <SlideEmailScreen screen={2} />;
+    case 34: return <SlideEmailScreen screen={3} />;
+    case 35: return <SlideEmailScreen screen={4} />;
+    case 36: return <SlideEmailScreen screen={5} />;
+    case 37: return <SlideEmailScreen screen={6} />;
+    case 38: return <SlideEmailScreen screen={7} />;
+    case 39: return <SlideEmailScreen screen={8} />;
+    case 40: return <SlideOutcome />;
     default: return null;
   }
 }
@@ -620,6 +622,18 @@ function SlideBizProblems() {
   return (
     <div className="cs1-si">
       <div className="cs1-slide-label">Problem &middot; 01</div>
+      {/* Business Problem identifier badge */}
+      <div style={{ marginBottom: 12 }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '5px 12px 5px 9px', borderRadius: 999,
+          background: '#f5f0e8', color: '#5c4a2e',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.03em',
+        }}>
+          <IconBriefcase size={14} />
+          Business Problems
+        </span>
+      </div>
       <h2 className="cs1-slide-h">Problems identified with<br />product &amp; business teams</h2>
       <div className="cs1-dirs" style={{ marginTop: 28 }}>
         {[
@@ -649,6 +663,18 @@ function SlideUserProblems() {
   return (
     <div className="cs1-si">
       <div className="cs1-slide-label">Problem &middot; 02</div>
+      {/* User Problem identifier badge */}
+      <div style={{ marginBottom: 12 }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '5px 12px 5px 9px', borderRadius: 999,
+          background: '#e8f2fd', color: '#1a5fa3',
+          fontSize: 12, fontWeight: 700, letterSpacing: '0.03em',
+        }}>
+          <IconPeople size={14} />
+          User Problems
+        </span>
+      </div>
       <h2 className="cs1-slide-h">User problems surface<br />from merchant feedback</h2>
       <div className="cs1-dirs" style={{ marginTop: 28, marginBottom: 0 }}>
         {[
@@ -1243,10 +1269,98 @@ function SlideIterations() {
           </div>
         ))}
       </div>
-      <SurfaceSlideshow
-        tag="Iteration screens — AI prototypes + V1–V4 evolution"
-        slides={["/cs1/s26.png", "/cs1/s28.png", "/cs1/s29.png"]}
-      />
+    </div>
+  );
+}
+
+/* ── Slide 18 — AI Iterations ── */
+function SlideAIIterations() {
+  return (
+    <div className="cs1-si">
+      <div className="cs1-slide-label">Ideation &middot; 02</div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40, alignItems: "flex-start" }}>
+
+        {/* Left — content */}
+        <div>
+          <h2 className="cs1-slide-h">AI iterations for<br />alignment and testing</h2>
+
+          <p style={{ fontSize: 15, fontWeight: 600, color: "var(--cs-text)", marginBottom: 16, lineHeight: 1.6 }}>
+            AI iterations were an important part at multiple stages of the process:
+          </p>
+
+          <ul style={{ margin: "0 0 32px 0", paddingLeft: 20, color: "var(--cs-muted)", fontSize: 15, lineHeight: 1.9, listStyleType: "disc" }}>
+            <li style={{ display: "list-item" }}>We made iterations before the Figma design to visualize and align stakeholders.</li>
+            <li style={{ display: "list-item" }}>We tested some designs with our merchants to take early feedback.</li>
+            <li style={{ display: "list-item" }}>Used Figma Make to explore iterations based on stakeholder feedback.</li>
+          </ul>
+
+          {/* Lovable */}
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 20 }}>
+            <img src="/cs1/Lovable.png" alt="Lovable" style={{ width: 48, height: 48, borderRadius: 12, flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--cs-text)", marginBottom: 4 }}>Lovable</div>
+              <a href="https://preview--payment-pulse-command-center.lovable.app/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--cs-accent)", textDecoration: "underline" }}>Link to iteration</a>
+            </div>
+          </div>
+
+          {/* Figma Make */}
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <img src="/cs1/Figma.png" alt="Figma Make" style={{ width: 48, height: 48, borderRadius: 12, flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--cs-text)", marginBottom: 4 }}>Figma Make</div>
+              <div style={{ display: "flex", gap: 12 }}>
+                <a href="https://plane-vowel-84598125.figma.site/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--cs-accent)", textDecoration: "underline" }}>Link 1</a>
+                <a href="https://wolf-geo-76357676.figma.site/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--cs-accent)", textDecoration: "underline" }}>Link 2</a>
+                <a href="https://plane-vowel-84598125.figma.site/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--cs-accent)", textDecoration: "underline" }}>Link 3</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right — stacked AI mockup images */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {/* Top image — right-aligned */}
+          <img
+            src="/cs1/AI_1.png"
+            alt="AI iteration 1"
+            style={{
+              width: "88%", height: "auto", borderRadius: 8, display: "block",
+              alignSelf: "flex-end",
+              boxShadow: "0 8px 24px rgba(0,0,0,0.13)",
+              marginBottom: -20,
+              position: "relative", zIndex: 3,
+              mixBlendMode: "multiply",
+            }}
+          />
+          {/* Middle image — left-aligned */}
+          <img
+            src="/cs1/AI_2.png"
+            alt="AI iteration 2"
+            style={{
+              width: "88%", height: "auto", borderRadius: 8, display: "block",
+              alignSelf: "flex-start",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.11)",
+              marginBottom: -20,
+              position: "relative", zIndex: 2,
+              mixBlendMode: "multiply",
+            }}
+          />
+          {/* Bottom image — right-aligned */}
+          <img
+            src="/cs1/AI_3.png"
+            alt="AI iteration 3"
+            style={{
+              width: "88%", height: "auto", borderRadius: 8, display: "block",
+              alignSelf: "flex-end",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
+              position: "relative", zIndex: 1,
+              mixBlendMode: "multiply",
+            }}
+          />
+        </div>
+
+      </div>
     </div>
   );
 }
@@ -1695,18 +1809,110 @@ function SlideEmailScreen3() {
   );
 }
 
+/* ─── PROBLEM MAPPING — Icon helpers + data ─── */
+
+/* Briefcase icon — Business Problem identifier */
+function IconBriefcase({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <rect x="1" y="5" width="12" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.35"/>
+      <path d="M4.5 5V4C4.5 3.17 5.17 2.5 6 2.5h2c.83 0 1.5.67 1.5 1.5v1" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round"/>
+      <path d="M1 8.5h12" stroke="currentColor" strokeWidth="1.35"/>
+    </svg>
+  );
+}
+
+/* People icon — User Problem identifier */
+function IconPeople({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <circle cx="5.5" cy="4.5" r="2" stroke="currentColor" strokeWidth="1.35"/>
+      <path d="M1 12.5c0-2.49 2.01-4.5 4.5-4.5s4.5 2.01 4.5 4.5" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round"/>
+      <circle cx="10.5" cy="5" r="1.5" stroke="currentColor" strokeWidth="1.35"/>
+      <path d="M13 12.5c0-1.93-1.1-3.6-2.72-4.38" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+type SolvesItem = { type: 'bp' | 'up'; num: string };
+
+/* Confirmed mapping from Figma slide annotations */
+const DASHBOARD_SOLVES: Record<number, SolvesItem[]> = {
+  1: [],  // Home — journey start, no tags
+  2: [{ type: 'bp', num: '02' }, { type: 'bp', num: '03' }, { type: 'up', num: '01' }],
+  3: [{ type: 'bp', num: '04' }, { type: 'bp', num: '02' }, { type: 'bp', num: '03' }, { type: 'up', num: '01' }],
+  4: [{ type: 'up', num: '01' }, { type: 'bp', num: '02' }],
+  5: [{ type: 'bp', num: '01' }],
+  6: [{ type: 'bp', num: '02' }, { type: 'up', num: '01' }],
+};
+
+const EMAIL_SOLVES: Record<number, SolvesItem[]> = {
+  1: [{ type: 'up', num: '01' }, { type: 'up', num: '02' }, { type: 'bp', num: '03' }],
+  2: [{ type: 'up', num: '01' }, { type: 'up', num: '02' }],
+  3: [{ type: 'up', num: '01' }, { type: 'up', num: '02' }],
+  4: [{ type: 'up', num: '01' }, { type: 'up', num: '02' }],
+  5: [{ type: 'bp', num: '02' }],
+  6: [{ type: 'bp', num: '04' }, { type: 'up', num: '02' }],
+  7: [{ type: 'up', num: '02' }, { type: 'bp', num: '04' }],
+  8: [{ type: 'up', num: '02' }],
+};
+
+/* Renders the "SOLVES" strip at the bottom of each screen slide */
+function SolvesStrip({ items }: { items: SolvesItem[] }) {
+  if (!items.length) return null;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18, flexWrap: 'wrap' }}>
+      <span style={{
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: '0.13em',
+        textTransform: 'uppercase',
+        color: 'var(--cs-dim)',
+        flexShrink: 0,
+      }}>
+        Solves
+      </span>
+      {items.map(({ type, num }) => {
+        const isBiz = type === 'bp';
+        return (
+          <span
+            key={`${type}-${num}`}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '4px 10px 4px 8px',
+              borderRadius: 999,
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: '0.03em',
+              background: isBiz ? '#f5f0e8' : '#e8f2fd',
+              color: isBiz ? '#5c4a2e' : '#1a5fa3',
+            }}
+          >
+            {isBiz ? <IconBriefcase size={12} /> : <IconPeople size={12} />}
+            {isBiz ? `BP-${num}` : `UP-${num}`}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ─── PARAMETERIZED SCREEN COMPONENTS ─── */
 
 /* ── Dashboard Screen N (1-6) — Displays actual screen mockups ── */
 function SlideDashboardScreen({ screen }: { screen: number }) {
   const screenLabels: Record<number, string> = {
-    1: "Ecosystem Health Dashboard",
-    2: "Downtime Detail Page",
-    3: "Transactions Dashboard with Attribution",
-    4: "Recovery Actions Panel",
-    5: "Historical Timeline View",
-    6: "Multi-downtime Overview"
+    1: "Razorpay Home — Journey start",
+    2: "Transaction Page — Anomaly detected",
+    3: "Failure Breakdown — Detailed view",
+    4: "Root Cause Identified — Downtime card",
+    5: "Recovery Actions — What Razorpay did",
+    6: "Failed Transactions — Attribution view",
   };
+
+  const solves = DASHBOARD_SOLVES[screen] ?? [];
 
   return (
     <div className="cs1-si">
@@ -1719,6 +1925,7 @@ function SlideDashboardScreen({ screen }: { screen: number }) {
           style={{ width: '100%', maxWidth: '900px', height: 'auto', margin: '0 auto', display: 'block' }}
         />
       </div>
+      <SolvesStrip items={solves} />
     </div>
   );
 }
@@ -1726,15 +1933,17 @@ function SlideDashboardScreen({ screen }: { screen: number }) {
 /* ── Email Screen N (1-8) — Displays actual screen mockups ── */
 function SlideEmailScreen({ screen }: { screen: number }) {
   const screenLabels: Record<number, string> = {
-    1: "Email Alert Received",
-    2: "Downtime Detail Page (from email)",
-    3: "Transactions Dashboard",
-    4: "Recovery Actions",
-    5: "Email Template Setup",
-    6: "Team Notification",
-    7: "Impact Analysis",
-    8: "Resolution Confirmation"
+    1: "Gmail Inbox — Downtime alert received",
+    2: "Email Body — 610 payments affected",
+    3: "Downtime Detail Page — Impact & recovery",
+    4: "Success Rate Analysis — Visual proof",
+    5: "Educational Context — What is Network Downtime",
+    6: "Ecosystem Health — 2 Ongoing downtimes",
+    7: "Ecosystem Health — All systems healthy",
+    8: "Downtime History — Calendar view",
   };
+
+  const solves = EMAIL_SOLVES[screen] ?? [];
 
   return (
     <div className="cs1-si">
@@ -1747,6 +1956,7 @@ function SlideEmailScreen({ screen }: { screen: number }) {
           style={{ width: '100%', maxWidth: '900px', height: 'auto', margin: '0 auto', display: 'block' }}
         />
       </div>
+      <SolvesStrip items={solves} />
     </div>
   );
 }
