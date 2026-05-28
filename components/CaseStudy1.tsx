@@ -1836,6 +1836,38 @@ function IconPeople({ size = 13 }: { size?: number }) {
 
 type SolvesItem = { type: 'bp' | 'up'; num: string };
 
+/* Full problem descriptions — shown in tooltip on hover */
+const PROBLEM_DATA: Record<string, { title: string; desc: string }> = {
+  'bp-01': {
+    title: 'Invisible Value',
+    desc: "Merchants overlook Razorpay's backup routing and intelligent rerouting, missing the platform intelligence being applied on their behalf.",
+  },
+  'bp-02': {
+    title: 'SR Perception Gap',
+    desc: "Without context for why SR drops during downtimes, Razorpay appears to underperform compared to orchestrators like Juspay — a false impression.",
+  },
+  'bp-03': {
+    title: 'Manual GTM Motion',
+    desc: "KAMs and analysts still share SR and downtime insights manually via PDFs and Slack, with no self-serve visibility for merchants.",
+  },
+  'bp-04': {
+    title: 'High Support Load',
+    desc: "Downtime-related issues drive merchant escalations, support dependency, and engineering war rooms — with no self-serve resolution path.",
+  },
+  'bp-05': {
+    title: 'Churn Risk',
+    desc: "Competing platforms bundle observability + routing together, making Razorpay feel less integrated and less intelligent.",
+  },
+  'up-01': {
+    title: 'Cost of Invisible Downtime',
+    desc: "Merchants face revenue loss, poor customer experience, and support overhead due to limited or delayed visibility into downtimes. They can't take corrective action because they don't know what's causing the failure.",
+  },
+  'up-02': {
+    title: 'Gaps in Communication',
+    desc: "The current system offers limited real-time insights and disjointed alerting, with no merchant-specific impact view. Downtime communication lacks clarity, speed, and actionable context.",
+  },
+};
+
 /* Confirmed mapping from Figma slide annotations */
 const DASHBOARD_SOLVES: Record<number, SolvesItem[]> = {
   1: [],  // Home — journey start, no tags
@@ -1857,6 +1889,105 @@ const EMAIL_SOLVES: Record<number, SolvesItem[]> = {
   8: [{ type: 'up', num: '02' }],
 };
 
+/* Interactive chip — shows problem title + description on hover */
+function SolvesChip({ type, num }: SolvesItem) {
+  const [hovered, setHovered] = useState(false);
+  const isBiz = type === 'bp';
+  const key = `${type}-${num}`;
+  const data = PROBLEM_DATA[key];
+  if (!data) return null;
+
+  return (
+    <span
+      style={{ position: 'relative', display: 'inline-flex' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* The chip pill */}
+      <span
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 5,
+          padding: '5px 11px 5px 8px',
+          borderRadius: 999,
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: '0.02em',
+          cursor: 'default',
+          userSelect: 'none',
+          background: isBiz ? '#f5f0e8' : '#e8f2fd',
+          color: isBiz ? '#5c4a2e' : '#1a5fa3',
+          border: `1px solid ${isBiz ? 'rgba(92,74,46,0.15)' : 'rgba(26,95,163,0.15)'}`,
+          transition: 'box-shadow 0.15s',
+          boxShadow: hovered ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
+        }}
+      >
+        {isBiz ? <IconBriefcase size={12} /> : <IconPeople size={12} />}
+        {isBiz ? `BP-${num}` : `UP-${num}`}
+        &nbsp;·&nbsp;
+        <span style={{ fontWeight: 500, opacity: 0.85 }}>{data.title}</span>
+      </span>
+
+      {/* Tooltip card — appears above on hover */}
+      {hovered && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 10px)',
+            left: 0,
+            zIndex: 20,
+            width: 272,
+            background: '#1c1c1e',
+            color: '#f5f5f7',
+            borderRadius: 10,
+            padding: '12px 14px',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.22)',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Arrow */}
+          <div style={{
+            position: 'absolute',
+            bottom: -6,
+            left: 18,
+            width: 12,
+            height: 12,
+            background: '#1c1c1e',
+            transform: 'rotate(45deg)',
+            borderRadius: 2,
+          }} />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            marginBottom: 6,
+          }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '2px 7px',
+              borderRadius: 999,
+              fontSize: 10,
+              fontWeight: 700,
+              background: isBiz ? '#f5f0e8' : '#e8f2fd',
+              color: isBiz ? '#5c4a2e' : '#1a5fa3',
+            }}>
+              {isBiz ? <IconBriefcase size={10} /> : <IconPeople size={10} />}
+              {isBiz ? `BP-${num}` : `UP-${num}`}
+            </span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: '#ffffff' }}>{data.title}</span>
+          </div>
+          <p style={{ margin: 0, fontSize: 12, lineHeight: 1.6, color: 'rgba(245,245,247,0.75)' }}>
+            {data.desc}
+          </p>
+        </div>
+      )}
+    </span>
+  );
+}
+
 /* Renders the "SOLVES" strip at the bottom of each screen slide */
 function SolvesStrip({ items }: { items: SolvesItem[] }) {
   if (!items.length) return null;
@@ -1872,29 +2003,9 @@ function SolvesStrip({ items }: { items: SolvesItem[] }) {
       }}>
         Solves
       </span>
-      {items.map(({ type, num }) => {
-        const isBiz = type === 'bp';
-        return (
-          <span
-            key={`${type}-${num}`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 5,
-              padding: '4px 10px 4px 8px',
-              borderRadius: 999,
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '0.03em',
-              background: isBiz ? '#f5f0e8' : '#e8f2fd',
-              color: isBiz ? '#5c4a2e' : '#1a5fa3',
-            }}
-          >
-            {isBiz ? <IconBriefcase size={12} /> : <IconPeople size={12} />}
-            {isBiz ? `BP-${num}` : `UP-${num}`}
-          </span>
-        );
-      })}
+      {items.map((item) => (
+        <SolvesChip key={`${item.type}-${item.num}`} {...item} />
+      ))}
     </div>
   );
 }
