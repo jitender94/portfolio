@@ -1868,6 +1868,66 @@ const PROBLEM_DATA: Record<string, { title: string; desc: string }> = {
   },
 };
 
+/* Annotation text for each screen — drawn directly from Figma slide captions */
+type ScreenAnnotation = { context?: string; desc: string; quote?: string };
+
+const DASHBOARD_ANNOTATIONS: Record<number, ScreenAnnotation> = {
+  1: {
+    desc: "Akash starts on the Razorpay Home page — his routine starting point before noticing the payment anomaly.",
+  },
+  2: {
+    context: "Akash navigates to Dashboard → Payments → Transactions",
+    desc: "Opens Razorpay Transactions page. Sees 'Failed: 1282 payments' with reasons grouped by type.",
+  },
+  3: {
+    context: "Akash wants more detail. He clicks [View Detailed Attribution]",
+    desc: "Failed payments are grouped by root cause, showing reasons like 'Axis UPI downtime' and 'HDFC server timeout.' Each failure is tagged accordingly.",
+  },
+  4: {
+    desc: "Selects 'PhonePe UPI downtime' from the failure breakdown. Sees root cause, estimated resolution time, and recommended actions inline.",
+    quote: "Oh thank god. It's not us. It's HDFC UPI downtime.",
+  },
+  5: {
+    desc: "When the user comes back after taking an action, they see what actions Razorpay has already taken on their behalf.",
+  },
+  6: {
+    desc: "The user can also see the full list of failed payments with the reasons and additional context per row. This is also an entry point into the individual failed payment detail page.",
+  },
+};
+
+const EMAIL_ANNOTATIONS: Record<number, ScreenAnnotation> = {
+  1: {
+    context: "Step 1 – Receives downtime email",
+    desc: "Receives a Downtime email from Razorpay stating that Amex network downtime is impacting Amex transactions.",
+  },
+  2: {
+    context: "Step 2 – Email summary",
+    desc: "Email summary: \"Amex card transactions failing since 3:15 PM. 610 payments affected.\" Clicks \"View in Dashboard.\"",
+  },
+  3: {
+    context: "Step 3 – Downtime Detail Page",
+    desc: "Sees downtime page with impact analysis, success rate graph, and timeline. Visual proof that Amex network issue caused the spike.",
+  },
+  4: {
+    desc: "Impact analysis shows success rate drop from 80% to 15% at 3:15 PM. 2,750 failed payments across 5,000 attempts. Downtime lasted 3h 12m (3:15 PM – 6:27 PM, resolved).",
+  },
+  5: {
+    desc: "Some merchants don't know what a network downtime is — so they can get more context and understand the exact issue behind a network downtime.",
+  },
+  6: {
+    context: "Downtime homepage",
+    desc: "Merchant can subscribe to alerts and add their teammates for the same, so that whenever there is a downtime, they are the first to know it.",
+  },
+  7: {
+    context: "Downtime homepage",
+    desc: "They can also sync Scheduled downtimes with their calendar so they are aware right from Google Calendar — and already prepared in advance.",
+  },
+  8: {
+    context: "Downtime homepage – History",
+    desc: "Full history of all downtimes, browsable by date and instrument. Merchants can see patterns and plan around recurring maintenance windows.",
+  },
+};
+
 /* Confirmed mapping from Figma slide annotations */
 const DASHBOARD_SOLVES: Record<number, SolvesItem[]> = {
   1: [],  // Home — journey start, no tags
@@ -2024,10 +2084,22 @@ function SlideDashboardScreen({ screen }: { screen: number }) {
   };
 
   const solves = DASHBOARD_SOLVES[screen] ?? [];
+  const annotation = DASHBOARD_ANNOTATIONS[screen];
 
   return (
     <div className="cs1-si">
       <div className="cs1-slide-label">Dashboard Journey &middot; Screen {screen}</div>
+      {annotation?.context && (
+        <div style={{
+          fontSize: 12,
+          fontWeight: 600,
+          color: 'var(--cs-accent)',
+          marginBottom: 8,
+          letterSpacing: '0.02em',
+        }}>
+          {annotation.context}
+        </div>
+      )}
       <h2 className="cs1-slide-h">{screenLabels[screen] || `Screen ${screen}`}</h2>
       <div className="cs1-laptop-mockups">
         <img
@@ -2036,6 +2108,22 @@ function SlideDashboardScreen({ screen }: { screen: number }) {
           style={{ width: '100%', maxWidth: '900px', height: 'auto', margin: '0 auto', display: 'block' }}
         />
       </div>
+      {annotation && (
+        <p style={{
+          fontSize: 14,
+          color: 'var(--cs-muted)',
+          lineHeight: 1.7,
+          marginTop: 16,
+          marginBottom: 0,
+        }}>
+          {annotation.desc}
+        </p>
+      )}
+      {annotation?.quote && (
+        <blockquote className="cs1-bq" style={{ marginTop: 16 }}>
+          <p>&ldquo;{annotation.quote}&rdquo;</p>
+        </blockquote>
+      )}
       <SolvesStrip items={solves} />
     </div>
   );
@@ -2055,10 +2143,22 @@ function SlideEmailScreen({ screen }: { screen: number }) {
   };
 
   const solves = EMAIL_SOLVES[screen] ?? [];
+  const annotation = EMAIL_ANNOTATIONS[screen];
 
   return (
     <div className="cs1-si">
       <div className="cs1-slide-label">Email Journey &middot; Screen {screen}</div>
+      {annotation?.context && (
+        <div style={{
+          fontSize: 12,
+          fontWeight: 600,
+          color: 'var(--cs-accent)',
+          marginBottom: 8,
+          letterSpacing: '0.02em',
+        }}>
+          {annotation.context}
+        </div>
+      )}
       <h2 className="cs1-slide-h">{screenLabels[screen] || `Screen ${screen}`}</h2>
       <div className="cs1-laptop-mockups">
         <img
@@ -2067,6 +2167,17 @@ function SlideEmailScreen({ screen }: { screen: number }) {
           style={{ width: '100%', maxWidth: '900px', height: 'auto', margin: '0 auto', display: 'block' }}
         />
       </div>
+      {annotation && (
+        <p style={{
+          fontSize: 14,
+          color: 'var(--cs-muted)',
+          lineHeight: 1.7,
+          marginTop: 16,
+          marginBottom: 0,
+        }}>
+          {annotation.desc}
+        </p>
+      )}
       <SolvesStrip items={solves} />
     </div>
   );
